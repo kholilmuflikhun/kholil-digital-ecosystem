@@ -1,0 +1,756 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────────────────── ENUMS ─────────────────────────
+
+enum GoalCategory {
+  REVENUE
+  PROFIT
+  SALES
+  CUSTOMERS
+  LEADS
+  CONTENT
+  PROJECTS
+  PERSONAL_DEVELOPMENT
+  MARKETING
+  PRODUCT_DEVELOPMENT
+  CUSTOM
+}
+
+enum GoalStatus {
+  ACTIVE
+  ACHIEVED
+  PAUSED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  SKIPPED
+}
+
+enum TaskCategory {
+  REVENUE
+  SALES
+  PROSPECTING
+  FOLLOW_UP
+  CONTENT
+  DELIVERY
+  STRATEGIC
+  OTHER
+}
+
+enum ProspectStatus {
+  NEW
+  CONTACTED
+  RESPONDED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATION
+  WON
+  LOST
+  DORMANT
+}
+
+enum DealStage {
+  LEAD
+  CONTACTED
+  QUALIFIED
+  DISCOVERY
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum ProjectStatus {
+  PLANNING
+  WAITING_FOR_CONTENT
+  IN_PROGRESS
+  REVIEW
+  REVISION
+  COMPLETED
+  ARCHIVED
+}
+
+enum ContentPillar {
+  EDUCATION
+  PORTFOLIO
+  CASE_STUDY
+  BEHIND_THE_SCENES
+  SELLING
+  PERSONAL_BRAND
+  THOUGHT_LEADERSHIP
+}
+
+enum Platform {
+  INSTAGRAM
+  TIKTOK
+  FACEBOOK
+  LINKEDIN
+  THREADS
+  YOUTUBE
+  WEBSITE
+  OTHER
+}
+
+enum ContentStatus {
+  IDEA
+  DRAFT
+  READY
+  SCHEDULED
+  PUBLISHED
+  REPURPOSED
+  ARCHIVED
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum CampaignStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum NotificationType {
+  FOLLOW_UP
+  OVERDUE_PAYMENT
+  DEADLINE
+  DAILY_PRIORITY
+  CAMPAIGN_MILESTONE
+  WEEKLY_REVIEW
+  CUSTOMER_REACTIVATION
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WHATSAPP
+  TELEGRAM
+  CALENDAR
+}
+
+// ───────────────────────── AUTH & USER ─────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  emailVerified DateTime?
+  image         String?
+  currency      String    @default("IDR")
+  locale        String    @default("id-ID")
+  timezone      String    @default("Asia/Jakarta")
+  workingDays   Int[]     @default([1, 2, 3, 4, 5, 6])
+  isDemo        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+
+  settings      UserSettings?
+  strategy      Strategy?
+  goals         Goal[]
+  campaigns     Campaign[]
+  tasks         Task[]
+  dailyLogs     DailyActivity[]
+  prospects     Prospect[]
+  deals         Deal[]
+  customers     Customer[]
+  offers        Offer[]
+  projects      Project[]
+  contents      Content[]
+  revenues      Revenue[]
+  expenses      Expense[]
+  payments      Payment[]
+  testimonials  Testimonial[]
+  referrals     Referral[]
+  notifications Notification[]
+  tags          Tag[]
+  activityLogs  ActivityLog[]
+  weeklyReviews WeeklyReview[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Parameter mesin sales math, dapat diatur pengguna (tidak ada angka yang dikunci)
+model UserSettings {
+  id                 String  @id @default(cuid())
+  userId             String  @unique
+  averageOrderValue  Decimal @default(0) @db.Decimal(16, 2)
+  conversionRate     Decimal @default(0.2) @db.Decimal(6, 4) // lead terkualifikasi → transaksi
+  qualificationRate  Decimal @default(0.4) @db.Decimal(6, 4) // prospek → lead terkualifikasi
+  responseRate       Decimal @default(0.3) @db.Decimal(6, 4) // outreach → prospek yang merespons
+  scoreCritical      Int     @default(50)
+  scoreNeedsWork     Int     @default(70)
+  scoreOnTrack       Int     @default(90)
+  repeatWindowDays   Int     @default(60)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Strategy {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  vision              String?  @db.Text
+  mission             String?  @db.Text
+  positioning         String?  @db.Text
+  valueProposition    String?  @db.Text
+  idealCustomer       String?  @db.Text
+  offersSummary       String?  @db.Text
+  acquisitionChannels String?  @db.Text
+  growthStrategy      String?  @db.Text
+  competitiveEdge     String?  @db.Text
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ───────────────────────── GOALS & CAMPAIGNS ─────────────────────────
+
+model Goal {
+  id           String       @id @default(cuid())
+  userId       String
+  campaignId   String?
+  name         String
+  description  String?      @db.Text
+  category     GoalCategory
+  metric       String // contoh: "IDR", "transaksi", "prospek", "konten"
+  targetValue  Decimal      @db.Decimal(16, 2)
+  currentValue Decimal      @default(0) @db.Decimal(16, 2)
+  startDate    DateTime
+  endDate      DateTime
+  status       GoalStatus   @default(ACTIVE)
+  priority     Priority     @default(MEDIUM)
+  isDemo       Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  tasks    Task[]
+
+  @@index([userId, status])
+  @@index([userId, category])
+  @@index([campaignId])
+}
+
+model Campaign {
+  id             String         @id @default(cuid())
+  userId         String
+  name           String
+  goalSummary    String?        @db.Text
+  strategy       String?        @db.Text
+  durationDays   Int // 7, 14, 30, 60, 90 atau custom
+  startDate      DateTime
+  endDate        DateTime
+  status         CampaignStatus @default(PLANNED)
+  revenueTarget  Decimal?       @db.Decimal(16, 2)
+  salesTarget    Int?
+  contentTarget  Int?
+  prospectTarget Int?
+  kpis           Json? // [{ key, label, target }]
+  milestones     Json? // [{ phase, title, startDay, endDay, objectives[], kpis[] }]
+  isDemo         Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goals    Goal[]
+  tasks    Task[]
+  contents Content[]
+
+  @@index([userId, status])
+}
+
+// ───────────────────────── TASKS & DAILY ─────────────────────────
+
+model Task {
+  id               String       @id @default(cuid())
+  userId           String
+  title            String
+  category         TaskCategory @default(OTHER)
+  priority         Priority     @default(MEDIUM)
+  status           TaskStatus   @default(TODO)
+  estimatedMinutes Int?
+  dueDate          DateTime?
+  completedAt      DateTime?
+  campaignDay      Int?
+  isKpiActivity    Boolean      @default(true)
+  prospectId       String?
+  customerId       String?
+  projectId        String?
+  goalId           String?
+  campaignId       String?
+  isDemo           Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prospect Prospect? @relation(fields: [prospectId], references: [id], onDelete: SetNull)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  project  Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  goal     Goal?     @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  @@index([userId, dueDate])
+  @@index([userId, status])
+  @@index([campaignId, campaignDay])
+}
+
+// Scorecard harian (satu baris per user per tanggal)
+model DailyActivity {
+  id                String   @id @default(cuid())
+  userId            String
+  date              DateTime @db.Date
+  prospectsContacted Int     @default(0)
+  responses         Int      @default(0)
+  qualifiedLeads    Int      @default(0)
+  followUps         Int      @default(0)
+  proposals         Int      @default(0)
+  dealsWon          Int      @default(0)
+  contentPublished  Int      @default(0)
+  hoursWorked       Decimal  @default(0) @db.Decimal(5, 2)
+  notes             String?  @db.Text
+  isDemo            Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model WeeklyReview {
+  id        String   @id @default(cuid())
+  userId    String
+  weekStart DateTime @db.Date
+  answers   Json // jawaban wizard: revenue, sales, marketing, operations, strategy
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart])
+}
+
+// ───────────────────────── CRM ─────────────────────────
+
+model Tag {
+  id     String @id @default(cuid())
+  userId String
+  name   String
+  color  String @default("#6366f1")
+
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prospects ProspectTag[]
+
+  @@unique([userId, name])
+}
+
+model Prospect {
+  id             String         @id @default(cuid())
+  userId         String
+  name           String
+  businessName   String?
+  contact        String?
+  email          String?
+  whatsapp       String?
+  instagram      String?
+  website        String?
+  industry       String?
+  location       String?
+  source         String? // kanal asal: instagram, referral, cold outreach, dst.
+  potentialValue Decimal        @default(0) @db.Decimal(16, 2)
+  probability    Int            @default(10) // 0-100
+  status         ProspectStatus @default(NEW)
+  notes          String?        @db.Text
+  lastContactAt  DateTime?
+  nextFollowUpAt DateTime?
+  offerId        String?
+  contentId      String? // atribusi: konten yang menghasilkan lead ini
+  isColdOutreach Boolean        @default(false)
+  isDemo         Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  offer   Offer?        @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  content Content?      @relation(fields: [contentId], references: [id], onDelete: SetNull)
+  deals   Deal[]
+  tags    ProspectTag[]
+  tasks   Task[]
+
+  @@index([userId, status])
+  @@index([userId, nextFollowUpAt])
+  @@index([contentId])
+}
+
+model ProspectTag {
+  prospectId String
+  tagId      String
+
+  prospect Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([prospectId, tagId])
+}
+
+model Deal {
+  id                  String    @id @default(cuid())
+  userId              String
+  name                String
+  prospectId          String
+  offerId             String?
+  customerId          String?
+  contentId           String?
+  stage               DealStage @default(LEAD)
+  value               Decimal   @default(0) @db.Decimal(16, 2)
+  probability         Int       @default(10)
+  expectedCloseDate   DateTime?
+  closedAt            DateTime?
+  lostReason          String?
+  notes               String?   @db.Text
+  nextAction          String?
+  isDemo              Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prospect  Prospect  @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  offer     Offer?    @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  customer  Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  content   Content?  @relation(fields: [contentId], references: [id], onDelete: SetNull)
+  projects  Project[]
+  revenues  Revenue[]
+
+  @@index([userId, stage])
+  @@index([userId, expectedCloseDate])
+  @@index([prospectId])
+}
+
+model Customer {
+  id             String   @id @default(cuid())
+  userId         String
+  name           String
+  businessName   String?
+  email          String?
+  whatsapp       String?
+  instagram      String?
+  notes          String?  @db.Text
+  referralSource String?
+  referredById   String? // pelanggan lain yang merekomendasikan
+  isDemo         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referredBy   Customer?     @relation("CustomerReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referredList Customer[]    @relation("CustomerReferrals")
+  deals        Deal[]
+  projects     Project[]
+  revenues     Revenue[]
+  testimonials Testimonial[]
+  referralsOut Referral[]    @relation("ReferrerCustomer")
+  tasks        Task[]
+
+  @@index([userId, createdAt])
+}
+
+// ───────────────────────── OFFERS & PROJECTS ─────────────────────────
+
+model Offer {
+  id            String   @id @default(cuid())
+  userId        String
+  name          String
+  category      String
+  description   String?  @db.Text
+  price         Decimal  @default(0) @db.Decimal(16, 2)
+  cost          Decimal  @default(0) @db.Decimal(16, 2)
+  deliveryDays  Int?
+  revisionLimit Int?
+  isActive      Boolean  @default(true)
+  targetCustomer String?
+  salesMessage  String?  @db.Text
+  isDemo        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prospects Prospect[]
+  deals     Deal[]
+  projects  Project[]
+  revenues  Revenue[]
+  contents  Content[]
+
+  @@index([userId, isActive])
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  userId      String
+  name        String
+  customerId  String?
+  dealId      String?
+  offerId     String?
+  status      ProjectStatus @default(PLANNING)
+  deadline    DateTime?
+  value       Decimal       @default(0) @db.Decimal(16, 2)
+  cost        Decimal       @default(0) @db.Decimal(16, 2)
+  completion  Int           @default(0) // 0-100
+  hoursSpent  Decimal       @default(0) @db.Decimal(7, 2)
+  revisions   Int           @default(0)
+  notes       String?       @db.Text
+  completedAt DateTime?
+  isDemo      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  deal     Deal?     @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  offer    Offer?    @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  tasks    Task[]
+  revenues Revenue[]
+  expenses Expense[]
+
+  @@index([userId, status])
+  @@index([userId, deadline])
+}
+
+// ───────────────────────── CONTENT ─────────────────────────
+
+model Content {
+  id          String        @id @default(cuid())
+  userId      String
+  title       String
+  platform    Platform
+  pillar      ContentPillar
+  format      String? // reel, carousel, thread, artikel, dst.
+  status      ContentStatus @default(IDEA)
+  publishDate DateTime?
+  cta         String?
+  offerId     String?
+  campaignId  String?
+  // Metrik funnel konten: reach → profile visit → DM → lead
+  reach         Int @default(0)
+  profileVisits Int @default(0)
+  dms           Int @default(0)
+  productionCost Decimal @default(0) @db.Decimal(16, 2)
+  notes       String?       @db.Text
+  isDemo      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  offer     Offer?     @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  campaign  Campaign?  @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  prospects Prospect[]
+  deals     Deal[]
+
+  @@index([userId, status])
+  @@index([userId, publishDate])
+}
+
+// ───────────────────────── FINANCE ─────────────────────────
+
+model Revenue {
+  id            String        @id @default(cuid())
+  userId        String
+  date          DateTime
+  customerId    String?
+  offerId       String?
+  dealId        String?
+  projectId     String?
+  grossRevenue  Decimal       @db.Decimal(16, 2)
+  cost          Decimal       @default(0) @db.Decimal(16, 2)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentMethod String?
+  reference     String?
+  channel       String?
+  dueDate       DateTime?
+  notes         String?       @db.Text
+  isDemo        Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  offer    Offer?    @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  deal     Deal?     @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  project  Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  payments Payment[]
+
+  @@index([userId, date])
+  @@index([userId, paymentStatus])
+  @@index([customerId])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  userId    String
+  revenueId String
+  amount    Decimal  @db.Decimal(16, 2)
+  paidAt    DateTime
+  method    String?
+  note      String?
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revenue Revenue @relation(fields: [revenueId], references: [id], onDelete: Cascade)
+
+  @@index([userId, paidAt])
+  @@index([revenueId])
+}
+
+// Biaya operasional di luar HPP per transaksi (iklan, tools, dll.)
+model Expense {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  category  String
+  amount    Decimal  @db.Decimal(16, 2)
+  note      String?
+  projectId String?
+  isDemo    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId, date])
+}
+
+// ───────────────────────── RETENTION ─────────────────────────
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  userId     String
+  customerId String
+  quote      String   @db.Text
+  rating     Int? // 1-5
+  isPublic   Boolean  @default(false)
+  receivedAt DateTime @default(now())
+  isDemo     Boolean  @default(false)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([userId, customerId])
+}
+
+model Referral {
+  id             String   @id @default(cuid())
+  userId         String
+  referrerId     String // pelanggan yang merekomendasikan
+  referredName   String
+  referredProspectId String?
+  resultingRevenue Decimal @default(0) @db.Decimal(16, 2)
+  createdAt      DateTime @default(now())
+  isDemo         Boolean  @default(false)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referrer Customer @relation("ReferrerCustomer", fields: [referrerId], references: [id], onDelete: Cascade)
+
+  @@index([userId, referrerId])
+}
+
+// ───────────────────────── NOTIFICATIONS & AUDIT ─────────────────────────
+
+model Notification {
+  id         String              @id @default(cuid())
+  userId     String
+  type       NotificationType
+  channel    NotificationChannel @default(IN_APP)
+  title      String
+  body       String?
+  entityType String?
+  entityId   String?
+  dedupeKey  String? // mencegah notifikasi ganda untuk entitas + tanggal yang sama
+  scheduledFor DateTime @default(now())
+  readAt     DateTime?
+  sentAt     DateTime?
+  createdAt  DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, readAt])
+  @@index([userId, scheduledFor])
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String
+  action     String // contoh: "deal.stage_changed"
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([entityType, entityId])
+}

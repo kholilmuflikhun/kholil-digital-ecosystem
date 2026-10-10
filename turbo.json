@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "DATABASE_URL", "AUTH_SECRET", "NEXT_PUBLIC_APP_URL", "ALLOW_SIGNUP",
+        "NEXT_PUBLIC_SITE_URL", "NEXT_PUBLIC_WHATSAPP_NUMBER", "NEXT_PUBLIC_GROWTH_OS_URL",
+        "CONTACT_EMAIL", "RESEND_API_KEY", "GROWTH_OS_API_URL", "GROWTH_OS_API_KEY",
+        "LEAD_INGEST_API_KEY", "LEAD_INGEST_USER_EMAIL"
+      ]
+    },
+    "dev": { "cache": false, "persistent": true },
+    "lint": { "dependsOn": ["^lint"] },
+    "typecheck": { "dependsOn": ["^typecheck"] },
+    "test": { "dependsOn": ["^test"] }
+  }
+}
