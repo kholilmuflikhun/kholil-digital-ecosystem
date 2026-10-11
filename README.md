@@ -24,11 +24,11 @@ docs/               deploy, integrasi, panduan environment/konten, dan brand voi
 
 ## Prasyarat
 
-Node.js 20.9+ dan pnpm 10.28.0. Aktifkan pnpm melalui Corepack jika belum tersedia:
+Node.js 20.9+ dan pnpm 12.11.2. Aktifkan pnpm melalui Corepack jika belum tersedia:
 
 ```bash
 corepack enable
-corepack prepare pnpm@10.28.0 --activate
+corepack prepare pnpm@12.11.2 --activate
 ```
 
 Growth OS juga memerlukan database PostgreSQL dan environment variables; Personal Brand dapat dijalankan tanpa database maupun environment. Jangan commit file environment lokal atau menyimpan rahasia di variabel `NEXT_PUBLIC_*`.

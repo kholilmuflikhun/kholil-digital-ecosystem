@@ -19,7 +19,7 @@
 
 1. **Lockfile**: `package-lock.json` diganti `pnpm-lock.yaml`. Versi dependensi bisa bergeser. Mitigasi: versi dipertahankan persis dari `package.json` lama.
 2. **Nama paket**: `growth-operating-system` menjadi `growth-os` agar `--filter=growth-os` sesuai konvensi. Hanya memengaruhi nama workspace, bukan perilaku runtime.
-3. **Skrip lifecycle Prisma**: pnpm 10 memblokir skrip build dependensi secara default. Mitigasi: `pnpm.onlyBuiltDependencies` di root berisi `prisma`, `@prisma/client`, `@prisma/engines`, `esbuild`, `sharp`.
+3. **Skrip lifecycle Prisma**: pnpm 10 memblokir skrip build dependensi secara default. Paket tepercaya (`prisma`, `@prisma/client`, `@prisma/engines`, `esbuild`, `sharp`) kini diizinkan melalui `allowBuilds` di `pnpm-workspace.yaml`, yaitu konfigurasi yang digunakan pnpm 11+.
 4. **Env**: file `.env` tetap per aplikasi (`apps/growth-os/.env`), tidak digabung. Variabel tidak berubah.
 5. **tsconfig**: tetap berdiri sendiri di tiap aplikasi (alias `@/*` tidak berubah). `tsconfig.base.json` di root hanya menyediakan opsi bersama.
 6. **Deployment Vercel**: proyek lama (bila ada) harus mengubah **Root Directory** menjadi `apps/growth-os` dan memakai pnpm. Lihat `docs/deploy-vercel.md`.
