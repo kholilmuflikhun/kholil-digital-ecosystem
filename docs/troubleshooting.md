@@ -1,7 +1,7 @@
 # Troubleshooting Monorepo
 
 | Gejala | Penyebab umum | Solusi |
-|---|---|---|
+| --- | --- | --- |
 | `Cannot find module '@kholil/shared'` | install belum dari root | jalankan `pnpm install` di root |
 | Vercel: gagal membaca `packages/*` | Root Directory tanpa "include source outside root" | aktifkan opsi itu di Settings → General |
 | `pnpm install` gagal di `prisma generate` / `Failed to fetch sha256 checksum` | unduhan engine Prisma diblokir (VPN, proxy, antivirus, jaringan) | sejak perbaikan ini `pnpm install` tidak lagi memanggil Prisma. Jalankan `pnpm --filter growth-os db:generate` setelah jaringan normal; `pnpm dev` dan `pnpm build` untuk Growth OS menjalankannya otomatis |

@@ -12,7 +12,7 @@ Website **tidak** mengakses database Growth OS. Ia hanya mengirim lead lewat end
 
 ## Struktur
 
-```
+```text
 apps/
   growth-os/        Next.js + Prisma + Auth.js (aplikasi internal)
   personal-brand/   Next.js, konten bertipe di content/, tanpa database

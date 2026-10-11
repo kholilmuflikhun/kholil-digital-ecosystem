@@ -3,7 +3,7 @@
 ## Kondisi awal (hasil audit)
 
 | Aspek | Temuan |
-|---|---|
+| --- | --- |
 | Struktur | Satu aplikasi Next.js, bukan monorepo, bukan repositori git |
 | Next.js / React | 15.5.x / 19 |
 | Package manager | npm (`package-lock.json`) |
