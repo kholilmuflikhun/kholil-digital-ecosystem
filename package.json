@@ -4,7 +4,9 @@
   "private": true,
   "description": "Monorepo: website personal brand Kholil Muflikhun + Growth Operating System",
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=20.9" },
+  "engines": {
+    "node": ">=20.9"
+  },
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
@@ -18,6 +20,15 @@
     "turbo": "^2.5.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@prisma/client", "@prisma/engines", "prisma", "esbuild", "sharp"]
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma",
+      "esbuild",
+      "sharp"
+    ],
+    "ignoredBuiltDependencies": [
+      "unrs-resolver"
+    ]
   }
 }

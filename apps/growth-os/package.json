@@ -11,8 +11,9 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db:generate": "prisma generate",
+    "predev": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
