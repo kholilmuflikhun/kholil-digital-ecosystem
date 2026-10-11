@@ -53,7 +53,7 @@ Lihat [`docs/mengedit-konten.md`](../../docs/mengedit-konten.md). Edit file di `
 
 ## Struktur
 
-```
+```text
 app/            rute App Router, aksi kontak, sitemap.ts, robots.ts
 components/     navigasi, formulir, CTA, atribusi, analytics, metadata terstruktur
 content/        data bertipe: layanan, produk, proyek, artikel, profil, proses, pengaturan
