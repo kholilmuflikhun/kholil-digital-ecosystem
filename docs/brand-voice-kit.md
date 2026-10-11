@@ -35,7 +35,7 @@ Jangan menjanjikan hasil penjualan, pertumbuhan, waktu balasan, harga, kapasitas
 ## Pesan utama per halaman
 
 | Halaman | Pesan | CTA |
-|---|---|---|
+| --- | --- | --- |
 | Beranda | Strategi brand, desain, dan digital disatukan dalam pengalaman bisnis yang konsisten. | Diskusikan Proyek Anda |
 | Tentang | Pendekatan personal yang menghubungkan arah bisnis, desain, dan implementasi. | Diskusikan Proyek Anda |
 | Layanan | Cakupan layanan jelas, dari strategi dan identitas hingga solusi digital dan produksi sesuai konfirmasi. | Diskusikan Proyek Anda |
