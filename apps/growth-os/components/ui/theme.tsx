@@ -19,7 +19,10 @@ export function ThemeToggle() {
   const dark = mounted && resolvedTheme === "dark";
   return (
     <button
-      type="button" aria-label="Ganti tema" onClick={() => setTheme(dark ? "light" : "dark")}
+      type="button"
+      aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+      title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+      onClick={() => setTheme(dark ? "light" : "dark")}
       className="inline-flex h-9 w-9 items-center justify-center rounded-md border hover:bg-muted"
     >
       {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}

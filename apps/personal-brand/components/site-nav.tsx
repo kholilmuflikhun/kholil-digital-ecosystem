@@ -35,7 +35,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
               <Link
                 href={i.href}
                 aria-current={isActive(pathname, i.href) ? "page" : undefined}
-                className="inline-flex min-h-[44px] items-center px-3 text-[0.95rem] font-medium text-quiet hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-magenta aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+                className="inline-flex min-h-[44px] items-center px-3 text-[0.95rem] font-medium text-quiet hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-cyan aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
               >
                 {i.label}
               </Link>

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
@@ -15,8 +16,8 @@ const config: Config = {
         danger: "rgb(var(--danger) / <alpha-value>)",
       },
       fontFamily: {
-        display: ["'Bricolage Grotesque Variable'", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["'Source Serif 4 Variable'", "ui-serif", "Georgia", "serif"],
+        display: ["ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"],
+        serif: ["ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"],
       },
       maxWidth: { page: "72rem", prose: "38rem" },
     },

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { mainNav, primaryCta, settings } from "@/content";
 import { Container } from "./layout";
 import { SiteNav } from "./site-nav";
+import { ThemeToggle } from "./theme";
 
 export function SiteHeader() {
   return (
@@ -11,6 +12,7 @@ export function SiteHeader() {
           {settings.siteName}
         </Link>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <SiteNav items={mainNav} cta={primaryCta} />
         </div>
       </Container>

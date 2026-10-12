@@ -1,38 +1,31 @@
-@import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource-variable/source-serif-4";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Token warna. Kertas dan tinta membawa halaman; cyan dan magenta adalah warna proses cetak
-   dan hanya dipakai pada tanda overprint serta penanda kecil. */
 :root {
-  --paper: 241 244 244;
-  --ink: 14 26 51;
-  --quiet: 84 98 118;
-  --rule: 203 211 216;
-  --cyan: 0 159 223;
-  --magenta: 228 0 124;
-  --link: 0 96 143;
+  --paper: 255 255 255;
+  --ink: 20 35 58;
+  --quiet: 88 105 128;
+  --rule: 220 228 237;
+  --cyan: 36 119 210;
+  --magenta: 20 64 116;
+  --link: 29 100 184;
   --danger: 176 28 28;
   --blend: multiply;
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: 11 18 32;
-    --ink: 232 238 242;
-    --quiet: 154 168 186;
-    --rule: 37 49 71;
-    --cyan: 28 150 205;
-    --magenta: 214 30 130;
-    --link: 110 200 245;
-    --danger: 255 140 140;
-    --blend: screen;
-    color-scheme: dark;
-  }
+.dark {
+  --paper: 15 23 42;
+  --ink: 235 241 249;
+  --quiet: 163 176 195;
+  --rule: 49 64 86;
+  --cyan: 83 163 235;
+  --magenta: 137 184 232;
+  --link: 119 184 245;
+  --danger: 255 140 140;
+  --blend: screen;
+  color-scheme: dark;
 }
 
 @layer base {
