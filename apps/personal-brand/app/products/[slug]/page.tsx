@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: Params) {
             {p.deliverables.length > 0 && (<><h2>Yang Anda terima</h2><ul>{p.deliverables.map((f) => (<li key={f}>{f}</li>))}</ul></>)}
             {p.revisionPolicy && (<><h2>Revisi</h2><p>{p.revisionPolicy}</p></>)}
           </div>
-          <aside className="h-fit border border-ink p-5" aria-label="Pesan produk">
+          <aside className="h-fit border border-foreground p-5" aria-label="Pesan produk">
             <div className="flex flex-col gap-3">
               <ButtonLink
                 href={external ? p.ctaDestination : `/contact?produk=${p.slug}`}
@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: Params) {
               <WhatsAppCta service={p.name} context={`Produk: ${p.name}`} placement="produk" className="w-full" />
             </div>
             {services.length > 0 && (
-              <div className="mt-6 border-t border-rule pt-4">
+              <div className="mt-6 border-t border-border pt-4">
                 <p className="ui text-sm font-semibold">Layanan terkait</p>
                 <ul className="mt-2 space-y-1 text-sm">{services.map((s) => (<li key={s.slug}><Link className="link" href={`/services/${s.slug}`}>{s.name}</Link></li>))}</ul>
               </div>

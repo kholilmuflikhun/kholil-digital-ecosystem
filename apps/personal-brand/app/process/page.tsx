@@ -18,13 +18,13 @@ export default function ProcessPage() {
       <Section ruled={false}>
         <ol className="max-w-3xl">
           {processSteps.map((s, i) => (
-            <li key={s.id} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-rule py-6">
-              <span className="ui text-sm text-quiet">{String(i + 1).padStart(2, "0")}</span>
+            <li key={s.id} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-border py-6">
+              <span className="ui text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
               <div>
                 <h2 className="display-md">{s.title}</h2>
-                <p className="mt-2 text-quiet">{s.description}</p>
+                <p className="mt-2 text-muted-foreground">{s.description}</p>
                 {s.appliesTo.length > 0 && (
-                  <p className="ui mt-2 text-xs text-quiet">Berlaku untuk: {s.appliesTo.map((a) => pillars.find((p) => p.id === a)?.name).join(", ")}</p>
+                  <p className="ui mt-2 text-xs text-muted-foreground">Berlaku untuk: {s.appliesTo.map((a) => pillars.find((p) => p.id === a)?.name).join(", ")}</p>
                 )}
               </div>
             </li>

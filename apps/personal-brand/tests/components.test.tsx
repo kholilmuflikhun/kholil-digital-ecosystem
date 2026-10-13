@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
-import { OverprintMark } from "@/components/overprint-mark";
+import { HeroPanel } from "@/components/hero-panel";
 import { ProductCard } from "@/components/cards";
 import { ProjectArt } from "@/components/project-art";
 import { WhatsAppCta } from "@/components/whatsapp-cta";
@@ -22,10 +22,11 @@ describe("komponen", () => {
     expect(html).toContain("\\u003c");
   });
 
-  it("OverprintMark dapat diakses lewat role dan label", () => {
-    const html = renderToStaticMarkup(<OverprintMark />);
-    expect(html).toContain('role="img"');
+  it("HeroPanel dikelompokkan dan berlabel untuk pembaca layar", () => {
+    const html = renderToStaticMarkup(<HeroPanel items={[{ id: "a", name: "Brand", tagline: "Strategi" }]} />);
+    expect(html).toContain('role="group"');
     expect(html).toContain("aria-label");
+    expect(html).toContain("Brand");
   });
 
   it("ProductCard memakai teks harga jujur, bukan angka", () => {

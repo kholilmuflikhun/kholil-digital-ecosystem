@@ -17,7 +17,7 @@ export default function TermsPage() {
       <PageHeader eyebrow="Legal" title="Syarat dan ketentuan." intro={`Terakhir diperbarui ${formatDate(settings.legalUpdatedAt)}.`} />
       <Section ruled={false}>
         <div className="prose-site">
-          <p className="ui border border-rule p-3 text-sm">Draf untuk ditinjau. Ketentuan final setiap proyek tetap mengikuti proposal atau perjanjian tertulis yang disepakati.</p>
+          <p className="ui border border-border p-3 text-sm">Draf untuk ditinjau. Ketentuan final setiap proyek tetap mengikuti proposal atau perjanjian tertulis yang disepakati.</p>
           <h2>Informasi di website</h2>
           <p>Konten di website ini bersifat informasi umum dan bukan penawaran yang mengikat. Ruang lingkup, biaya, dan jadwal ditetapkan dalam proposal tertulis yang disepakati kedua pihak.</p>
           <h2>Pemesanan dan pembayaran</h2>

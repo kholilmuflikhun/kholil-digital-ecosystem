@@ -32,12 +32,12 @@ export default async function ServicePage({ params }: Params) {
       <JsonLd data={serviceJsonLd(s)} />
       <Breadcrumbs items={[{ name: "Layanan", path: "/services" }, { name: s.name, path: `/services/${s.slug}` }]} />
       <PageHeader eyebrow={pillar?.name} title={s.name} intro={s.summary}>
-        <p className="ui mt-4 text-sm text-quiet">{availabilityLabels[s.availability]}</p>
+        <p className="ui mt-4 text-sm text-muted-foreground">{availabilityLabels[s.availability]}</p>
       </PageHeader>
       <Section ruled={false} title="Yang Anda terima" as="h2">
         <ul className="prose-site">{s.deliverables.map((d) => (<li key={d}>{d}</li>))}</ul>
         {s.idealFor && <p className="mt-8 max-w-prose"><strong className="ui">Cocok untuk:</strong> {s.idealFor}</p>}
-        <p className="mt-6 max-w-prose text-quiet">Lingkup, biaya, dan batas revisi disepakati sebelum pengerjaan dimulai.</p>
+        <p className="mt-6 max-w-prose text-muted-foreground">Lingkup, biaya, dan batas revisi disepakati sebelum pengerjaan dimulai.</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href={`/contact?layanan=${s.slug}`} event="consultation_click" eventProps={{ placement: "layanan", service: s.slug }}>Diskusikan Proyek</ButtonLink>
           <WhatsAppCta service={s.name} context={`Layanan: ${s.name}`} placement="layanan" />

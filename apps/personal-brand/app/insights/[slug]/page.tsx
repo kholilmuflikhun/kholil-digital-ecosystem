@@ -32,7 +32,7 @@ export default async function ArticlePage({ params }: Params) {
       <JsonLd data={articleJsonLd(a)} />
       <Breadcrumbs items={[{ name: "Wawasan", path: "/insights" }, { name: a.title, path: `/insights/${a.slug}` }]} />
       <PageHeader eyebrow={a.category} title={a.title} intro={a.description}>
-        <p className="ui mt-5 text-sm text-quiet">
+        <p className="ui mt-5 text-sm text-muted-foreground">
           {a.author} · <time dateTime={a.publishedAt}>{formatDate(a.publishedAt)}</time> · {a.readingMinutes} menit baca
         </p>
       </PageHeader>

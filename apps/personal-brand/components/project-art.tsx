@@ -24,15 +24,15 @@ export function ProjectArt({ variant, className = "" }: { variant: Variant; clas
       className={`block h-full w-full ${className}`}
       preserveAspectRatio="xMidYMid slice"
     >
-      <rect width="320" height="200" fill="rgb(var(--rule))" opacity="0.35" />
-      <g style={{ mixBlendMode: "var(--blend)" as never }}>{shapes[variant]}</g>
+      <rect width="320" height="200" fill="hsl(var(--muted))" />
+      <g>{shapes[variant]}</g>
     </svg>
   );
 }
 
-const C = "rgb(var(--cyan))";
-const M = "rgb(var(--magenta))";
-const I = "rgb(var(--ink))";
+const C = "hsl(var(--primary))";
+const M = "hsl(var(--primary) / 0.45)";
+const I = "hsl(var(--foreground))";
 
 const shapes: Record<Variant, React.ReactNode> = {
   packaging: (

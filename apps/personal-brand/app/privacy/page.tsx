@@ -17,7 +17,7 @@ export default function PrivacyPage() {
       <PageHeader eyebrow="Legal" title="Kebijakan privasi." intro={`Terakhir diperbarui ${formatDate(settings.legalUpdatedAt)}.`} />
       <Section ruled={false}>
         <div className="prose-site">
-          <p className="ui border border-rule p-3 text-sm">Draf untuk ditinjau. Dokumen ini belum menjadi nasihat hukum; tinjau bersama penasihat hukum sebelum dipublikasikan sebagai kebijakan final.</p>
+          <p className="ui border border-border p-3 text-sm">Draf untuk ditinjau. Dokumen ini belum menjadi nasihat hukum; tinjau bersama penasihat hukum sebelum dipublikasikan sebagai kebijakan final.</p>
           <h2>Data yang dikumpulkan</h2>
           <p>Lewat formulir kontak, saya menerima nama, email dan/atau nomor WhatsApp, nama bisnis (opsional), kebutuhan, perkiraan anggaran, target waktu, dan pesan yang Anda tulis.</p>
           <p>Saya juga menyimpan sementara di browser Anda (sessionStorage) sumber kunjungan: parameter UTM, situs perujuk, dan halaman pertama yang dibuka. Data ini dikirim bersama formulir agar saya tahu dari mana Anda datang. Tidak ada cookie pelacak yang dipasang oleh situs ini.</p>

@@ -22,7 +22,7 @@ export default function InsightsPage() {
       />
       <Section ruled={false}>
         {list.length === 0 ? (
-          <p className="border border-rule p-6 text-quiet">Artikel baru sedang disiapkan. Silakan kembali lagi untuk membaca panduan seputar brand, desain, dan digital.</p>
+          <p className="border border-border p-6 text-muted-foreground">Artikel baru sedang disiapkan. Silakan kembali lagi untuk membaca panduan seputar brand, desain, dan digital.</p>
         ) : (
           <ul className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">{list.map((a) => (<li key={a.slug}><ArticleCard article={a} /></li>))}</ul>
         )}

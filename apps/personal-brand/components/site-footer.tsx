@@ -8,11 +8,11 @@ import { TrackedLink } from "./tracked-link";
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-24 border-t border-rule">
+    <footer className="mt-24 border-t border-border">
       <Container className="grid gap-12 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <p className="ui text-xl font-bold">{settings.siteName}</p>
-          <p className="mt-3 max-w-sm text-quiet">{profile.role}.</p>
+          <p className="mt-3 max-w-sm text-muted-foreground">{profile.role}.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <WhatsAppCta placement="footer" />
           </div>
@@ -25,7 +25,7 @@ export function SiteFooter() {
           )}
         </div>
         <nav aria-label="Peta situs">
-          <p className="ui mb-3 text-sm font-medium uppercase tracking-[0.14em] text-quiet">Situs</p>
+          <p className="eyebrow mb-3">Situs</p>
           <ul className="ui space-y-1">
             {mainNav.map((i) => (
               <li key={i.href}>
@@ -37,7 +37,7 @@ export function SiteFooter() {
           </ul>
         </nav>
         <nav aria-label="Informasi">
-          <p className="ui mb-3 text-sm font-medium uppercase tracking-[0.14em] text-quiet">Informasi</p>
+          <p className="eyebrow mb-3">Informasi</p>
           <ul className="ui space-y-1">
             {footerNav.map((i) => (
               <li key={i.href}>
@@ -57,8 +57,8 @@ export function SiteFooter() {
           </ul>
         </nav>
       </Container>
-      <Container className="border-t border-rule py-6">
-        <p className="ui text-sm text-quiet">© {year} {settings.siteName}. Seluruh hak dilindungi.</p>
+      <Container className="border-t border-border py-6">
+        <p className="ui text-sm text-muted-foreground">© {year} {settings.siteName}. Seluruh hak dilindungi.</p>
       </Container>
     </footer>
   );
