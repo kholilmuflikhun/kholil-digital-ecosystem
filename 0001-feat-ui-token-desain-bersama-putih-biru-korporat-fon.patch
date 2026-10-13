@@ -1,0 +1,1549 @@
+From 052c341a7aa9aa5b7fcb5edf19e11cbefd043ed1 Mon Sep 17 00:00:00 2001
+From: Kholil Muflikhun <kholilmuflikhun@gmail.com>
+Date: Tue, 13 Oct 2026 04:14:34 +0000
+Subject: [PATCH 1/2] feat(ui): token desain bersama putih + biru korporat,
+ font Inter, redesain website
+
+- packages/config: theme.css (HSL, light/dark) dan preset Tailwind bersama
+- personal-brand: migrasi token, kartu/tombol/hero baru, ikon lucide
+- growth-os: pakai preset bersama, warna chart dan tooltip mengikuti tema
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01VsppAaRRkZ1HfyHg29FZqL
+---
+ apps/growth-os/app/globals.css                |  42 +-----
+ apps/growth-os/components/ui/charts.tsx       |  16 ++-
+ apps/growth-os/package.json                   |   5 +-
+ apps/growth-os/tailwind.config.ts             |  22 +--
+ apps/personal-brand/app/about/page.tsx        |   8 +-
+ apps/personal-brand/app/contact/page.tsx      |   8 +-
+ apps/personal-brand/app/error.tsx             |   4 +-
+ apps/personal-brand/app/globals.css           | 131 +++---------------
+ .../app/insights/[slug]/page.tsx              |   2 +-
+ apps/personal-brand/app/insights/page.tsx     |   2 +-
+ apps/personal-brand/app/layout.tsx            |   2 +-
+ apps/personal-brand/app/loading.tsx           |   2 +-
+ apps/personal-brand/app/not-found.tsx         |   4 +-
+ apps/personal-brand/app/page.tsx              |  36 +++--
+ .../app/portfolio/[slug]/page.tsx             |  10 +-
+ apps/personal-brand/app/portfolio/page.tsx    |   2 +-
+ apps/personal-brand/app/privacy/page.tsx      |   2 +-
+ apps/personal-brand/app/process/page.tsx      |   8 +-
+ .../app/products/[slug]/page.tsx              |   4 +-
+ .../app/services/[slug]/page.tsx              |   4 +-
+ apps/personal-brand/app/services/page.tsx     |   2 +-
+ apps/personal-brand/app/terms/page.tsx        |   2 +-
+ .../personal-brand/components/breadcrumbs.tsx |   8 +-
+ .../personal-brand/components/button-link.tsx |   8 +-
+ apps/personal-brand/components/cards.tsx      |  34 ++---
+ .../components/contact-form.tsx               |  16 +--
+ .../components/filter-browsers.tsx            |   6 +-
+ apps/personal-brand/components/hero-panel.tsx |  29 ++++
+ apps/personal-brand/components/layout.tsx     |  12 +-
+ .../components/overprint-mark.tsx             |  24 ----
+ .../personal-brand/components/project-art.tsx |  10 +-
+ .../personal-brand/components/site-footer.tsx |  12 +-
+ .../personal-brand/components/site-header.tsx |   2 +-
+ apps/personal-brand/components/site-nav.tsx   |  16 +--
+ apps/personal-brand/components/theme.tsx      |   2 +-
+ .../components/whatsapp-cta.tsx               |   4 +-
+ apps/personal-brand/package.json              |   1 +
+ apps/personal-brand/tailwind.config.ts        |  24 +---
+ apps/personal-brand/tests/components.test.tsx |   9 +-
+ packages/config/package.json                  |   4 +-
+ packages/config/tailwind-preset.cjs           |  35 +++++
+ packages/config/theme.css                     |  57 ++++++++
+ pnpm-lock.yaml                                |  11 ++
+ 43 files changed, 301 insertions(+), 341 deletions(-)
+ create mode 100644 apps/personal-brand/components/hero-panel.tsx
+ delete mode 100644 apps/personal-brand/components/overprint-mark.tsx
+ create mode 100644 packages/config/tailwind-preset.cjs
+ create mode 100644 packages/config/theme.css
+
+diff --git a/apps/growth-os/app/globals.css b/apps/growth-os/app/globals.css
+index 59a8473..1426f80 100644
+--- a/apps/growth-os/app/globals.css
++++ b/apps/growth-os/app/globals.css
+@@ -1,40 +1,12 @@
++@import "@kholil/config/theme.css";
++@import "@fontsource-variable/inter";
++
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+-:root {
+-  --background: 0 0% 100%;
+-  --foreground: 217 33% 16%;
+-  --card: 0 0% 100%;
+-  --muted: 214 32% 96%;
+-  --muted-foreground: 215 16% 44%;
+-  --border: 214 24% 88%;
+-  --primary: 213 72% 42%;
+-  --primary-foreground: 0 0% 100%;
+-  --success: 152 60% 36%;
+-  --warning: 36 90% 44%;
+-  --danger: 0 72% 48%;
+-}
+-
+-.dark {
+-  --background: 217 33% 10%;
+-  --foreground: 214 32% 95%;
+-  --card: 217 30% 13%;
+-  --muted: 216 25% 18%;
+-  --muted-foreground: 215 18% 68%;
+-  --border: 216 20% 24%;
+-  --primary: 211 78% 63%;
+-  --primary-foreground: 217 33% 10%;
+-  --success: 152 55% 48%;
+-  --warning: 38 92% 56%;
+-  --danger: 0 80% 64%;
+-}
+-
+-body {
+-  @apply bg-background text-foreground antialiased;
+-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+-}
+-
+-* {
+-  @apply border-border;
++@layer base {
++  body { @apply font-sans antialiased; }
++  * { @apply border-border; }
++  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; border-radius: 4px; }
+ }
+diff --git a/apps/growth-os/components/ui/charts.tsx b/apps/growth-os/components/ui/charts.tsx
+index 89c7aa1..3ffff07 100644
+--- a/apps/growth-os/components/ui/charts.tsx
++++ b/apps/growth-os/components/ui/charts.tsx
+@@ -6,9 +6,15 @@ import {
+ } from "recharts";
+ import { formatCompact } from "@/lib/utils";
+ 
+-const COLORS = ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#0ea5e9", "#84cc16", "#a855f7", "#f97316"];
++const COLORS = [1, 2, 3, 4, 5, 6].map((n) => `hsl(var(--chart-${n}))`);
+ 
+-const axis = { fontSize: 11, fill: "hsl(220 9% 46%)" };
++const tooltipStyle = {
++  contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))", fontSize: 12 },
++  labelStyle: { color: "hsl(var(--foreground))" },
++  itemStyle: { color: "hsl(var(--foreground))" },
++} as const;
++
++const axis = { fontSize: 11, fill: "hsl(var(--muted-foreground))" };
+ 
+ export function TrendChart({ data, series, height = 240 }: {
+   data: Record<string, string | number>[];
+@@ -22,7 +28,7 @@ export function TrendChart({ data, series, height = 240 }: {
+           <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.4} />
+           <XAxis dataKey="month" tick={axis} tickLine={false} axisLine={false} />
+           <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={(v) => formatCompact(v)} width={48} />
+-          <Tooltip formatter={(v: number) => formatCompact(v)} />
++          <Tooltip {...tooltipStyle} formatter={(v: number) => formatCompact(v)} />
+           <Legend wrapperStyle={{ fontSize: 12 }} />
+           {series.map((s, i) => (
+             <Area key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={COLORS[i]} fill={COLORS[i]} fillOpacity={0.12} strokeWidth={2} />
+@@ -41,7 +47,7 @@ export function BarList({ data, height = 240 }: { data: { name: string; value: n
+           <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.4} />
+           <XAxis type="number" tick={axis} tickLine={false} axisLine={false} tickFormatter={(v) => formatCompact(v)} />
+           <YAxis type="category" dataKey="name" tick={axis} tickLine={false} axisLine={false} width={120} />
+-          <Tooltip formatter={(v: number) => formatCompact(v)} />
++          <Tooltip {...tooltipStyle} formatter={(v: number) => formatCompact(v)} />
+           <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+             {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+           </Bar>
+@@ -59,7 +65,7 @@ export function ActivityChart({ data, height = 200 }: { data: Record<string, str
+           <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.4} />
+           <XAxis dataKey="day" tick={axis} tickLine={false} axisLine={false} />
+           <YAxis tick={axis} tickLine={false} axisLine={false} width={28} allowDecimals={false} />
+-          <Tooltip />
++          <Tooltip {...tooltipStyle} />
+           <Legend wrapperStyle={{ fontSize: 12 }} />
+           <Line type="monotone" dataKey="contacted" name="Prospek dihubungi" stroke={COLORS[0]} strokeWidth={2} dot={false} />
+           <Line type="monotone" dataKey="followUps" name="Follow-up" stroke={COLORS[1]} strokeWidth={2} dot={false} />
+diff --git a/apps/growth-os/package.json b/apps/growth-os/package.json
+index 121bf81..1bee223 100644
+--- a/apps/growth-os/package.json
++++ b/apps/growth-os/package.json
+@@ -17,7 +17,9 @@
+   },
+   "dependencies": {
+     "@auth/prisma-adapter": "^2.7.4",
++    "@fontsource-variable/inter": "^5.1.0",
+     "@hookform/resolvers": "^3.9.1",
++    "@kholil/shared": "workspace:*",
+     "@prisma/client": "^6.0.0",
+     "bcryptjs": "^2.4.3",
+     "class-variance-authority": "^0.7.1",
+@@ -32,8 +34,7 @@
+     "react-hook-form": "^7.54.0",
+     "recharts": "^2.15.0",
+     "tailwind-merge": "^2.5.5",
+-    "zod": "^3.24.1",
+-    "@kholil/shared": "workspace:*"
++    "zod": "^3.24.1"
+   },
+   "devDependencies": {
+     "@types/bcryptjs": "^2.4.6",
+diff --git a/apps/growth-os/tailwind.config.ts b/apps/growth-os/tailwind.config.ts
+index 119da8a..c9d869a 100644
+--- a/apps/growth-os/tailwind.config.ts
++++ b/apps/growth-os/tailwind.config.ts
+@@ -1,26 +1,10 @@
+ import type { Config } from "tailwindcss";
++// eslint-disable-next-line @typescript-eslint/no-require-imports
++const preset = require("@kholil/config/tailwind-preset");
+ 
+ const config: Config = {
+-  darkMode: "class",
++  presets: [preset],
+   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
+-  theme: {
+-    extend: {
+-      colors: {
+-        background: "hsl(var(--background))",
+-        foreground: "hsl(var(--foreground))",
+-        card: "hsl(var(--card))",
+-        muted: "hsl(var(--muted))",
+-        "muted-foreground": "hsl(var(--muted-foreground))",
+-        border: "hsl(var(--border))",
+-        primary: "hsl(var(--primary))",
+-        "primary-foreground": "hsl(var(--primary-foreground))",
+-        success: "hsl(var(--success))",
+-        warning: "hsl(var(--warning))",
+-        danger: "hsl(var(--danger))",
+-      },
+-      borderRadius: { lg: "0.75rem", md: "0.5rem", sm: "0.375rem" },
+-    },
+-  },
+   plugins: [],
+ };
+ 
+diff --git a/apps/personal-brand/app/about/page.tsx b/apps/personal-brand/app/about/page.tsx
+index 19c0a09..780558f 100644
+--- a/apps/personal-brand/app/about/page.tsx
++++ b/apps/personal-brand/app/about/page.tsx
+@@ -25,9 +25,9 @@ export default function AboutPage() {
+       <Section eyebrow="Prinsip yang saya pegang" title="Cara saya membangun brand dan produk yang lebih dipercaya.">
+         <dl className="grid gap-8 md:grid-cols-2">
+           {profile.philosophy.map((item) => (
+-            <div key={item.title} className="border-t border-rule pt-4">
++            <div key={item.title} className="border-t border-border pt-4">
+               <dt className="display-md">{item.title}</dt>
+-              <dd className="mt-2 text-quiet">{item.text}</dd>
++              <dd className="mt-2 text-muted-foreground">{item.text}</dd>
+             </div>
+           ))}
+         </dl>
+@@ -35,7 +35,7 @@ export default function AboutPage() {
+       <Section eyebrow="Bidang yang saya tangani" title="Kompetensi yang saya bawa ke setiap proyek yang serius.">
+         <ul className="grid gap-x-8 sm:grid-cols-2">
+           {profile.capabilities.map((capability, index) => (
+-            <li key={`capability-${index}`} className="border-t border-rule py-3">
++            <li key={`capability-${index}`} className="border-t border-border py-3">
+               {capability}
+             </li>
+           ))}
+@@ -44,7 +44,7 @@ export default function AboutPage() {
+       <Section eyebrow="Ideal untuk" title="Bisnis yang ingin tampil lebih profesional dan lebih siap berkembang.">
+         <ul className="flex flex-wrap gap-2">
+           {profile.audiences.map((audience, index) => (
+-            <li key={`audience-${index}`} className="ui rounded-sm border border-rule px-3 py-1.5 text-sm">
++            <li key={`audience-${index}`} className="ui rounded-full border border-border bg-muted px-3 py-1.5 text-sm">
+               {audience}
+             </li>
+           ))}
+diff --git a/apps/personal-brand/app/contact/page.tsx b/apps/personal-brand/app/contact/page.tsx
+index a090435..9606c80 100644
+--- a/apps/personal-brand/app/contact/page.tsx
++++ b/apps/personal-brand/app/contact/page.tsx
+@@ -45,18 +45,18 @@ export default async function ContactPage({ searchParams }: Props) {
+             defaultMessage={subject ? `${subject}\n\n` : undefined}
+             context={{ page: subject, serviceSlug: service?.slug, productSlug: product?.slug }}
+           />
+-          <aside className="h-fit space-y-6 border border-rule p-5" aria-label="Cara lain menghubungi">
++          <aside className="h-fit space-y-6 border border-border p-5" aria-label="Cara lain menghubungi">
+             <h2 className="display-md">Alternatif kontak</h2>
+             <div className="space-y-3">
+               <WhatsAppCta variant="solid" context={subject} service={product?.name ?? service?.name} placement="kontak" className="w-full" />
+-              {!whatsappNumber && <p className="text-sm text-quiet">Nomor WhatsApp belum dikonfigurasi. Anda tetap bisa mengirimkan formulir.</p>}
++              {!whatsappNumber && <p className="text-sm text-muted-foreground">Nomor WhatsApp belum dikonfigurasi. Anda tetap bisa mengirimkan formulir.</p>}
+               {publicEmail ? (
+                 <p><TrackedLink href={`mailto:${publicEmail}`} event="email_click" eventProps={{ placement: "kontak" }} className="link">{publicEmail}</TrackedLink></p>
+               ) : (
+-                <p className="text-sm text-quiet">Alamat email publik belum dikonfigurasi.</p>
++                <p className="text-sm text-muted-foreground">Alamat email publik belum dikonfigurasi.</p>
+               )}
+             </div>
+-            <p className="text-sm text-quiet">Balasan biasanya diberikan dalam waktu singkat. Untuk kebutuhan yang lebih urgent, WhatsApp adalah jalur tercepat.</p>
++            <p className="text-sm text-muted-foreground">Balasan biasanya diberikan dalam waktu singkat. Untuk kebutuhan yang lebih urgent, WhatsApp adalah jalur tercepat.</p>
+           </aside>
+         </div>
+       </Section>
+diff --git a/apps/personal-brand/app/error.tsx b/apps/personal-brand/app/error.tsx
+index 25eb46c..f8abcfa 100644
+--- a/apps/personal-brand/app/error.tsx
++++ b/apps/personal-brand/app/error.tsx
+@@ -7,8 +7,8 @@ export default function ErrorPage({ reset }: { error: Error & { digest?: string
+   return (
+     <Container className="py-24">
+       <h1 className="display-lg">Terjadi kendala.</h1>
+-      <p className="mt-4 max-w-prose text-lg text-quiet">Halaman ini gagal dimuat. Silakan coba lagi. Bila berulang, hubungi saya lewat halaman kontak.</p>
+-      <button type="button" onClick={reset} className="ui mt-6 min-h-[44px] rounded-sm bg-ink px-5 font-semibold text-paper">
++      <p className="mt-4 max-w-prose text-lg text-muted-foreground">Halaman ini gagal dimuat. Silakan coba lagi. Bila berulang, hubungi saya lewat halaman kontak.</p>
++      <button type="button" onClick={reset} className="ui mt-6 min-h-[44px] rounded-lg bg-primary px-5 font-semibold text-primary-foreground">
+         Coba lagi
+       </button>
+     </Container>
+diff --git a/apps/personal-brand/app/globals.css b/apps/personal-brand/app/globals.css
+index ae3e662..bdeb5d5 100644
+--- a/apps/personal-brand/app/globals.css
++++ b/apps/personal-brand/app/globals.css
+@@ -1,128 +1,31 @@
++@import "@kholil/config/theme.css";
++@import "@fontsource-variable/inter";
++
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+-:root {
+-  --paper: 255 255 255;
+-  --ink: 20 35 58;
+-  --quiet: 88 105 128;
+-  --rule: 220 228 237;
+-  --cyan: 36 119 210;
+-  --magenta: 20 64 116;
+-  --link: 29 100 184;
+-  --danger: 176 28 28;
+-  --blend: multiply;
+-  color-scheme: light;
+-}
+-
+-.dark {
+-  --paper: 15 23 42;
+-  --ink: 235 241 249;
+-  --quiet: 163 176 195;
+-  --rule: 49 64 86;
+-  --cyan: 83 163 235;
+-  --magenta: 137 184 232;
+-  --link: 119 184 245;
+-  --danger: 255 140 140;
+-  --blend: screen;
+-  color-scheme: dark;
+-}
+-
+ @layer base {
+-  html {
+-    scroll-behavior: smooth;
+-    -webkit-text-size-adjust: 100%;
+-  }
+-  body {
+-    @apply bg-paper font-serif text-ink antialiased;
+-    font-size: 1.0625rem;
+-    line-height: 1.7;
+-    text-rendering: optimizeLegibility;
+-  }
+-  h1, h2, h3, h4 {
+-    @apply font-display text-ink;
+-    letter-spacing: -0.015em;
+-    text-wrap: balance;
+-  }
++  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
++  body { @apply font-sans antialiased; font-size: 1.0625rem; line-height: 1.7; text-rendering: optimizeLegibility; }
++  h1, h2, h3, h4 { @apply text-foreground; letter-spacing: -0.02em; text-wrap: balance; }
+   p { text-wrap: pretty; }
+   a { @apply underline-offset-4; }
+-  :focus-visible {
+-    outline: 3px solid rgb(var(--link));
+-    outline-offset: 3px;
+-    border-radius: 2px;
+-  }
+-  ::selection { background: rgb(var(--cyan) / 0.35); }
+-  @media (prefers-reduced-motion: reduce) {
+-    html { scroll-behavior: auto; }
+-  }
++  * { @apply border-border; }
++  :focus-visible { outline: 3px solid hsl(var(--ring)); outline-offset: 3px; border-radius: 4px; }
++  ::selection { background: hsl(var(--primary) / 0.25); }
++  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+ }
+ 
+ @layer components {
+-  /* Tautan di dalam teks */
+-  .link { @apply text-link underline decoration-1 hover:decoration-2; }
+-
+-  /* Judul utama halaman: besar, rapat, rata kiri */
+-  .display-xl {
+-    @apply font-display font-bold;
+-    font-size: clamp(2.5rem, 7.2vw, 5.25rem);
+-    line-height: 0.98;
+-    letter-spacing: -0.035em;
+-    font-variation-settings: "wdth" 92;
+-  }
+-  .display-lg {
+-    @apply font-display font-bold;
+-    font-size: clamp(2rem, 4.6vw, 3.25rem);
+-    line-height: 1.04;
+-    letter-spacing: -0.028em;
+-  }
+-  .display-md {
+-    @apply font-display font-semibold;
+-    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+-    line-height: 1.15;
+-  }
+-  .ui { @apply font-display; }
+-
+-  /* Isi artikel dan teks panjang: lebar baris terjaga */
++  .link { @apply font-medium text-primary underline decoration-1 hover:decoration-2; }
++  .display-xl { @apply font-bold; font-size: clamp(2.25rem, 5.6vw, 4rem); line-height: 1.05; letter-spacing: -0.035em; }
++  .display-lg { @apply font-bold; font-size: clamp(1.75rem, 3.8vw, 2.75rem); line-height: 1.1; letter-spacing: -0.028em; }
++  .display-md { @apply font-semibold; font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.25; }
++  .eyebrow { @apply text-xs font-semibold uppercase text-primary; letter-spacing: 0.14em; }
++  .surface { @apply rounded-xl border bg-card text-card-foreground shadow-soft; }
+   .prose-site { @apply max-w-prose; }
+   .prose-site > * + * { @apply mt-5; }
+   .prose-site h2 { @apply display-md mt-12; }
+-  .prose-site ul { @apply list-disc space-y-2 pl-6 marker:text-quiet; }
+-
+-  /* ── Tanda overprint ── */
+-  .overprint {
+-    position: relative;
+-    aspect-ratio: 1 / 0.86;
+-    width: 100%;
+-    isolation: isolate;
+-  }
+-  .overprint-layer {
+-    position: absolute;
+-    top: 6%;
+-    width: 64%;
+-    aspect-ratio: 1;
+-    border-radius: 9999px;
+-    mix-blend-mode: var(--blend);
+-    animation: into-register 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+-  }
+-  .overprint-cyan { left: 2%; background: rgb(var(--cyan)); --from: -22px; }
+-  .overprint-magenta { right: 2%; background: rgb(var(--magenta)); --from: 22px; animation-delay: 120ms; }
+-  @keyframes into-register {
+-    from { transform: translate(var(--from), calc(var(--from) * -0.6)); opacity: 0.55; }
+-    to { transform: translate(0, 0); opacity: 1; }
+-  }
+-  @media (prefers-reduced-motion: reduce) {
+-    .overprint-layer { animation: none; }
+-  }
+-
+-  /* Tanda potong di sudut: konvensi file siap cetak */
+-  .crop::before, .crop::after {
+-    content: "";
+-    position: absolute;
+-    width: 18px;
+-    height: 18px;
+-    border-color: rgb(var(--quiet));
+-    pointer-events: none;
+-  }
+-  .crop::before { top: 0; left: 0; border-top: 1px solid; border-left: 1px solid; }
+-  .crop::after { bottom: 0; right: 0; border-bottom: 1px solid; border-right: 1px solid; }
++  .prose-site ul { @apply list-disc space-y-2 pl-6 marker:text-muted-foreground; }
+ }
+diff --git a/apps/personal-brand/app/insights/[slug]/page.tsx b/apps/personal-brand/app/insights/[slug]/page.tsx
+index c364663..d93b586 100644
+--- a/apps/personal-brand/app/insights/[slug]/page.tsx
++++ b/apps/personal-brand/app/insights/[slug]/page.tsx
+@@ -32,7 +32,7 @@ export default async function ArticlePage({ params }: Params) {
+       <JsonLd data={articleJsonLd(a)} />
+       <Breadcrumbs items={[{ name: "Wawasan", path: "/insights" }, { name: a.title, path: `/insights/${a.slug}` }]} />
+       <PageHeader eyebrow={a.category} title={a.title} intro={a.description}>
+-        <p className="ui mt-5 text-sm text-quiet">
++        <p className="ui mt-5 text-sm text-muted-foreground">
+           {a.author} · <time dateTime={a.publishedAt}>{formatDate(a.publishedAt)}</time> · {a.readingMinutes} menit baca
+         </p>
+       </PageHeader>
+diff --git a/apps/personal-brand/app/insights/page.tsx b/apps/personal-brand/app/insights/page.tsx
+index 26a0277..cd85231 100644
+--- a/apps/personal-brand/app/insights/page.tsx
++++ b/apps/personal-brand/app/insights/page.tsx
+@@ -22,7 +22,7 @@ export default function InsightsPage() {
+       />
+       <Section ruled={false}>
+         {list.length === 0 ? (
+-          <p className="border border-rule p-6 text-quiet">Artikel baru sedang disiapkan. Silakan kembali lagi untuk membaca panduan seputar brand, desain, dan digital.</p>
++          <p className="border border-border p-6 text-muted-foreground">Artikel baru sedang disiapkan. Silakan kembali lagi untuk membaca panduan seputar brand, desain, dan digital.</p>
+         ) : (
+           <ul className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">{list.map((a) => (<li key={a.slug}><ArticleCard article={a} /></li>))}</ul>
+         )}
+diff --git a/apps/personal-brand/app/layout.tsx b/apps/personal-brand/app/layout.tsx
+index 92ac399..f262a36 100644
+--- a/apps/personal-brand/app/layout.tsx
++++ b/apps/personal-brand/app/layout.tsx
+@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode })
+         <ThemeProvider>
+           <a
+             href="#konten"
+-            className="ui sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
++            className="ui sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground"
+           >
+             Lewati ke konten utama
+           </a>
+diff --git a/apps/personal-brand/app/loading.tsx b/apps/personal-brand/app/loading.tsx
+index f1a2c30..261bf2f 100644
+--- a/apps/personal-brand/app/loading.tsx
++++ b/apps/personal-brand/app/loading.tsx
+@@ -1,6 +1,6 @@
+ export default function Loading() {
+   return (
+-    <div role="status" aria-live="polite" className="mx-auto max-w-page px-4 py-24 text-quiet">
++    <div role="status" aria-live="polite" className="mx-auto max-w-page px-4 py-24 text-muted-foreground">
+       <span className="ui">Memuat…</span>
+     </div>
+   );
+diff --git a/apps/personal-brand/app/not-found.tsx b/apps/personal-brand/app/not-found.tsx
+index 5f66636..8871c37 100644
+--- a/apps/personal-brand/app/not-found.tsx
++++ b/apps/personal-brand/app/not-found.tsx
+@@ -4,9 +4,9 @@ import { ButtonLink } from "@/components/button-link";
+ export default function NotFound() {
+   return (
+     <Container className="py-24">
+-      <p className="ui text-sm font-medium uppercase tracking-[0.14em] text-quiet">404</p>
++      <p className="eyebrow">404</p>
+       <h1 className="display-xl mt-3">Halaman tidak ditemukan.</h1>
+-      <p className="mt-6 max-w-prose text-lg text-quiet">Alamat yang Anda tuju tidak ada atau sudah dipindahkan. Coba mulai dari beranda atau lihat layanan.</p>
++      <p className="mt-6 max-w-prose text-lg text-muted-foreground">Alamat yang Anda tuju tidak ada atau sudah dipindahkan. Coba mulai dari beranda atau lihat layanan.</p>
+       <div className="mt-8 flex flex-wrap gap-3">
+         <ButtonLink href="/">Ke beranda</ButtonLink>
+         <ButtonLink href="/services" variant="secondary">Lihat layanan</ButtonLink>
+diff --git a/apps/personal-brand/app/page.tsx b/apps/personal-brand/app/page.tsx
+index 9719856..a597b89 100644
+--- a/apps/personal-brand/app/page.tsx
++++ b/apps/personal-brand/app/page.tsx
+@@ -6,7 +6,7 @@ import {
+ import { buildMetadata } from "@/lib/seo";
+ import { Container, Section } from "@/components/layout";
+ import { ButtonLink } from "@/components/button-link";
+-import { OverprintMark } from "@/components/overprint-mark";
++import { HeroPanel } from "@/components/hero-panel";
+ import { ProductBrowser } from "@/components/filter-browsers";
+ import { ProjectCard, ArticleCard } from "@/components/cards";
+ import { WhatsAppCta } from "@/components/whatsapp-cta";
+@@ -29,20 +29,18 @@ export default function HomePage() {
+   return (
+     <>
+       {/* 1. Hero */}
+-      <section aria-labelledby="hero-judul" className="pb-16 pt-14 sm:pb-24 sm:pt-20">
+-        <Container className="grid items-center gap-12 lg:grid-cols-[1.5fr_1fr]">
++      <section aria-labelledby="hero-judul" className="bg-gradient-to-b from-primary/5 to-transparent pb-16 pt-14 sm:pb-24 sm:pt-20">
++        <Container className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
+           <div>
+-            <p className="ui mb-5 text-sm font-medium uppercase tracking-[0.14em] text-quiet">{profile.name} · Strategi Brand · Desain · Digital</p>
++            <p className="eyebrow mb-5">{profile.name} · Strategi Brand · Desain · Digital</p>
+             <h1 id="hero-judul" className="display-xl">{profile.headline}</h1>
+-            <p className="mt-6 max-w-prose text-lg text-quiet sm:text-xl">{profile.heroSupport}</p>
++            <p className="mt-6 max-w-prose text-lg text-muted-foreground sm:text-xl">{profile.heroSupport}</p>
+             <div className="mt-8 flex flex-wrap gap-3">
+               <ButtonLink href={primaryCta.href} event="consultation_click" eventProps={{ placement: "hero" }}>{primaryCta.label}</ButtonLink>
+               <ButtonLink href={secondaryCta.href} variant="secondary">{secondaryCta.label}</ButtonLink>
+             </div>
+           </div>
+-          <div className="crop relative p-4" aria-hidden={false}>
+-            <OverprintMark />
+-          </div>
++          <HeroPanel items={pillars} />
+         </Container>
+       </section>
+ 
+@@ -58,9 +56,9 @@ export default function HomePage() {
+       <Section id="layanan" eyebrow="Layanan" title="Empat bidang kerja, satu ekosistem yang terarah untuk pertumbuhan." intro="Setiap layanan dirancang untuk memperkuat identitas, pengalaman, dan eksekusi bisnis Anda—tanpa perlu mengelola banyak vendor yang terpisah.">
+         <div className="grid gap-10 md:grid-cols-2">
+           {pillars.map((p) => (
+-            <article key={p.id} className="border-t border-ink pt-4">
++            <article key={p.id} className="surface p-6">
+               <h3 className="display-md">{p.name}</h3>
+-              <p className="mt-2 text-quiet">{p.tagline}</p>
++              <p className="mt-2 text-muted-foreground">{p.tagline}</p>
+               <ul className="ui mt-4 space-y-1 text-sm">
+                 {servicesByPillar(p.id).slice(0, 4).map((s) => (
+                   <li key={s.slug}><Link href={`/services/${s.slug}`} className="hover:underline">{s.name}</Link></li>
+@@ -94,9 +92,9 @@ export default function HomePage() {
+       <Section id="alasan" eyebrow="Cara kerja" title="Mengapa bisnis memilih pendekatan yang lebih terarah ini.">
+         <dl className="grid gap-8 md:grid-cols-2">
+           {profile.philosophy.map((f) => (
+-            <div key={f.title} className="border-t border-rule pt-4">
++            <div key={f.title} className="surface p-6">
+               <dt className="display-md">{f.title}</dt>
+-              <dd className="mt-2 text-quiet">{f.text}</dd>
++              <dd className="mt-2 text-muted-foreground">{f.text}</dd>
+             </div>
+           ))}
+         </dl>
+@@ -106,10 +104,10 @@ export default function HomePage() {
+       <Section id="proses" eyebrow="Proses" title="Dari ide awal sampai hasil akhir, setiap langkah dibuat jelas dan terkendali.">
+         <ol className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+           {processSteps.slice(0, 4).map((s, i) => (
+-            <li key={s.id} className="border-t border-ink pt-3">
+-              <span className="ui text-sm text-quiet">{String(i + 1).padStart(2, "0")}</span>
++            <li key={s.id} className="surface p-5">
++              <span className="ui text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+               <h3 className="display-md mt-1">{s.title}</h3>
+-              <p className="mt-2 text-quiet">{s.description}</p>
++              <p className="mt-2 text-muted-foreground">{s.description}</p>
+             </li>
+           ))}
+         </ol>
+@@ -120,8 +118,8 @@ export default function HomePage() {
+       {caseStudy && (
+         <Section id="studi-kasus" eyebrow="Studi kasus" title={caseStudy.title}>
+           <div className="grid gap-8 md:grid-cols-2">
+-            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-quiet">Masalah</h3><p className="mt-2">{caseStudy.problem}</p></div>
+-            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-quiet">Pendekatan</h3><p className="mt-2">{caseStudy.approach}</p></div>
++            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">Masalah</h3><p className="mt-2">{caseStudy.problem}</p></div>
++            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">Pendekatan</h3><p className="mt-2">{caseStudy.approach}</p></div>
+           </div>
+           <p className="mt-8"><Link href={`/portfolio/${caseStudy.slug}`} className="link ui font-semibold">Baca studi kasus</Link></p>
+         </Section>
+@@ -134,7 +132,7 @@ export default function HomePage() {
+             {testimonials.map((t) => (
+               <li key={t.id}>
+                 <blockquote className="text-lg">“{t.quote}”</blockquote>
+-                <p className="ui mt-3 text-sm text-quiet">{t.name}{t.role ? `, ${t.role}` : ""}{t.business ? ` · ${t.business}` : ""}</p>
++                <p className="ui mt-3 text-sm text-muted-foreground">{t.name}{t.role ? `, ${t.role}` : ""}{t.business ? ` · ${t.business}` : ""}</p>
+               </li>
+             ))}
+           </ul>
+@@ -155,7 +153,7 @@ export default function HomePage() {
+       <Section id="hubungi" ruled>
+         <div className="max-w-3xl">
+           <h2 className="display-lg">Siap memperkuat brand dan sistem digital Anda?</h2>
+-          <p className="mt-4 max-w-prose text-lg text-quiet">Ceritakan kebutuhan Anda dengan singkat dan jelas. Saya akan membantu menguraikan langkah yang paling tepat untuk memperkuat posisi, komunikasi, dan eksekusi bisnis Anda.</p>
++          <p className="mt-4 max-w-prose text-lg text-muted-foreground">Ceritakan kebutuhan Anda dengan singkat dan jelas. Saya akan membantu menguraikan langkah yang paling tepat untuk memperkuat posisi, komunikasi, dan eksekusi bisnis Anda.</p>
+           <div className="mt-8 flex flex-wrap gap-3">
+             <ButtonLink href="/contact" event="consultation_click" eventProps={{ placement: "cta-akhir" }}>Diskusikan Proyek Anda</ButtonLink>
+             <WhatsAppCta placement="cta-akhir" />
+diff --git a/apps/personal-brand/app/portfolio/[slug]/page.tsx b/apps/personal-brand/app/portfolio/[slug]/page.tsx
+index effdd99..5a87cce 100644
+--- a/apps/personal-brand/app/portfolio/[slug]/page.tsx
++++ b/apps/personal-brand/app/portfolio/[slug]/page.tsx
+@@ -36,7 +36,7 @@ export default async function ProjectPage({ params }: Params) {
+       <Breadcrumbs items={[{ name: "Portofolio", path: "/portfolio" }, { name: p.title, path: `/portfolio/${p.slug}` }]} />
+       <PageHeader eyebrow={projectTypeLabels[p.type]} title={p.title} intro={p.summary} />
+       <Section ruled={false}>
+-        <div className="mb-12 aspect-[16/8] overflow-hidden border border-rule">
++        <div className="mb-12 aspect-[16/8] overflow-hidden border border-border">
+           {p.images[0] ? (
+             <Image src={p.images[0].src} alt={p.images[0].alt} width={p.images[0].width} height={p.images[0].height} className="h-full w-full object-cover" priority />
+           ) : p.art ? (
+@@ -51,13 +51,13 @@ export default async function ProjectPage({ params }: Params) {
+             <h2>Hasil kerja</h2><ul>{p.deliverables.map((d) => (<li key={d}>{d}</li>))}</ul>
+             {p.outcome && (<><h2>Hasil</h2><p>{p.outcome}</p></>)}
+           </div>
+-          <aside className="h-fit border border-rule p-5" aria-label="Informasi proyek">
++          <aside className="h-fit border border-border p-5" aria-label="Informasi proyek">
+             <dl className="ui space-y-3 text-sm">
+-              {rows.map(([k, v]) => (<div key={k}><dt className="text-quiet">{k}</dt><dd className="font-medium">{v}</dd></div>))}
++              {rows.map(([k, v]) => (<div key={k}><dt className="text-muted-foreground">{k}</dt><dd className="font-medium">{v}</dd></div>))}
+             </dl>
+             {services.length > 0 && (
+-              <div className="mt-5 border-t border-rule pt-4">
+-                <p className="ui text-sm text-quiet">Layanan terkait</p>
++              <div className="mt-5 border-t border-border pt-4">
++                <p className="ui text-sm text-muted-foreground">Layanan terkait</p>
+                 <ul className="mt-1 space-y-1 text-sm">{services.map((s) => (<li key={s.slug}><Link href={`/services/${s.slug}`} className="link">{s.name}</Link></li>))}</ul>
+               </div>
+             )}
+diff --git a/apps/personal-brand/app/portfolio/page.tsx b/apps/personal-brand/app/portfolio/page.tsx
+index 93cf730..be797e5 100644
+--- a/apps/personal-brand/app/portfolio/page.tsx
++++ b/apps/personal-brand/app/portfolio/page.tsx
+@@ -18,7 +18,7 @@ export default function PortfolioPage() {
+       <PageHeader eyebrow="Portofolio" title="Karya yang menunjukkan arah, kualitas, dan hasil yang nyata." intro="Setiap proyek disusun dengan konteks yang jelas: tantangan yang dihadapi, pendekatan yang dipilih, dan nilai yang bisa dibawa ke bisnis Anda." />
+       <Section ruled={false}>
+         {projects.length === 0 ? (
+-          <p className="border border-rule p-6 text-quiet">Portofolio sedang disiapkan.</p>
++          <p className="border border-border p-6 text-muted-foreground">Portofolio sedang disiapkan.</p>
+         ) : (
+           <ProjectBrowser projects={projects} labels={projectCategoryLabels} typeLabels={projectTypeLabels} />
+         )}
+diff --git a/apps/personal-brand/app/privacy/page.tsx b/apps/personal-brand/app/privacy/page.tsx
+index 1a617ae..9ac21bf 100644
+--- a/apps/personal-brand/app/privacy/page.tsx
++++ b/apps/personal-brand/app/privacy/page.tsx
+@@ -17,7 +17,7 @@ export default function PrivacyPage() {
+       <PageHeader eyebrow="Legal" title="Kebijakan privasi." intro={`Terakhir diperbarui ${formatDate(settings.legalUpdatedAt)}.`} />
+       <Section ruled={false}>
+         <div className="prose-site">
+-          <p className="ui border border-rule p-3 text-sm">Draf untuk ditinjau. Dokumen ini belum menjadi nasihat hukum; tinjau bersama penasihat hukum sebelum dipublikasikan sebagai kebijakan final.</p>
++          <p className="ui border border-border p-3 text-sm">Draf untuk ditinjau. Dokumen ini belum menjadi nasihat hukum; tinjau bersama penasihat hukum sebelum dipublikasikan sebagai kebijakan final.</p>
+           <h2>Data yang dikumpulkan</h2>
+           <p>Lewat formulir kontak, saya menerima nama, email dan/atau nomor WhatsApp, nama bisnis (opsional), kebutuhan, perkiraan anggaran, target waktu, dan pesan yang Anda tulis.</p>
+           <p>Saya juga menyimpan sementara di browser Anda (sessionStorage) sumber kunjungan: parameter UTM, situs perujuk, dan halaman pertama yang dibuka. Data ini dikirim bersama formulir agar saya tahu dari mana Anda datang. Tidak ada cookie pelacak yang dipasang oleh situs ini.</p>
+diff --git a/apps/personal-brand/app/process/page.tsx b/apps/personal-brand/app/process/page.tsx
+index 6b3ec6f..4a61631 100644
+--- a/apps/personal-brand/app/process/page.tsx
++++ b/apps/personal-brand/app/process/page.tsx
+@@ -18,13 +18,13 @@ export default function ProcessPage() {
+       <Section ruled={false}>
+         <ol className="max-w-3xl">
+           {processSteps.map((s, i) => (
+-            <li key={s.id} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-rule py-6">
+-              <span className="ui text-sm text-quiet">{String(i + 1).padStart(2, "0")}</span>
++            <li key={s.id} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-border py-6">
++              <span className="ui text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+               <div>
+                 <h2 className="display-md">{s.title}</h2>
+-                <p className="mt-2 text-quiet">{s.description}</p>
++                <p className="mt-2 text-muted-foreground">{s.description}</p>
+                 {s.appliesTo.length > 0 && (
+-                  <p className="ui mt-2 text-xs text-quiet">Berlaku untuk: {s.appliesTo.map((a) => pillars.find((p) => p.id === a)?.name).join(", ")}</p>
++                  <p className="ui mt-2 text-xs text-muted-foreground">Berlaku untuk: {s.appliesTo.map((a) => pillars.find((p) => p.id === a)?.name).join(", ")}</p>
+                 )}
+               </div>
+             </li>
+diff --git a/apps/personal-brand/app/products/[slug]/page.tsx b/apps/personal-brand/app/products/[slug]/page.tsx
+index b5a0817..94aea08 100644
+--- a/apps/personal-brand/app/products/[slug]/page.tsx
++++ b/apps/personal-brand/app/products/[slug]/page.tsx
+@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: Params) {
+             {p.deliverables.length > 0 && (<><h2>Yang Anda terima</h2><ul>{p.deliverables.map((f) => (<li key={f}>{f}</li>))}</ul></>)}
+             {p.revisionPolicy && (<><h2>Revisi</h2><p>{p.revisionPolicy}</p></>)}
+           </div>
+-          <aside className="h-fit border border-ink p-5" aria-label="Pesan produk">
++          <aside className="h-fit border border-foreground p-5" aria-label="Pesan produk">
+             <div className="flex flex-col gap-3">
+               <ButtonLink
+                 href={external ? p.ctaDestination : `/contact?produk=${p.slug}`}
+@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: Params) {
+               <WhatsAppCta service={p.name} context={`Produk: ${p.name}`} placement="produk" className="w-full" />
+             </div>
+             {services.length > 0 && (
+-              <div className="mt-6 border-t border-rule pt-4">
++              <div className="mt-6 border-t border-border pt-4">
+                 <p className="ui text-sm font-semibold">Layanan terkait</p>
+                 <ul className="mt-2 space-y-1 text-sm">{services.map((s) => (<li key={s.slug}><Link className="link" href={`/services/${s.slug}`}>{s.name}</Link></li>))}</ul>
+               </div>
+diff --git a/apps/personal-brand/app/services/[slug]/page.tsx b/apps/personal-brand/app/services/[slug]/page.tsx
+index 502d61b..88b6c6b 100644
+--- a/apps/personal-brand/app/services/[slug]/page.tsx
++++ b/apps/personal-brand/app/services/[slug]/page.tsx
+@@ -32,12 +32,12 @@ export default async function ServicePage({ params }: Params) {
+       <JsonLd data={serviceJsonLd(s)} />
+       <Breadcrumbs items={[{ name: "Layanan", path: "/services" }, { name: s.name, path: `/services/${s.slug}` }]} />
+       <PageHeader eyebrow={pillar?.name} title={s.name} intro={s.summary}>
+-        <p className="ui mt-4 text-sm text-quiet">{availabilityLabels[s.availability]}</p>
++        <p className="ui mt-4 text-sm text-muted-foreground">{availabilityLabels[s.availability]}</p>
+       </PageHeader>
+       <Section ruled={false} title="Yang Anda terima" as="h2">
+         <ul className="prose-site">{s.deliverables.map((d) => (<li key={d}>{d}</li>))}</ul>
+         {s.idealFor && <p className="mt-8 max-w-prose"><strong className="ui">Cocok untuk:</strong> {s.idealFor}</p>}
+-        <p className="mt-6 max-w-prose text-quiet">Lingkup, biaya, dan batas revisi disepakati sebelum pengerjaan dimulai.</p>
++        <p className="mt-6 max-w-prose text-muted-foreground">Lingkup, biaya, dan batas revisi disepakati sebelum pengerjaan dimulai.</p>
+         <div className="mt-8 flex flex-wrap gap-3">
+           <ButtonLink href={`/contact?layanan=${s.slug}`} event="consultation_click" eventProps={{ placement: "layanan", service: s.slug }}>Diskusikan Proyek</ButtonLink>
+           <WhatsAppCta service={s.name} context={`Layanan: ${s.name}`} placement="layanan" />
+diff --git a/apps/personal-brand/app/services/page.tsx b/apps/personal-brand/app/services/page.tsx
+index efefc52..38f4a43 100644
+--- a/apps/personal-brand/app/services/page.tsx
++++ b/apps/personal-brand/app/services/page.tsx
+@@ -19,7 +19,7 @@ export default function ServicesPage() {
+       {pillars.map((p) => (
+         <Section key={p.id} id={p.id} title={p.name} intro={p.description} ruled>
+           {p.kind === "production" && (
+-            <p className="ui mb-6 border border-rule p-4 text-sm">
++            <p className="ui mb-6 border border-border p-4 text-sm">
+               Catatan: bagian ini memisahkan <strong>desain</strong> (file siap produksi) dari <strong>produksi fisik</strong>. Kapasitas, estimasi, dan ketersediaan produksi dikonfirmasi per pesanan.
+             </p>
+           )}
+diff --git a/apps/personal-brand/app/terms/page.tsx b/apps/personal-brand/app/terms/page.tsx
+index 68e78b4..b0b7681 100644
+--- a/apps/personal-brand/app/terms/page.tsx
++++ b/apps/personal-brand/app/terms/page.tsx
+@@ -17,7 +17,7 @@ export default function TermsPage() {
+       <PageHeader eyebrow="Legal" title="Syarat dan ketentuan." intro={`Terakhir diperbarui ${formatDate(settings.legalUpdatedAt)}.`} />
+       <Section ruled={false}>
+         <div className="prose-site">
+-          <p className="ui border border-rule p-3 text-sm">Draf untuk ditinjau. Ketentuan final setiap proyek tetap mengikuti proposal atau perjanjian tertulis yang disepakati.</p>
++          <p className="ui border border-border p-3 text-sm">Draf untuk ditinjau. Ketentuan final setiap proyek tetap mengikuti proposal atau perjanjian tertulis yang disepakati.</p>
+           <h2>Informasi di website</h2>
+           <p>Konten di website ini bersifat informasi umum dan bukan penawaran yang mengikat. Ruang lingkup, biaya, dan jadwal ditetapkan dalam proposal tertulis yang disepakati kedua pihak.</p>
+           <h2>Pemesanan dan pembayaran</h2>
+diff --git a/apps/personal-brand/components/breadcrumbs.tsx b/apps/personal-brand/components/breadcrumbs.tsx
+index 48a4122..aaebe52 100644
+--- a/apps/personal-brand/components/breadcrumbs.tsx
++++ b/apps/personal-brand/components/breadcrumbs.tsx
+@@ -11,19 +11,19 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
+   return (
+     <>
+       <JsonLd data={breadcrumbJsonLd(all)} />
+-      <nav aria-label="Breadcrumb" className="border-b border-rule">
++      <nav aria-label="Breadcrumb" className="border-b border-border">
+         <Container>
+-          <ol className="ui flex flex-wrap items-center gap-x-2 py-3 text-sm text-quiet">
++          <ol className="ui flex flex-wrap items-center gap-x-2 py-3 text-sm text-muted-foreground">
+             {all.map((c, i) => {
+               const last = i === all.length - 1;
+               return (
+                 <li key={c.path} className="flex items-center gap-2">
+                   {last ? (
+-                    <span aria-current="page" className="text-ink">
++                    <span aria-current="page" className="text-foreground">
+                       {c.name}
+                     </span>
+                   ) : (
+-                    <Link href={c.path} className="underline underline-offset-4 hover:text-ink">
++                    <Link href={c.path} className="underline underline-offset-4 hover:text-foreground">
+                       {c.name}
+                     </Link>
+                   )}
+diff --git a/apps/personal-brand/components/button-link.tsx b/apps/personal-brand/components/button-link.tsx
+index 9ef8dec..9186a52 100644
+--- a/apps/personal-brand/components/button-link.tsx
++++ b/apps/personal-brand/components/button-link.tsx
+@@ -3,11 +3,11 @@ import type { AnalyticsEvent } from "@/lib/analytics";
+ import { TrackedLink } from "./tracked-link";
+ 
+ const base =
+-  "ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-base font-semibold transition-colors";
++  "ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-[0.95rem] font-semibold transition-colors";
+ const variants = {
+-  primary: "bg-ink text-paper hover:bg-ink/85",
+-  secondary: "border border-ink text-ink hover:bg-ink hover:text-paper",
+-  ghost: "text-ink underline decoration-1 underline-offset-4 hover:decoration-2 px-0",
++  primary: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90",
++  secondary: "border border-input bg-card text-foreground hover:border-primary hover:text-primary",
++  ghost: "text-primary underline decoration-1 underline-offset-4 hover:decoration-2 px-0",
+ } as const;
+ 
+ type Props = {
+diff --git a/apps/personal-brand/components/cards.tsx b/apps/personal-brand/components/cards.tsx
+index 18b2ceb..cd077ef 100644
+--- a/apps/personal-brand/components/cards.tsx
++++ b/apps/personal-brand/components/cards.tsx
+@@ -9,7 +9,7 @@ export function PriceLabel({ pricing }: { pricing: Product["pricing"] }) {
+   const { label, prefix } = formatPricing(pricing);
+   return (
+     <p className="ui text-sm">
+-      {prefix && <span className="text-quiet">{prefix} </span>}
++      {prefix && <span className="text-muted-foreground">{prefix} </span>}
+       <span className="font-semibold">{label}</span>
+     </p>
+   );
+@@ -17,17 +17,17 @@ export function PriceLabel({ pricing }: { pricing: Product["pricing"] }) {
+ 
+ export function ProductCard({ product }: { product: Product }) {
+   return (
+-    <article className="flex h-full flex-col border border-rule p-5 transition-colors hover:border-ink">
+-      <p className="ui text-xs font-medium uppercase tracking-[0.14em] text-quiet">{productCategoryLabels[product.category]}</p>
++    <article className="surface relative flex h-full flex-col p-5 transition hover:-translate-y-0.5 hover:border-primary hover:shadow-lift">
++      <p className="eyebrow">{productCategoryLabels[product.category]}</p>
+       <h3 className="display-md mt-2">
+         <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0 hover:underline">
+           {product.name}
+         </Link>
+       </h3>
+-      <p className="mt-2 flex-1 text-quiet">{product.shortDescription}</p>
+-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-rule pt-3">
++      <p className="mt-2 flex-1 text-muted-foreground">{product.shortDescription}</p>
++      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3">
+         <PriceLabel pricing={product.pricing} />
+-        <span className="ui rounded-sm border border-rule px-2 py-0.5 text-xs">{availabilityLabels[product.availability]}</span>
++        <span className="ui rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs">{availabilityLabels[product.availability]}</span>
+       </div>
+     </article>
+   );
+@@ -36,8 +36,8 @@ export function ProductCard({ product }: { product: Product }) {
+ export function ProjectCard({ project }: { project: Project }) {
+   const image = project.images[0];
+   return (
+-    <article className="relative flex h-full flex-col border border-rule transition-colors hover:border-ink">
+-      <div className="aspect-[16/10] overflow-hidden border-b border-rule">
++    <article className="surface relative flex h-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:border-primary hover:shadow-lift">
++      <div className="aspect-[16/10] overflow-hidden border-b border-border">
+         {image ? (
+           <Image src={image.src} alt={image.alt} width={image.width} height={image.height} className="h-full w-full object-cover" />
+         ) : project.art ? (
+@@ -45,7 +45,7 @@ export function ProjectCard({ project }: { project: Project }) {
+         ) : null}
+       </div>
+       <div className="flex flex-1 flex-col p-5">
+-        <p className="ui text-xs font-medium uppercase tracking-[0.14em] text-quiet">
++        <p className="eyebrow">
+           {projectTypeLabels[project.type]} · {projectCategoryLabels[project.category]}
+         </p>
+         <h3 className="display-md mt-2">
+@@ -53,7 +53,7 @@ export function ProjectCard({ project }: { project: Project }) {
+             {project.title}
+           </Link>
+         </h3>
+-        <p className="mt-2 text-quiet">{project.summary}</p>
++        <p className="mt-2 text-muted-foreground">{project.summary}</p>
+       </div>
+     </article>
+   );
+@@ -61,8 +61,8 @@ export function ProjectCard({ project }: { project: Project }) {
+ 
+ export function ArticleCard({ article }: { article: Article }) {
+   return (
+-    <article className="relative flex h-full flex-col border-t border-ink pt-4">
+-      <p className="ui text-xs font-medium uppercase tracking-[0.14em] text-quiet">
++    <article className="surface relative flex h-full flex-col p-5 transition hover:border-primary hover:shadow-lift">
++      <p className="eyebrow">
+         {article.category} · {article.readingMinutes} menit baca
+       </p>
+       <h3 className="display-md mt-2">
+@@ -70,8 +70,8 @@ export function ArticleCard({ article }: { article: Article }) {
+           {article.title}
+         </Link>
+       </h3>
+-      <p className="mt-2 text-quiet">{article.description}</p>
+-      <p className="ui mt-3 text-sm text-quiet">
++      <p className="mt-2 text-muted-foreground">{article.description}</p>
++      <p className="ui mt-3 text-sm text-muted-foreground">
+         <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+       </p>
+     </article>
+@@ -80,11 +80,11 @@ export function ArticleCard({ article }: { article: Article }) {
+ 
+ export function ServiceLink({ service, index }: { service: Service; index?: number }) {
+   return (
+-    <li className="relative border-t border-rule">
++    <li className="relative border-t border-border">
+       <Link href={`/services/${service.slug}`} className="group grid gap-1 py-4 sm:grid-cols-[3rem_1fr_2fr] sm:items-baseline sm:gap-4">
+-        {index !== undefined && <span className="ui text-sm text-quiet">{String(index + 1).padStart(2, "0")}</span>}
++        {index !== undefined && <span className="ui text-sm text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>}
+         <span className="ui text-lg font-semibold group-hover:underline">{service.name}</span>
+-        <span className="text-quiet">{service.summary}</span>
++        <span className="text-muted-foreground">{service.summary}</span>
+       </Link>
+     </li>
+   );
+diff --git a/apps/personal-brand/components/contact-form.tsx b/apps/personal-brand/components/contact-form.tsx
+index df08433..7b00e46 100644
+--- a/apps/personal-brand/components/contact-form.tsx
++++ b/apps/personal-brand/components/contact-form.tsx
+@@ -16,7 +16,7 @@ type Props = {
+ };
+ 
+ const field =
+-  "ui mt-1.5 block w-full min-h-[44px] rounded-sm border border-ink/50 bg-paper px-3 py-2 text-base text-ink placeholder:text-quiet aria-[invalid=true]:border-danger";
++  "ui mt-1.5 block w-full min-h-[44px] rounded-lg border border-input bg-background px-3 py-2 text-base text-foreground placeholder:text-muted-foreground aria-[invalid=true]:border-danger";
+ const label = "ui block text-sm font-semibold";
+ 
+ export function ContactForm({ defaultCategory, defaultMessage, context }: Props) {
+@@ -37,9 +37,9 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
+ 
+   if (state.status === "success") {
+     return (
+-      <div ref={statusRef} tabIndex={-1} role="status" className="border border-ink p-6 outline-none">
++      <div ref={statusRef} tabIndex={-1} role="status" className="border border-foreground p-6 outline-none">
+         <h2 className="display-md">Pesan Anda sudah terkirim.</h2>
+-        <p className="mt-3 text-quiet">
++        <p className="mt-3 text-muted-foreground">
+           Terima kasih. Saya akan membaca kebutuhan Anda dan membalas lewat metode kontak yang Anda pilih. Estimasi waktu balasan tidak dijanjikan di sini; bila
+           mendesak, hubungi lewat WhatsApp.
+         </p>
+@@ -108,7 +108,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
+           {err("whatsapp") && <p id="whatsapp-error" className="mt-1 text-sm text-danger">{err("whatsapp")}</p>}
+         </div>
+       </div>
+-      <p className="-mt-3 text-sm text-quiet">Isi minimal salah satu: email atau nomor WhatsApp.</p>
++      <p className="-mt-3 text-sm text-muted-foreground">Isi minimal salah satu: email atau nomor WhatsApp.</p>
+ 
+       <fieldset aria-describedby={describe("preferredContact")}>
+         <legend className={label}>Metode kontak yang Anda pilih <span aria-hidden="true">*</span></legend>
+@@ -118,7 +118,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
+             ["email", "Email"],
+           ].map(([v, l]) => (
+             <label key={v} className="ui inline-flex min-h-[44px] items-center gap-2">
+-              <input type="radio" name="preferredContact" value={v} required defaultChecked={(values.preferredContact ?? "whatsapp") === v} className="h-5 w-5 accent-ink" />
++              <input type="radio" name="preferredContact" value={v} required defaultChecked={(values.preferredContact ?? "whatsapp") === v} className="h-5 w-5 accent-foreground" />
+               {l}
+             </label>
+           ))}
+@@ -149,7 +149,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
+             <option value="">Pilih</option>
+             {budgetOptions.map((o) => (<option key={o}>{o}</option>))}
+           </select>
+-          <p className="mt-1 text-sm text-quiet">Hanya membantu saya memahami skala. Bukan daftar harga dan tidak mengikat.</p>
++          <p className="mt-1 text-sm text-muted-foreground">Hanya membantu saya memahami skala. Bukan daftar harga dan tidak mengikat.</p>
+         </div>
+       </div>
+ 
+@@ -160,10 +160,10 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
+       </div>
+ 
+       <div className="flex flex-wrap items-center gap-4">
+-        <button type="submit" disabled={pending || !startedAt} className="ui inline-flex min-h-[48px] items-center justify-center rounded-sm bg-ink px-6 text-base font-semibold text-paper hover:bg-ink/85 disabled:opacity-60">
++        <button type="submit" disabled={pending || !startedAt} className="ui inline-flex min-h-[48px] items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-60">
+           {pending ? "Mengirim…" : "Kirim pesan"}
+         </button>
+-        <p className="text-sm text-quiet">Data Anda hanya dipakai untuk membalas pesan ini. Lihat <Link className="link" href="/privacy">kebijakan privasi</Link>.</p>
++        <p className="text-sm text-muted-foreground">Data Anda hanya dipakai untuk membalas pesan ini. Lihat <Link className="link" href="/privacy">kebijakan privasi</Link>.</p>
+       </div>
+     </form>
+   );
+diff --git a/apps/personal-brand/components/filter-browsers.tsx b/apps/personal-brand/components/filter-browsers.tsx
+index 4d3efc6..aaab36b 100644
+--- a/apps/personal-brand/components/filter-browsers.tsx
++++ b/apps/personal-brand/components/filter-browsers.tsx
+@@ -16,7 +16,7 @@ function FilterBar({ options, active, onChange, label }: { options: Option[]; ac
+           type="button"
+           aria-pressed={active === o.value}
+           onClick={() => onChange(o.value)}
+-          className="ui min-h-[44px] rounded-sm border border-ink px-4 text-sm font-medium aria-pressed:bg-ink aria-pressed:text-paper"
++          className="ui min-h-[44px] rounded-full border border-input px-4 text-sm font-medium hover:border-primary aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+         >
+           {o.label}
+         </button>
+@@ -53,7 +53,7 @@ export function ProductBrowser({
+         }}
+       />
+       {shown.length === 0 ? (
+-        <p className="border border-rule p-6 text-quiet">Belum ada produk di kategori ini.</p>
++        <p className="border border-border p-6 text-muted-foreground">Belum ada produk di kategori ini.</p>
+       ) : (
+         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+           {shown.map((p) => (
+@@ -91,7 +91,7 @@ export function ProjectBrowser({
+         }}
+       />
+       {filtered.length === 0 ? (
+-        <p className="border border-rule p-6 text-quiet">Belum ada karya di kategori ini.</p>
++        <p className="border border-border p-6 text-muted-foreground">Belum ada karya di kategori ini.</p>
+       ) : (
+         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+           {filtered.map((p) => (
+diff --git a/apps/personal-brand/components/hero-panel.tsx b/apps/personal-brand/components/hero-panel.tsx
+new file mode 100644
+index 0000000..86dd552
+--- /dev/null
++++ b/apps/personal-brand/components/hero-panel.tsx
+@@ -0,0 +1,29 @@
++import { Code2, LayoutDashboard, Palette, Target, type LucideIcon } from "lucide-react";
++
++const icons: LucideIcon[] = [Target, Palette, Code2, LayoutDashboard];
++
++type Item = { id: string; name: string; tagline: string };
++
++/** Panel ringkas empat bidang kerja di hero. Isi diambil dari konten, bukan angka atau klaim hasil. */
++export function HeroPanel({ items, label = "Empat bidang kerja yang saling terhubung" }: { items: Item[]; label?: string }) {
++  return (
++    <div role="group" aria-label={label} className="surface relative p-2 shadow-lift">
++      <ul className="divide-y divide-border">
++        {items.slice(0, 4).map((item, i) => {
++          const Icon = icons[i % icons.length]!;
++          return (
++            <li key={item.id} className="flex items-start gap-4 p-4">
++              <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
++                <Icon aria-hidden="true" size={20} />
++              </span>
++              <span>
++                <span className="block font-semibold">{item.name}</span>
++                <span className="mt-0.5 block text-sm text-muted-foreground">{item.tagline}</span>
++              </span>
++            </li>
++          );
++        })}
++      </ul>
++    </div>
++  );
++}
+diff --git a/apps/personal-brand/components/layout.tsx b/apps/personal-brand/components/layout.tsx
+index 1098823..8abfbe6 100644
+--- a/apps/personal-brand/components/layout.tsx
++++ b/apps/personal-brand/components/layout.tsx
+@@ -20,17 +20,17 @@ type SectionProps = {
+ export function Section({ children, id, eyebrow, title, intro, as: Heading = "h2", className = "", ruled = true }: SectionProps) {
+   const headingId = id && title ? `${id}-judul` : undefined;
+   return (
+-    <section id={id} aria-labelledby={headingId} className={`${ruled ? "border-t border-rule" : ""} py-16 sm:py-24 ${className}`}>
++    <section id={id} aria-labelledby={headingId} className={`${ruled ? "border-t border-border" : ""} py-16 sm:py-24 ${className}`}>
+       <Container>
+         {(eyebrow || title || intro) && (
+           <header className="mb-10 max-w-3xl sm:mb-14">
+-            {eyebrow && <p className="ui mb-3 text-sm font-medium uppercase tracking-[0.14em] text-quiet">{eyebrow}</p>}
++            {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+             {title && (
+               <Heading id={headingId} className="display-lg">
+                 {title}
+               </Heading>
+             )}
+-            {intro && <p className="mt-4 max-w-prose text-lg text-quiet">{intro}</p>}
++            {intro && <p className="mt-4 max-w-prose text-lg text-muted-foreground">{intro}</p>}
+           </header>
+         )}
+         {children}
+@@ -42,11 +42,11 @@ export function Section({ children, id, eyebrow, title, intro, as: Heading = "h2
+ /** Judul halaman dalam (h1). */
+ export function PageHeader({ eyebrow, title, intro, children }: { eyebrow?: string; title: string; intro?: string; children?: ReactNode }) {
+   return (
+-    <header className="border-b border-rule pb-12 pt-14 sm:pb-16 sm:pt-20">
++    <header className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent pb-12 pt-14 sm:pb-16 sm:pt-20">
+       <Container>
+-        {eyebrow && <p className="ui mb-4 text-sm font-medium uppercase tracking-[0.14em] text-quiet">{eyebrow}</p>}
++        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+         <h1 className="display-xl max-w-4xl">{title}</h1>
+-        {intro && <p className="mt-6 max-w-prose text-lg text-quiet sm:text-xl">{intro}</p>}
++        {intro && <p className="mt-6 max-w-prose text-lg text-muted-foreground sm:text-xl">{intro}</p>}
+         {children}
+       </Container>
+     </header>
+diff --git a/apps/personal-brand/components/overprint-mark.tsx b/apps/personal-brand/components/overprint-mark.tsx
+deleted file mode 100644
+index ffa8412..0000000
+--- a/apps/personal-brand/components/overprint-mark.tsx
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/**
+- * Tanda overprint: dua warna proses cetak yang saling menumpuk. Dekoratif-informatif,
+- * bukan data. Label teks menjelaskan makna bagi pembaca layar.
+- */
+-export function OverprintMark({ className = "", label = "Desain dan teknologi bertemu di satu tempat" }: { className?: string; label?: string }) {
+-  return (
+-    <div role="img" aria-label={label} className={`overprint ${className}`}>
+-      <span className="overprint-layer overprint-cyan" aria-hidden="true" />
+-      <span className="overprint-layer overprint-magenta" aria-hidden="true" />
+-      <span
+-        aria-hidden="true"
+-        className="ui absolute bottom-0 left-0 text-xs font-medium uppercase tracking-[0.16em] text-quiet"
+-      >
+-        Desain
+-      </span>
+-      <span
+-        aria-hidden="true"
+-        className="ui absolute bottom-0 right-0 text-xs font-medium uppercase tracking-[0.16em] text-quiet"
+-      >
+-        Teknologi
+-      </span>
+-    </div>
+-  );
+-}
+diff --git a/apps/personal-brand/components/project-art.tsx b/apps/personal-brand/components/project-art.tsx
+index 1da61f9..d7d4d67 100644
+--- a/apps/personal-brand/components/project-art.tsx
++++ b/apps/personal-brand/components/project-art.tsx
+@@ -24,15 +24,15 @@ export function ProjectArt({ variant, className = "" }: { variant: Variant; clas
+       className={`block h-full w-full ${className}`}
+       preserveAspectRatio="xMidYMid slice"
+     >
+-      <rect width="320" height="200" fill="rgb(var(--rule))" opacity="0.35" />
+-      <g style={{ mixBlendMode: "var(--blend)" as never }}>{shapes[variant]}</g>
++      <rect width="320" height="200" fill="hsl(var(--muted))" />
++      <g>{shapes[variant]}</g>
+     </svg>
+   );
+ }
+ 
+-const C = "rgb(var(--cyan))";
+-const M = "rgb(var(--magenta))";
+-const I = "rgb(var(--ink))";
++const C = "hsl(var(--primary))";
++const M = "hsl(var(--primary) / 0.45)";
++const I = "hsl(var(--foreground))";
+ 
+ const shapes: Record<Variant, React.ReactNode> = {
+   packaging: (
+diff --git a/apps/personal-brand/components/site-footer.tsx b/apps/personal-brand/components/site-footer.tsx
+index f1909b2..abbf7d5 100644
+--- a/apps/personal-brand/components/site-footer.tsx
++++ b/apps/personal-brand/components/site-footer.tsx
+@@ -8,11 +8,11 @@ import { TrackedLink } from "./tracked-link";
+ export function SiteFooter() {
+   const year = new Date().getFullYear();
+   return (
+-    <footer className="mt-24 border-t border-rule">
++    <footer className="mt-24 border-t border-border">
+       <Container className="grid gap-12 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+         <div>
+           <p className="ui text-xl font-bold">{settings.siteName}</p>
+-          <p className="mt-3 max-w-sm text-quiet">{profile.role}.</p>
++          <p className="mt-3 max-w-sm text-muted-foreground">{profile.role}.</p>
+           <div className="mt-6 flex flex-wrap gap-3">
+             <WhatsAppCta placement="footer" />
+           </div>
+@@ -25,7 +25,7 @@ export function SiteFooter() {
+           )}
+         </div>
+         <nav aria-label="Peta situs">
+-          <p className="ui mb-3 text-sm font-medium uppercase tracking-[0.14em] text-quiet">Situs</p>
++          <p className="eyebrow mb-3">Situs</p>
+           <ul className="ui space-y-1">
+             {mainNav.map((i) => (
+               <li key={i.href}>
+@@ -37,7 +37,7 @@ export function SiteFooter() {
+           </ul>
+         </nav>
+         <nav aria-label="Informasi">
+-          <p className="ui mb-3 text-sm font-medium uppercase tracking-[0.14em] text-quiet">Informasi</p>
++          <p className="eyebrow mb-3">Informasi</p>
+           <ul className="ui space-y-1">
+             {footerNav.map((i) => (
+               <li key={i.href}>
+@@ -57,8 +57,8 @@ export function SiteFooter() {
+           </ul>
+         </nav>
+       </Container>
+-      <Container className="border-t border-rule py-6">
+-        <p className="ui text-sm text-quiet">© {year} {settings.siteName}. Seluruh hak dilindungi.</p>
++      <Container className="border-t border-border py-6">
++        <p className="ui text-sm text-muted-foreground">© {year} {settings.siteName}. Seluruh hak dilindungi.</p>
+       </Container>
+     </footer>
+   );
+diff --git a/apps/personal-brand/components/site-header.tsx b/apps/personal-brand/components/site-header.tsx
+index 2f47679..d5cca95 100644
+--- a/apps/personal-brand/components/site-header.tsx
++++ b/apps/personal-brand/components/site-header.tsx
+@@ -6,7 +6,7 @@ import { ThemeToggle } from "./theme";
+ 
+ export function SiteHeader() {
+   return (
+-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur supports-[backdrop-filter]:bg-paper/80">
++    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+       <Container className="flex min-h-[64px] items-center justify-between gap-4">
+         <Link href="/" className="ui text-lg font-bold tracking-tight" aria-label={`${settings.siteName}, ke beranda`}>
+           {settings.siteName}
+diff --git a/apps/personal-brand/components/site-nav.tsx b/apps/personal-brand/components/site-nav.tsx
+index 27d240f..a526a55 100644
+--- a/apps/personal-brand/components/site-nav.tsx
++++ b/apps/personal-brand/components/site-nav.tsx
+@@ -35,7 +35,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+               <Link
+                 href={i.href}
+                 aria-current={isActive(pathname, i.href) ? "page" : undefined}
+-                className="inline-flex min-h-[44px] items-center px-3 text-[0.95rem] font-medium text-quiet hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-cyan aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
++                className="inline-flex min-h-[44px] items-center px-3 text-[0.95rem] font-medium text-muted-foreground hover:text-foreground aria-[current=page]:text-primary"
+               >
+                 {i.label}
+               </Link>
+@@ -46,7 +46,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+ 
+       <Link
+         href={cta.href}
+-        className="ui hidden min-h-[44px] items-center rounded-sm bg-ink px-4 text-[0.95rem] font-semibold text-paper hover:bg-ink/85 lg:inline-flex"
++        className="ui hidden min-h-[44px] items-center rounded-lg bg-primary px-4 text-[0.95rem] font-semibold text-primary-foreground shadow-soft hover:bg-primary/90 lg:inline-flex"
+       >
+         {cta.label}
+       </Link>
+@@ -58,7 +58,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+         aria-haspopup="dialog"
+         aria-expanded={open}
+         aria-controls="menu-seluler"
+-        className="ui inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-sm border border-rule px-3 lg:hidden"
++        className="ui inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-lg border border-border px-3 lg:hidden"
+       >
+         <Menu aria-hidden="true" size={20} />
+         <span className="text-sm font-medium">Menu</span>
+@@ -75,7 +75,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+         onClick={(e) => {
+           if (e.target === dialogRef.current) closeMenu();
+         }}
+-        className="m-0 h-full max-h-none w-full max-w-none bg-paper p-0 text-ink backdrop:bg-ink/40"
++        className="m-0 h-full max-h-none w-full max-w-none bg-background p-0 text-foreground backdrop:bg-foreground/50"
+       >
+         <div className="mx-auto flex h-full max-w-page flex-col px-4 py-4 sm:px-6">
+           <div className="flex items-center justify-between">
+@@ -83,7 +83,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+             <button
+               type="button"
+               onClick={closeMenu}
+-              className="ui inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-sm border border-rule px-3"
++              className="ui inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-lg border border-border px-3"
+             >
+               <X aria-hidden="true" size={20} />
+               <span className="text-sm font-medium">Tutup</span>
+@@ -92,12 +92,12 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+           <nav aria-label="Navigasi seluler" className="mt-8 flex-1 overflow-y-auto">
+             <ul className="ui">
+               {items.map((i) => (
+-                <li key={i.href} className="border-b border-rule">
++                <li key={i.href} className="border-b border-border">
+                   <Link
+                     href={i.href}
+                     onClick={closeMenu}
+                     aria-current={isActive(pathname, i.href) ? "page" : undefined}
+-                    className="flex min-h-[56px] items-center text-2xl font-semibold aria-[current=page]:text-link"
++                    className="flex min-h-[56px] items-center text-2xl font-semibold aria-[current=page]:text-primary"
+                   >
+                     {i.label}
+                   </Link>
+@@ -108,7 +108,7 @@ export function SiteNav({ items, cta }: { items: Item[]; cta: Item }) {
+           <Link
+             href={cta.href}
+             onClick={closeMenu}
+-            className="ui mt-6 inline-flex min-h-[48px] items-center justify-center rounded-sm bg-ink px-5 text-base font-semibold text-paper"
++            className="ui mt-6 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-primary px-5 text-base font-semibold text-primary-foreground"
+           >
+             {cta.label}
+           </Link>
+diff --git a/apps/personal-brand/components/theme.tsx b/apps/personal-brand/components/theme.tsx
+index 53e6374..e410504 100644
+--- a/apps/personal-brand/components/theme.tsx
++++ b/apps/personal-brand/components/theme.tsx
+@@ -24,7 +24,7 @@ export function ThemeToggle() {
+       aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+       title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+       onClick={() => setTheme(dark ? "light" : "dark")}
+-      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-rule text-ink transition-colors hover:bg-ink/5"
++      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-muted"
+     >
+       {dark ? <Sun aria-hidden="true" size={18} /> : <Moon aria-hidden="true" size={18} />}
+     </button>
+diff --git a/apps/personal-brand/components/whatsapp-cta.tsx b/apps/personal-brand/components/whatsapp-cta.tsx
+index 317e974..38cc284 100644
+--- a/apps/personal-brand/components/whatsapp-cta.tsx
++++ b/apps/personal-brand/components/whatsapp-cta.tsx
+@@ -18,13 +18,13 @@ type Props = WhatsAppMessageInput & {
+ export function WhatsAppCta({ label = "Chat via WhatsApp", variant = "outline", className = "", placement = "umum", ...message }: Props) {
+   const url = buildWhatsAppUrl(whatsappNumber, message);
+   const styles =
+-    variant === "solid" ? "bg-ink text-paper hover:bg-ink/85" : "border border-ink text-ink hover:bg-ink hover:text-paper";
++    variant === "solid" ? "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90" : "border border-input bg-card text-foreground hover:border-primary hover:text-primary";
+   return (
+     <TrackedLink
+       href={url ?? "/contact"}
+       event="whatsapp_click"
+       eventProps={{ placement, configured: Boolean(url) }}
+-      className={`ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-base font-semibold transition-colors ${styles} ${className}`}
++      className={`ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-[0.95rem] font-semibold transition-colors ${styles} ${className}`}
+     >
+       <MessageCircle aria-hidden="true" size={18} />
+       {url ? label : "Hubungi lewat formulir"}
+diff --git a/apps/personal-brand/package.json b/apps/personal-brand/package.json
+index 55d882e..0ad3c2f 100644
+--- a/apps/personal-brand/package.json
++++ b/apps/personal-brand/package.json
+@@ -11,6 +11,7 @@
+     "test": "vitest run"
+   },
+   "dependencies": {
++    "@fontsource-variable/inter": "^5.1.0",
+     "@kholil/shared": "workspace:*",
+     "lucide-react": "^0.468.0",
+     "next": "^15.1.0",
+diff --git a/apps/personal-brand/tailwind.config.ts b/apps/personal-brand/tailwind.config.ts
+index 8bab775..d4e296c 100644
+--- a/apps/personal-brand/tailwind.config.ts
++++ b/apps/personal-brand/tailwind.config.ts
+@@ -1,27 +1,11 @@
+ import type { Config } from "tailwindcss";
++// eslint-disable-next-line @typescript-eslint/no-require-imports
++const preset = require("@kholil/config/tailwind-preset");
+ 
+ const config: Config = {
+-  darkMode: "class",
++  presets: [preset],
+   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+-  theme: {
+-    extend: {
+-      colors: {
+-        paper: "rgb(var(--paper) / <alpha-value>)",
+-        ink: "rgb(var(--ink) / <alpha-value>)",
+-        quiet: "rgb(var(--quiet) / <alpha-value>)",
+-        rule: "rgb(var(--rule) / <alpha-value>)",
+-        cyan: "rgb(var(--cyan) / <alpha-value>)",
+-        magenta: "rgb(var(--magenta) / <alpha-value>)",
+-        link: "rgb(var(--link) / <alpha-value>)",
+-        danger: "rgb(var(--danger) / <alpha-value>)",
+-      },
+-      fontFamily: {
+-        display: ["ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"],
+-        serif: ["ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"],
+-      },
+-      maxWidth: { page: "72rem", prose: "38rem" },
+-    },
+-  },
++  theme: { extend: { maxWidth: { page: "72rem", prose: "40rem" } } },
+   plugins: [],
+ };
+ 
+diff --git a/apps/personal-brand/tests/components.test.tsx b/apps/personal-brand/tests/components.test.tsx
+index 21f1a1f..3c3926c 100644
+--- a/apps/personal-brand/tests/components.test.tsx
++++ b/apps/personal-brand/tests/components.test.tsx
+@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
+ import { renderToStaticMarkup } from "react-dom/server";
+ import { Breadcrumbs } from "@/components/breadcrumbs";
+ import { JsonLd } from "@/components/json-ld";
+-import { OverprintMark } from "@/components/overprint-mark";
++import { HeroPanel } from "@/components/hero-panel";
+ import { ProductCard } from "@/components/cards";
+ import { ProjectArt } from "@/components/project-art";
+ import { WhatsAppCta } from "@/components/whatsapp-cta";
+@@ -22,10 +22,11 @@ describe("komponen", () => {
+     expect(html).toContain("\\u003c");
+   });
+ 
+-  it("OverprintMark dapat diakses lewat role dan label", () => {
+-    const html = renderToStaticMarkup(<OverprintMark />);
+-    expect(html).toContain('role="img"');
++  it("HeroPanel dikelompokkan dan berlabel untuk pembaca layar", () => {
++    const html = renderToStaticMarkup(<HeroPanel items={[{ id: "a", name: "Brand", tagline: "Strategi" }]} />);
++    expect(html).toContain('role="group"');
+     expect(html).toContain("aria-label");
++    expect(html).toContain("Brand");
+   });
+ 
+   it("ProductCard memakai teks harga jujur, bukan angka", () => {
+diff --git a/packages/config/package.json b/packages/config/package.json
+index ffa5b3b..5ab775a 100644
+--- a/packages/config/package.json
++++ b/packages/config/package.json
+@@ -4,7 +4,9 @@
+   "private": true,
+   "type": "module",
+   "exports": {
+-    "./eslint-next": "./eslint-next.mjs"
++    "./eslint-next": "./eslint-next.mjs",
++    "./theme.css": "./theme.css",
++    "./tailwind-preset": "./tailwind-preset.cjs"
+   },
+   "dependencies": {
+     "@eslint/eslintrc": "^3.2.0",
+diff --git a/packages/config/tailwind-preset.cjs b/packages/config/tailwind-preset.cjs
+new file mode 100644
+index 0000000..9d661bc
+--- /dev/null
++++ b/packages/config/tailwind-preset.cjs
+@@ -0,0 +1,35 @@
++/** Preset Tailwind bersama: warna dari token CSS, mode gelap berbasis class, font Inter. */
++const c = (name) => `hsl(var(--${name}) / <alpha-value>)`;
++
++/** @type {import('tailwindcss').Config} */
++module.exports = {
++  darkMode: "class",
++  theme: {
++    extend: {
++      colors: {
++        background: c("background"),
++        foreground: c("foreground"),
++        card: c("card"),
++        "card-foreground": c("card-foreground"),
++        muted: c("muted"),
++        "muted-foreground": c("muted-foreground"),
++        border: c("border"),
++        input: c("input"),
++        primary: c("primary"),
++        "primary-foreground": c("primary-foreground"),
++        ring: c("ring"),
++        success: c("success"),
++        warning: c("warning"),
++        danger: c("danger"),
++      },
++      fontFamily: {
++        sans: ['"Inter Variable"', "ui-sans-serif", "system-ui", "-apple-system", '"Segoe UI"', "Roboto", "Arial", "sans-serif"],
++      },
++      boxShadow: {
++        soft: "0 1px 2px hsl(222 47% 11% / 0.05), 0 4px 16px hsl(222 47% 11% / 0.05)",
++        lift: "0 2px 4px hsl(222 47% 11% / 0.06), 0 12px 32px hsl(222 47% 11% / 0.10)",
++      },
++      borderRadius: { xl: "1rem", lg: "0.75rem", md: "0.5rem", sm: "0.375rem" },
++    },
++  },
++};
+diff --git a/packages/config/theme.css b/packages/config/theme.css
+new file mode 100644
+index 0000000..ad49ddf
+--- /dev/null
++++ b/packages/config/theme.css
+@@ -0,0 +1,57 @@
++/* Token desain bersama Growth OS + Personal Brand (HSL, dipakai lewat hsl(var(--x))). */
++:root {
++  --background: 0 0% 100%;
++  --foreground: 222 47% 11%;
++  --card: 0 0% 100%;
++  --card-foreground: 222 47% 11%;
++  --muted: 210 40% 96%;
++  --muted-foreground: 215 19% 35%;
++  --border: 214 32% 91%;
++  --input: 214 32% 85%;
++  --primary: 224 76% 44%;
++  --primary-foreground: 0 0% 100%;
++  --ring: 224 76% 44%;
++  --success: 152 60% 28%;
++  --warning: 32 95% 32%;
++  --danger: 0 72% 45%;
++  --chart-1: 224 76% 44%;
++  --chart-2: 199 89% 40%;
++  --chart-3: 173 70% 30%;
++  --chart-4: 32 95% 40%;
++  --chart-5: 262 60% 52%;
++  --chart-6: 215 19% 45%;
++  --radius: 0.75rem;
++  color-scheme: light;
++}
++
++.dark {
++  --background: 222 47% 6%;
++  --foreground: 210 40% 96%;
++  --card: 222 40% 9%;
++  --card-foreground: 210 40% 96%;
++  --muted: 222 30% 14%;
++  --muted-foreground: 215 20% 70%;
++  --border: 222 25% 20%;
++  --input: 222 25% 26%;
++  --primary: 217 91% 65%;
++  --primary-foreground: 222 47% 7%;
++  --ring: 217 91% 65%;
++  --success: 152 55% 50%;
++  --warning: 38 92% 58%;
++  --danger: 0 85% 70%;
++  --chart-1: 217 91% 65%;
++  --chart-2: 199 89% 60%;
++  --chart-3: 173 65% 52%;
++  --chart-4: 38 92% 58%;
++  --chart-5: 262 83% 74%;
++  --chart-6: 215 20% 70%;
++  color-scheme: dark;
++}
++
++body {
++  font-family: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
++  font-feature-settings: "cv08", "cv11", "ss03";
++  background-color: hsl(var(--background));
++  color: hsl(var(--foreground));
++  -webkit-font-smoothing: antialiased;
++}
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 36eece6..d5a7ac3 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -178,6 +178,9 @@ importers:
+       '@auth/prisma-adapter':
+         specifier: ^2.7.4
+         version: 2.11.3(@prisma/client@6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3))
++      '@fontsource-variable/inter':
++        specifier: ^5.1.0
++        version: 5.3.0
+       '@hookform/resolvers':
+         specifier: ^3.9.1
+         version: 3.10.0(react-hook-form@7.89.0(@types/react@19.3.0)(react@19.3.0))
+@@ -275,6 +278,9 @@ importers:
+ 
+   apps/personal-brand:
+     dependencies:
++      '@fontsource-variable/inter':
++        specifier: ^5.1.0
++        version: 5.3.0
+       '@kholil/shared':
+         specifier: workspace:*
+         version: link:../../packages/shared
+@@ -729,6 +735,9 @@ packages:
+     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
+     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+ 
++  '@fontsource-variable/inter@5.3.0':
++    resolution: {integrity: sha512-OupL48va4JNofb97w6NYeF9S7W/kHNKM0Er8Dem5nqi4jeOLrVJDoE8tZEpnMJmtkvNbB1EIPPwHcdkF6b1oUA==}
++
+   '@hookform/resolvers@3.10.0':
+     resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
+     peerDependencies:
+@@ -3405,6 +3414,8 @@ snapshots:
+       '@eslint/core': 0.17.0
+       levn: 0.4.1
+ 
++  '@fontsource-variable/inter@5.3.0': {}
++
+   '@hookform/resolvers@3.10.0(react-hook-form@7.89.0(@types/react@19.3.0)(react@19.3.0))':
+     dependencies:
+       react-hook-form: 7.89.0(@types/react@19.3.0)(react@19.3.0)
+-- 
+2.43.0
+
