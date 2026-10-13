@@ -74,6 +74,15 @@ Lead dari website memerlukan `LEAD_INGEST_API_KEY` dan `LEAD_INGEST_USER_EMAIL` 
    ```
    Di PowerShell: `$env:DATABASE_URL="<url produksi>"; pnpm --filter growth-os exec prisma db push`.
    (atau pakai `prisma migrate deploy` bila Anda memakai migrasi).
+
+### Memperbarui database yang sudah ada
+
+Pembaruan ini menambah kolom `Prospect.externalId` (unik per akun, dasar idempotensi lead) dan `Goal.autoTrack`. Keduanya aditif dan aman untuk data lama.
+
+- Pengembangan lokal: `pnpm --filter growth-os db:push` (atau `db:migrate -- --name tambah-externalid-autotrack` bila ingin riwayat migrasi).
+- Produksi: buat migrasi sekali di mesin Anda (`pnpm --filter growth-os db:migrate -- --name init`), commit folder `prisma/migrations`, lalu jalankan `pnpm --filter growth-os db:deploy` terhadap database produksi.
+
+> Repositori ini belum menyertakan folder `prisma/migrations` karena migrasi harus dibuat oleh Prisma terhadap database nyata.
 6. Seed bersifat opsional dan hanya untuk membuat data demo; hindari menjalankannya di produksi kecuali data demo memang diinginkan.
 
 Gunakan connection string dengan pooling (mis. pooler Neon) agar aman untuk serverless.
@@ -108,9 +117,18 @@ prisma/           schema.prisma dan seed data demo
 
 Berbasis aturan (tanpa AI) dan berasal dari data aplikasi. Bila data belum cukup, UI dapat menampilkan **"Not enough data yet."**
 
-### Notifikasi
+### Notifikasi in-app
 
-Model `Notification` mendukung tipe (follow-up, tagihan jatuh tempo, deadline, prioritas harian, milestone kampanye, review mingguan, reaktivasi), kanal (`IN_APP`, `EMAIL`, `WHATSAPP`, `TELEGRAM`, `CALENDAR`), dan `dedupeKey`. MVP belum menghasilkan atau menampilkan notifikasi. Langkah berikutnya adalah job terjadwal (misalnya Vercel Cron) yang membuat notifikasi, lalu UI untuk menampilkannya.
+Notifikasi dibuat dari data nyata: follow-up prospek yang jatuh tempo, tagihan lewat jatuh tempo (dengan sisa tagihan), tugas prioritas tinggi hari ini, dan deadline proyek 3 hari ke depan. Lead baru dari website juga membuat notifikasi. Idempotensi dijamin constraint unik `(userId, dedupeKey)` dengan `createMany({ skipDuplicates })`, jadi menjalankan ulang tidak menggandakan.
+
+Pembuatan terjadi (1) saat halaman **Notifikasi** dibuka atau tombol Segarkan ditekan, dan (2) lewat cron harian `GET /api/cron/notifications` (butuh `CRON_SECRET`). Lonceng di header menampilkan jumlah belum dibaca. Kanal selain `IN_APP` (email, WhatsApp, Telegram, kalender) belum dikirim.
+
+### Pembayaran bertahap, biaya, dan goal otomatis
+
+- **Pembayaran bertahap:** tombol *Bayar* di tabel Revenue mencatat pembayaran parsial. Status (`PENDING`/`PARTIAL`/`PAID`/`OVERDUE`) dihitung ulang dalam transaksi database; pembayaran melebihi sisa tagihan ditolak.
+- **Biaya operasional:** daftar, edit, dan hapus di halaman Revenue; ikut dihitung pada laba bersih dan goal `PROFIT`.
+- **Goal otomatis:** centang *Hitung otomatis dari data* pada goal. Kategori `REVENUE`, `PROFIT`, `SALES`, `CUSTOMERS`, `LEADS`, `CONTENT`, `PROJECTS` dihitung dari data pada periode goal; kategori lain tetap manual.
+- **Testimoni & Referral:** halaman sendiri; testimoni berstatus publik hanya bila pelanggan mengizinkan.
 
 ## Monorepo dan integrasi
 
@@ -119,6 +137,5 @@ Aplikasi ini berada di `apps/growth-os` dalam monorepo pnpm + Turborepo. Kontrak
 ## Keterbatasan MVP
 
 - Kanban pipeline memindahkan deal lewat dropdown tahap (bukan drag-and-drop).
-- Pembuatan dan tampilan notifikasi otomatis belum aktif (lihat di atas).
-- Testimoni dan referral tersimpan di database dan dihitung di funnel, tetapi belum punya halaman input sendiri.
+- Notifikasi baru berkanal in-app; pengiriman email/WhatsApp/Telegram belum ada.
 - Belum ada OAuth; autentikasi saat ini memakai credentials. Provider OAuth dapat ditambahkan di konfigurasi Auth.js.

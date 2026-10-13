@@ -13,7 +13,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "lint": "eslint .",
     "db:generate": "prisma generate",
-    "predev": "prisma generate"
+    "predev": "prisma generate",
+    "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",

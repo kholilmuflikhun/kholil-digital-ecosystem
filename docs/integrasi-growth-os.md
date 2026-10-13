@@ -43,3 +43,9 @@ Implementasikan `LeadSink` di `apps/personal-brand/lib/leads/sinks.ts` lalu daft
 ## Batasan
 
 Rate limiter in-memory per instance. Untuk batas global gunakan Upstash Redis (ganti isi `lib/rate-limit.ts` dan `apps/growth-os/lib/utils/rate-limit.ts`). Integrasi ini belum diuji end-to-end terhadap database sungguhan di lingkungan pengembangan ini.
+
+## Idempotensi (diperbarui)
+
+Growth OS menyimpan `externalId` pada `Prospect` dengan constraint unik `(userId, externalId)`. Prospek, log aktivitas, dan notifikasi lead baru ditulis dalam satu transaksi. Pengiriman ulang atau dua permintaan bersamaan dengan `externalId` sama menghasilkan satu prospek: permintaan kedua melanggar constraint dan dijawab `200 {"duplicate": true}`. Pemeriksaan sebelumnya (cari lalu buat) tidak aman terhadap balapan dan sudah diganti.
+
+Kolom baru ini membutuhkan pembaruan skema database (lihat README Growth OS, bagian *Memperbarui database yang sudah ada*).

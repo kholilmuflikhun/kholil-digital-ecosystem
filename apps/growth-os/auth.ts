@@ -17,7 +17,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const { email, password } = parsed.data;
 
         // Batasi percobaan login per email
-        if (!rateLimit(`login:${email}`, 8, 60_000).ok) return null;
+        if (!(await rateLimit(`login:${email}`, 8, 60_000)).ok) return null;
 
         const user = await db.user.findUnique({ where: { email } });
         if (!user?.passwordHash) return null;

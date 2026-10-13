@@ -31,13 +31,13 @@ export function parse<S extends z.ZodTypeAny>(schema: S, input: FormData | Recor
 /** Pembatas laju mutasi per user (60 per menit). */
 export async function guard() {
   const userId = await requireUserId();
-  if (!rateLimit(`mutate:${userId}`, 60, 60_000).ok) {
+  if (!(await rateLimit(`mutate:${userId}`, 60, 60_000)).ok) {
     throw new Error("Terlalu banyak permintaan. Coba lagi sebentar.");
   }
   return userId;
 }
 
-type OwnedModel = "offer" | "prospect" | "customer" | "deal" | "project" | "content" | "goal" | "campaign";
+type OwnedModel = "offer" | "prospect" | "customer" | "deal" | "project" | "content" | "goal" | "campaign" | "revenue";
 
 /**
  * Verifikasi bahwa semua ID relasi milik user. Tidak pernah percaya ID dari klien.

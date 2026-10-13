@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireUserId } from "@/lib/auth/session";
 import { calculateGoalProgress } from "@/lib/calculations";
 import { formatPct, num } from "@/lib/utils";
+import { syncGoalProgress } from "@/lib/data/goal-sync";
 import { saveGoal, deleteGoal, createCampaign } from "@/lib/actions/business";
 import { Badge, Card, CardTitle, DemoBadge, EmptyState, PageHeader, Progress } from "@/components/ui/primitives";
 import { DeleteButton, EntityForm, type Field } from "@/components/ui/entity-form";
@@ -18,7 +19,8 @@ const goalFields: Field[] = [
   { name: "category", label: "Kategori", type: "select", required: true, options: GOAL_CATEGORY },
   { name: "metric", label: "Metrik (mis. IDR, transaksi)", required: true },
   { name: "targetValue", label: "Target", type: "number", required: true },
-  { name: "currentValue", label: "Nilai saat ini", type: "number" },
+  { name: "currentValue", label: "Nilai saat ini (manual)", type: "number" },
+  { name: "autoTrack", label: "Hitung otomatis dari data (pendapatan, profit, penjualan, pelanggan, lead, konten, proyek)", type: "checkbox" },
   { name: "startDate", label: "Mulai", type: "date", required: true },
   { name: "endDate", label: "Selesai", type: "date", required: true },
   { name: "status", label: "Status", type: "select", required: true, options: GOAL_STATUS },
@@ -40,6 +42,7 @@ const campaignFields: Field[] = [
 
 export default async function GoalsPage() {
   const userId = await requireUserId();
+  await syncGoalProgress(userId).catch((e) => console.error("goal sync failed", e));
   const [goals, campaigns] = await Promise.all([
     db.goal.findMany({ where: { userId }, orderBy: [{ status: "asc" }, { endDate: "asc" }] }),
     db.campaign.findMany({ where: { userId }, orderBy: { startDate: "desc" } }),
@@ -74,7 +77,7 @@ export default async function GoalsPage() {
                         {label(GOAL_CATEGORY, g.category)} · {format(g.startDate, "d MMM")} – {format(g.endDate, "d MMM yyyy")}
                       </p>
                     </div>
-                    <Badge tone={g.status === "ACHIEVED" ? "success" : g.status === "ACTIVE" ? "primary" : "neutral"}>{label(GOAL_STATUS, g.status)}</Badge>
+                    <span className="flex items-center gap-1">{g.autoTrack && <Badge>Otomatis</Badge>}<Badge tone={g.status === "ACHIEVED" ? "success" : g.status === "ACTIVE" ? "primary" : "neutral"}>{label(GOAL_STATUS, g.status)}</Badge></span>
                   </div>
                   <div className="mt-3"><Progress value={p.progressPct} tone={p.onTrack ? "success" : "warning"} label={g.name} /></div>
                   <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">

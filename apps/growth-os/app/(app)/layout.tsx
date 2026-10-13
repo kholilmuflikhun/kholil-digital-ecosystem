@@ -5,9 +5,12 @@ import { logoutAction } from "@/lib/actions/auth";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const userId = await requireUserId();
-  const user = await db.user.findUnique({ where: { id: userId }, select: { name: true, email: true } });
+  const [user, unread] = await Promise.all([
+    db.user.findUnique({ where: { id: userId }, select: { name: true, email: true } }),
+    db.notification.count({ where: { userId, channel: "IN_APP", readAt: null } }),
+  ]);
   return (
-    <AppShell userName={user?.name ?? user?.email ?? ""} logout={logoutAction}>
+    <AppShell userName={user?.name ?? user?.email ?? ""} logout={logoutAction} unread={unread}>
       {children}
     </AppShell>
   );

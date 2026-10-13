@@ -144,6 +144,16 @@ LEAD_INGEST_USER_EMAIL="admin@domainanda.com"
 
 Email ini harus valid dan sesuai dengan akun yang ada di aplikasi Growth OS.
 
+### CRON_SECRET
+
+Rahasia untuk endpoint `GET /api/cron/notifications` (job harian yang membuat notifikasi in-app dan memperbarui progres goal otomatis). Minimal 32 karakter. Bila kosong atau lebih pendek, endpoint menjawab 503 dan notifikasi tetap dibuat saat halaman Notifikasi dibuka. `vercel.json` di `apps/growth-os` menjadwalkan job pukul 01:00 UTC; Vercel otomatis mengirim `Authorization: Bearer <CRON_SECRET>`.
+
+Buat nilainya sendiri: `openssl rand -hex 32`.
+
+### UPSTASH_REDIS_REST_URL dan UPSTASH_REDIS_REST_TOKEN (opsional)
+
+Mengaktifkan pembatas laju global di Upstash Redis. Tanpa keduanya, pembatas memakai memori per instance (cukup untuk lokal, kurang kuat di Vercel). Bila Upstash gagal dijangkau, aplikasi otomatis memakai cadangan in-memory dan mencatat peringatan di log.
+
 ## 3. Contoh file `.env` yang siap digunakan
 
 ### Contoh lokal
@@ -190,6 +200,8 @@ pnpm dev --filter=growth-os
 ```
 
 Informasi lengkapnya bisa dilihat di [apps/growth-os/README.md](../apps/growth-os/README.md).
+
+> **Peringatan:** nilai `AUTH_SECRET` dan `LEAD_INGEST_API_KEY` pada contoh di dokumen ini hanya ilustrasi dan tertulis publik di repositori. Jangan dipakai di produksi; buat nilai baru dengan `openssl`.
 
 ## 6. Praktik keamanan yang disarankan
 

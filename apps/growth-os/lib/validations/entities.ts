@@ -8,6 +8,7 @@ const optionalDate = z
   .transform((v) => (v ? new Date(v) : undefined))
   .refine((d) => d === undefined || !Number.isNaN(d.getTime()), "Tanggal tidak valid");
 const requiredDate = z.coerce.date();
+const bool = z.preprocess((v) => v === true || v === "on" || v === "true", z.boolean());
 const pct = z.coerce.number().int().min(0).max(100);
 
 export const goalSchema = z
@@ -25,6 +26,7 @@ export const goalSchema = z
     endDate: requiredDate,
     status: z.enum(["ACTIVE", "ACHIEVED", "PAUSED", "CANCELLED"]).default("ACTIVE"),
     priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).default("MEDIUM"),
+    autoTrack: bool.default(false),
   })
   .refine((g) => g.endDate >= g.startDate, { path: ["endDate"], message: "Tanggal akhir harus setelah tanggal mulai" });
 
@@ -219,3 +221,28 @@ export const weeklyReviewSchema = z.object({
 });
 
 export const idSchema = z.object({ id: z.string().cuid() });
+
+export const paymentSchema = z.object({
+  revenueId: z.string().cuid(),
+  amount: z.coerce.number().positive("Jumlah harus lebih dari 0").max(1e13),
+  paidAt: requiredDate,
+  method: optionalText,
+  note: optionalText,
+});
+
+export const testimonialSchema = z.object({
+  customerId: z.string().cuid(),
+  quote: z.string().trim().min(5, "Terlalu pendek").max(2000),
+  rating: z.coerce.number().int().min(1).max(5).optional(),
+  isPublic: bool.default(false),
+  receivedAt: requiredDate.optional(),
+});
+
+export const referralSchema = z.object({
+  referrerId: z.string().cuid(),
+  referredName: z.string().trim().min(2).max(120),
+  referredProspectId: z.string().cuid().optional(),
+  resultingRevenue: money.default(0),
+});
+
+export const notificationIdSchema = z.object({ id: z.string().cuid() });

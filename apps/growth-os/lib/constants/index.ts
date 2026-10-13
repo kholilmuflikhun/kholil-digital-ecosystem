@@ -5,11 +5,13 @@ export const NAV_ITEMS = [
   { href: "/prospects", label: "Prospects", icon: "Users" },
   { href: "/pipeline", label: "Sales Pipeline", icon: "Kanban" },
   { href: "/customers", label: "Customers", icon: "Heart" },
+  { href: "/retention", label: "Testimoni & Referral", icon: "Award" },
   { href: "/offers", label: "Offers", icon: "Package" },
   { href: "/projects", label: "Projects", icon: "FolderKanban" },
   { href: "/content", label: "Content", icon: "Megaphone" },
   { href: "/revenue", label: "Revenue", icon: "Wallet" },
   { href: "/analytics", label: "Analytics", icon: "BarChart3" },
+  { href: "/notifications", label: "Notifikasi", icon: "Bell" },
   { href: "/strategy", label: "Strategy", icon: "Compass" },
   { href: "/settings", label: "Settings", icon: "Settings" },
 ] as const;

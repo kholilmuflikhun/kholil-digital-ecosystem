@@ -283,6 +283,7 @@ model Goal {
   endDate      DateTime
   status       GoalStatus   @default(ACTIVE)
   priority     Priority     @default(MEDIUM)
+  autoTrack    Boolean      @default(false) // true = currentValue dihitung otomatis dari data
   isDemo       Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -431,6 +432,7 @@ model Prospect {
   offerId        String?
   contentId      String? // atribusi: konten yang menghasilkan lead ini
   isColdOutreach Boolean        @default(false)
+  externalId     String? // ID idempotensi dari website; unik per akun (NULL boleh banyak)
   isDemo         Boolean        @default(false)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -445,6 +447,7 @@ model Prospect {
   @@index([userId, status])
   @@index([userId, nextFollowUpAt])
   @@index([contentId])
+  @@unique([userId, externalId])
 }
 
 model ProspectTag {
