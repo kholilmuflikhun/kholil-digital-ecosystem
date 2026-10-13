@@ -19,7 +19,7 @@ export default function ServicesPage() {
       {pillars.map((p) => (
         <Section key={p.id} id={p.id} title={p.name} intro={p.description} ruled>
           {p.kind === "production" && (
-            <p className="ui mb-6 border border-rule p-4 text-sm">
+            <p className="ui mb-6 border border-border p-4 text-sm">
               Catatan: bagian ini memisahkan <strong>desain</strong> (file siap produksi) dari <strong>produksi fisik</strong>. Kapasitas, estimasi, dan ketersediaan produksi dikonfirmasi per pesanan.
             </p>
           )}

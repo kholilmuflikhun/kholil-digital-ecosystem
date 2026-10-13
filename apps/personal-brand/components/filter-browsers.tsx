@@ -16,7 +16,7 @@ function FilterBar({ options, active, onChange, label }: { options: Option[]; ac
           type="button"
           aria-pressed={active === o.value}
           onClick={() => onChange(o.value)}
-          className="ui min-h-[44px] rounded-sm border border-ink px-4 text-sm font-medium aria-pressed:bg-ink aria-pressed:text-paper"
+          className="ui min-h-[44px] rounded-full border border-input px-4 text-sm font-medium hover:border-primary aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground"
         >
           {o.label}
         </button>
@@ -53,7 +53,7 @@ export function ProductBrowser({
         }}
       />
       {shown.length === 0 ? (
-        <p className="border border-rule p-6 text-quiet">Belum ada produk di kategori ini.</p>
+        <p className="border border-border p-6 text-muted-foreground">Belum ada produk di kategori ini.</p>
       ) : (
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
           {shown.map((p) => (
@@ -91,7 +91,7 @@ export function ProjectBrowser({
         }}
       />
       {filtered.length === 0 ? (
-        <p className="border border-rule p-6 text-quiet">Belum ada karya di kategori ini.</p>
+        <p className="border border-border p-6 text-muted-foreground">Belum ada karya di kategori ini.</p>
       ) : (
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
           {filtered.map((p) => (

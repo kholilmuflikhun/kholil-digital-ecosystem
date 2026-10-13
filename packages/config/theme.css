@@ -1,0 +1,57 @@
+/* Token desain bersama Growth OS + Personal Brand (HSL, dipakai lewat hsl(var(--x))). */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 19% 35%;
+  --border: 214 32% 91%;
+  --input: 214 32% 85%;
+  --primary: 224 76% 44%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 224 76% 44%;
+  --success: 152 60% 28%;
+  --warning: 32 95% 32%;
+  --danger: 0 72% 45%;
+  --chart-1: 224 76% 44%;
+  --chart-2: 199 89% 40%;
+  --chart-3: 173 70% 30%;
+  --chart-4: 32 95% 40%;
+  --chart-5: 262 60% 52%;
+  --chart-6: 215 19% 45%;
+  --radius: 0.75rem;
+  color-scheme: light;
+}
+
+.dark {
+  --background: 222 47% 6%;
+  --foreground: 210 40% 96%;
+  --card: 222 40% 9%;
+  --card-foreground: 210 40% 96%;
+  --muted: 222 30% 14%;
+  --muted-foreground: 215 20% 70%;
+  --border: 222 25% 20%;
+  --input: 222 25% 26%;
+  --primary: 217 91% 65%;
+  --primary-foreground: 222 47% 7%;
+  --ring: 217 91% 65%;
+  --success: 152 55% 50%;
+  --warning: 38 92% 58%;
+  --danger: 0 85% 70%;
+  --chart-1: 217 91% 65%;
+  --chart-2: 199 89% 60%;
+  --chart-3: 173 65% 52%;
+  --chart-4: 38 92% 58%;
+  --chart-5: 262 83% 74%;
+  --chart-6: 215 20% 70%;
+  color-scheme: dark;
+}
+
+body {
+  font-family: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-feature-settings: "cv08", "cv11", "ss03";
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+}

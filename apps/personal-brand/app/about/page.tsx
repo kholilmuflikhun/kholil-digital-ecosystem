@@ -25,9 +25,9 @@ export default function AboutPage() {
       <Section eyebrow="Prinsip yang saya pegang" title="Cara saya membangun brand dan produk yang lebih dipercaya.">
         <dl className="grid gap-8 md:grid-cols-2">
           {profile.philosophy.map((item) => (
-            <div key={item.title} className="border-t border-rule pt-4">
+            <div key={item.title} className="border-t border-border pt-4">
               <dt className="display-md">{item.title}</dt>
-              <dd className="mt-2 text-quiet">{item.text}</dd>
+              <dd className="mt-2 text-muted-foreground">{item.text}</dd>
             </div>
           ))}
         </dl>
@@ -35,7 +35,7 @@ export default function AboutPage() {
       <Section eyebrow="Bidang yang saya tangani" title="Kompetensi yang saya bawa ke setiap proyek yang serius.">
         <ul className="grid gap-x-8 sm:grid-cols-2">
           {profile.capabilities.map((capability, index) => (
-            <li key={`capability-${index}`} className="border-t border-rule py-3">
+            <li key={`capability-${index}`} className="border-t border-border py-3">
               {capability}
             </li>
           ))}
@@ -44,7 +44,7 @@ export default function AboutPage() {
       <Section eyebrow="Ideal untuk" title="Bisnis yang ingin tampil lebih profesional dan lebih siap berkembang.">
         <ul className="flex flex-wrap gap-2">
           {profile.audiences.map((audience, index) => (
-            <li key={`audience-${index}`} className="ui rounded-sm border border-rule px-3 py-1.5 text-sm">
+            <li key={`audience-${index}`} className="ui rounded-full border border-border bg-muted px-3 py-1.5 text-sm">
               {audience}
             </li>
           ))}

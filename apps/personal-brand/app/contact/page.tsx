@@ -45,18 +45,18 @@ export default async function ContactPage({ searchParams }: Props) {
             defaultMessage={subject ? `${subject}\n\n` : undefined}
             context={{ page: subject, serviceSlug: service?.slug, productSlug: product?.slug }}
           />
-          <aside className="h-fit space-y-6 border border-rule p-5" aria-label="Cara lain menghubungi">
+          <aside className="h-fit space-y-6 border border-border p-5" aria-label="Cara lain menghubungi">
             <h2 className="display-md">Alternatif kontak</h2>
             <div className="space-y-3">
               <WhatsAppCta variant="solid" context={subject} service={product?.name ?? service?.name} placement="kontak" className="w-full" />
-              {!whatsappNumber && <p className="text-sm text-quiet">Nomor WhatsApp belum dikonfigurasi. Anda tetap bisa mengirimkan formulir.</p>}
+              {!whatsappNumber && <p className="text-sm text-muted-foreground">Nomor WhatsApp belum dikonfigurasi. Anda tetap bisa mengirimkan formulir.</p>}
               {publicEmail ? (
                 <p><TrackedLink href={`mailto:${publicEmail}`} event="email_click" eventProps={{ placement: "kontak" }} className="link">{publicEmail}</TrackedLink></p>
               ) : (
-                <p className="text-sm text-quiet">Alamat email publik belum dikonfigurasi.</p>
+                <p className="text-sm text-muted-foreground">Alamat email publik belum dikonfigurasi.</p>
               )}
             </div>
-            <p className="text-sm text-quiet">Balasan biasanya diberikan dalam waktu singkat. Untuk kebutuhan yang lebih urgent, WhatsApp adalah jalur tercepat.</p>
+            <p className="text-sm text-muted-foreground">Balasan biasanya diberikan dalam waktu singkat. Untuk kebutuhan yang lebih urgent, WhatsApp adalah jalur tercepat.</p>
           </aside>
         </div>
       </Section>

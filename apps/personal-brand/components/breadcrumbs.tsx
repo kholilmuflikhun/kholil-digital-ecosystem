@@ -11,19 +11,19 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(all)} />
-      <nav aria-label="Breadcrumb" className="border-b border-rule">
+      <nav aria-label="Breadcrumb" className="border-b border-border">
         <Container>
-          <ol className="ui flex flex-wrap items-center gap-x-2 py-3 text-sm text-quiet">
+          <ol className="ui flex flex-wrap items-center gap-x-2 py-3 text-sm text-muted-foreground">
             {all.map((c, i) => {
               const last = i === all.length - 1;
               return (
                 <li key={c.path} className="flex items-center gap-2">
                   {last ? (
-                    <span aria-current="page" className="text-ink">
+                    <span aria-current="page" className="text-foreground">
                       {c.name}
                     </span>
                   ) : (
-                    <Link href={c.path} className="underline underline-offset-4 hover:text-ink">
+                    <Link href={c.path} className="underline underline-offset-4 hover:text-foreground">
                       {c.name}
                     </Link>
                   )}

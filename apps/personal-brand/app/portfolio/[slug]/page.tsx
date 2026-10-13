@@ -36,7 +36,7 @@ export default async function ProjectPage({ params }: Params) {
       <Breadcrumbs items={[{ name: "Portofolio", path: "/portfolio" }, { name: p.title, path: `/portfolio/${p.slug}` }]} />
       <PageHeader eyebrow={projectTypeLabels[p.type]} title={p.title} intro={p.summary} />
       <Section ruled={false}>
-        <div className="mb-12 aspect-[16/8] overflow-hidden border border-rule">
+        <div className="mb-12 aspect-[16/8] overflow-hidden border border-border">
           {p.images[0] ? (
             <Image src={p.images[0].src} alt={p.images[0].alt} width={p.images[0].width} height={p.images[0].height} className="h-full w-full object-cover" priority />
           ) : p.art ? (
@@ -51,13 +51,13 @@ export default async function ProjectPage({ params }: Params) {
             <h2>Hasil kerja</h2><ul>{p.deliverables.map((d) => (<li key={d}>{d}</li>))}</ul>
             {p.outcome && (<><h2>Hasil</h2><p>{p.outcome}</p></>)}
           </div>
-          <aside className="h-fit border border-rule p-5" aria-label="Informasi proyek">
+          <aside className="h-fit border border-border p-5" aria-label="Informasi proyek">
             <dl className="ui space-y-3 text-sm">
-              {rows.map(([k, v]) => (<div key={k}><dt className="text-quiet">{k}</dt><dd className="font-medium">{v}</dd></div>))}
+              {rows.map(([k, v]) => (<div key={k}><dt className="text-muted-foreground">{k}</dt><dd className="font-medium">{v}</dd></div>))}
             </dl>
             {services.length > 0 && (
-              <div className="mt-5 border-t border-rule pt-4">
-                <p className="ui text-sm text-quiet">Layanan terkait</p>
+              <div className="mt-5 border-t border-border pt-4">
+                <p className="ui text-sm text-muted-foreground">Layanan terkait</p>
                 <ul className="mt-1 space-y-1 text-sm">{services.map((s) => (<li key={s.slug}><Link href={`/services/${s.slug}`} className="link">{s.name}</Link></li>))}</ul>
               </div>
             )}

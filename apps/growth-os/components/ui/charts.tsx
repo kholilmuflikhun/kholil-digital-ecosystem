@@ -6,9 +6,15 @@ import {
 } from "recharts";
 import { formatCompact } from "@/lib/utils";
 
-const COLORS = ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#0ea5e9", "#84cc16", "#a855f7", "#f97316"];
+const COLORS = [1, 2, 3, 4, 5, 6].map((n) => `hsl(var(--chart-${n}))`);
 
-const axis = { fontSize: 11, fill: "hsl(220 9% 46%)" };
+const tooltipStyle = {
+  contentStyle: { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))", fontSize: 12 },
+  labelStyle: { color: "hsl(var(--foreground))" },
+  itemStyle: { color: "hsl(var(--foreground))" },
+} as const;
+
+const axis = { fontSize: 11, fill: "hsl(var(--muted-foreground))" };
 
 export function TrendChart({ data, series, height = 240 }: {
   data: Record<string, string | number>[];
@@ -22,7 +28,7 @@ export function TrendChart({ data, series, height = 240 }: {
           <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.4} />
           <XAxis dataKey="month" tick={axis} tickLine={false} axisLine={false} />
           <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={(v) => formatCompact(v)} width={48} />
-          <Tooltip formatter={(v: number) => formatCompact(v)} />
+          <Tooltip {...tooltipStyle} formatter={(v: number) => formatCompact(v)} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
           {series.map((s, i) => (
             <Area key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={COLORS[i]} fill={COLORS[i]} fillOpacity={0.12} strokeWidth={2} />
@@ -41,7 +47,7 @@ export function BarList({ data, height = 240 }: { data: { name: string; value: n
           <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.4} />
           <XAxis type="number" tick={axis} tickLine={false} axisLine={false} tickFormatter={(v) => formatCompact(v)} />
           <YAxis type="category" dataKey="name" tick={axis} tickLine={false} axisLine={false} width={120} />
-          <Tooltip formatter={(v: number) => formatCompact(v)} />
+          <Tooltip {...tooltipStyle} formatter={(v: number) => formatCompact(v)} />
           <Bar dataKey="value" radius={[0, 4, 4, 0]}>
             {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
           </Bar>
@@ -59,7 +65,7 @@ export function ActivityChart({ data, height = 200 }: { data: Record<string, str
           <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.4} />
           <XAxis dataKey="day" tick={axis} tickLine={false} axisLine={false} />
           <YAxis tick={axis} tickLine={false} axisLine={false} width={28} allowDecimals={false} />
-          <Tooltip />
+          <Tooltip {...tooltipStyle} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
           <Line type="monotone" dataKey="contacted" name="Prospek dihubungi" stroke={COLORS[0]} strokeWidth={2} dot={false} />
           <Line type="monotone" dataKey="followUps" name="Follow-up" stroke={COLORS[1]} strokeWidth={2} dot={false} />

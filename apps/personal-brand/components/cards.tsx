@@ -9,7 +9,7 @@ export function PriceLabel({ pricing }: { pricing: Product["pricing"] }) {
   const { label, prefix } = formatPricing(pricing);
   return (
     <p className="ui text-sm">
-      {prefix && <span className="text-quiet">{prefix} </span>}
+      {prefix && <span className="text-muted-foreground">{prefix} </span>}
       <span className="font-semibold">{label}</span>
     </p>
   );
@@ -17,17 +17,17 @@ export function PriceLabel({ pricing }: { pricing: Product["pricing"] }) {
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="flex h-full flex-col border border-rule p-5 transition-colors hover:border-ink">
-      <p className="ui text-xs font-medium uppercase tracking-[0.14em] text-quiet">{productCategoryLabels[product.category]}</p>
+    <article className="surface relative flex h-full flex-col p-5 transition hover:-translate-y-0.5 hover:border-primary hover:shadow-lift">
+      <p className="eyebrow">{productCategoryLabels[product.category]}</p>
       <h3 className="display-md mt-2">
         <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0 hover:underline">
           {product.name}
         </Link>
       </h3>
-      <p className="mt-2 flex-1 text-quiet">{product.shortDescription}</p>
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-rule pt-3">
+      <p className="mt-2 flex-1 text-muted-foreground">{product.shortDescription}</p>
+      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3">
         <PriceLabel pricing={product.pricing} />
-        <span className="ui rounded-sm border border-rule px-2 py-0.5 text-xs">{availabilityLabels[product.availability]}</span>
+        <span className="ui rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs">{availabilityLabels[product.availability]}</span>
       </div>
     </article>
   );
@@ -36,8 +36,8 @@ export function ProductCard({ product }: { product: Product }) {
 export function ProjectCard({ project }: { project: Project }) {
   const image = project.images[0];
   return (
-    <article className="relative flex h-full flex-col border border-rule transition-colors hover:border-ink">
-      <div className="aspect-[16/10] overflow-hidden border-b border-rule">
+    <article className="surface relative flex h-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:border-primary hover:shadow-lift">
+      <div className="aspect-[16/10] overflow-hidden border-b border-border">
         {image ? (
           <Image src={image.src} alt={image.alt} width={image.width} height={image.height} className="h-full w-full object-cover" />
         ) : project.art ? (
@@ -45,7 +45,7 @@ export function ProjectCard({ project }: { project: Project }) {
         ) : null}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <p className="ui text-xs font-medium uppercase tracking-[0.14em] text-quiet">
+        <p className="eyebrow">
           {projectTypeLabels[project.type]} · {projectCategoryLabels[project.category]}
         </p>
         <h3 className="display-md mt-2">
@@ -53,7 +53,7 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.title}
           </Link>
         </h3>
-        <p className="mt-2 text-quiet">{project.summary}</p>
+        <p className="mt-2 text-muted-foreground">{project.summary}</p>
       </div>
     </article>
   );
@@ -61,8 +61,8 @@ export function ProjectCard({ project }: { project: Project }) {
 
 export function ArticleCard({ article }: { article: Article }) {
   return (
-    <article className="relative flex h-full flex-col border-t border-ink pt-4">
-      <p className="ui text-xs font-medium uppercase tracking-[0.14em] text-quiet">
+    <article className="surface relative flex h-full flex-col p-5 transition hover:border-primary hover:shadow-lift">
+      <p className="eyebrow">
         {article.category} · {article.readingMinutes} menit baca
       </p>
       <h3 className="display-md mt-2">
@@ -70,8 +70,8 @@ export function ArticleCard({ article }: { article: Article }) {
           {article.title}
         </Link>
       </h3>
-      <p className="mt-2 text-quiet">{article.description}</p>
-      <p className="ui mt-3 text-sm text-quiet">
+      <p className="mt-2 text-muted-foreground">{article.description}</p>
+      <p className="ui mt-3 text-sm text-muted-foreground">
         <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
       </p>
     </article>
@@ -80,11 +80,11 @@ export function ArticleCard({ article }: { article: Article }) {
 
 export function ServiceLink({ service, index }: { service: Service; index?: number }) {
   return (
-    <li className="relative border-t border-rule">
+    <li className="relative border-t border-border">
       <Link href={`/services/${service.slug}`} className="group grid gap-1 py-4 sm:grid-cols-[3rem_1fr_2fr] sm:items-baseline sm:gap-4">
-        {index !== undefined && <span className="ui text-sm text-quiet">{String(index + 1).padStart(2, "0")}</span>}
+        {index !== undefined && <span className="ui text-sm text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>}
         <span className="ui text-lg font-semibold group-hover:underline">{service.name}</span>
-        <span className="text-quiet">{service.summary}</span>
+        <span className="text-muted-foreground">{service.summary}</span>
       </Link>
     </li>
   );

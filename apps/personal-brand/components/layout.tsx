@@ -20,17 +20,17 @@ type SectionProps = {
 export function Section({ children, id, eyebrow, title, intro, as: Heading = "h2", className = "", ruled = true }: SectionProps) {
   const headingId = id && title ? `${id}-judul` : undefined;
   return (
-    <section id={id} aria-labelledby={headingId} className={`${ruled ? "border-t border-rule" : ""} py-16 sm:py-24 ${className}`}>
+    <section id={id} aria-labelledby={headingId} className={`${ruled ? "border-t border-border" : ""} py-16 sm:py-24 ${className}`}>
       <Container>
         {(eyebrow || title || intro) && (
           <header className="mb-10 max-w-3xl sm:mb-14">
-            {eyebrow && <p className="ui mb-3 text-sm font-medium uppercase tracking-[0.14em] text-quiet">{eyebrow}</p>}
+            {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
             {title && (
               <Heading id={headingId} className="display-lg">
                 {title}
               </Heading>
             )}
-            {intro && <p className="mt-4 max-w-prose text-lg text-quiet">{intro}</p>}
+            {intro && <p className="mt-4 max-w-prose text-lg text-muted-foreground">{intro}</p>}
           </header>
         )}
         {children}
@@ -42,11 +42,11 @@ export function Section({ children, id, eyebrow, title, intro, as: Heading = "h2
 /** Judul halaman dalam (h1). */
 export function PageHeader({ eyebrow, title, intro, children }: { eyebrow?: string; title: string; intro?: string; children?: ReactNode }) {
   return (
-    <header className="border-b border-rule pb-12 pt-14 sm:pb-16 sm:pt-20">
+    <header className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent pb-12 pt-14 sm:pb-16 sm:pt-20">
       <Container>
-        {eyebrow && <p className="ui mb-4 text-sm font-medium uppercase tracking-[0.14em] text-quiet">{eyebrow}</p>}
+        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
         <h1 className="display-xl max-w-4xl">{title}</h1>
-        {intro && <p className="mt-6 max-w-prose text-lg text-quiet sm:text-xl">{intro}</p>}
+        {intro && <p className="mt-6 max-w-prose text-lg text-muted-foreground sm:text-xl">{intro}</p>}
         {children}
       </Container>
     </header>

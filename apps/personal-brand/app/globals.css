@@ -1,128 +1,31 @@
+@import "@kholil/config/theme.css";
+@import "@fontsource-variable/inter";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --paper: 255 255 255;
-  --ink: 20 35 58;
-  --quiet: 88 105 128;
-  --rule: 220 228 237;
-  --cyan: 36 119 210;
-  --magenta: 20 64 116;
-  --link: 29 100 184;
-  --danger: 176 28 28;
-  --blend: multiply;
-  color-scheme: light;
-}
-
-.dark {
-  --paper: 15 23 42;
-  --ink: 235 241 249;
-  --quiet: 163 176 195;
-  --rule: 49 64 86;
-  --cyan: 83 163 235;
-  --magenta: 137 184 232;
-  --link: 119 184 245;
-  --danger: 255 140 140;
-  --blend: screen;
-  color-scheme: dark;
-}
-
 @layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-  }
-  body {
-    @apply bg-paper font-serif text-ink antialiased;
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    text-rendering: optimizeLegibility;
-  }
-  h1, h2, h3, h4 {
-    @apply font-display text-ink;
-    letter-spacing: -0.015em;
-    text-wrap: balance;
-  }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply font-sans antialiased; font-size: 1.0625rem; line-height: 1.7; text-rendering: optimizeLegibility; }
+  h1, h2, h3, h4 { @apply text-foreground; letter-spacing: -0.02em; text-wrap: balance; }
   p { text-wrap: pretty; }
   a { @apply underline-offset-4; }
-  :focus-visible {
-    outline: 3px solid rgb(var(--link));
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-  ::selection { background: rgb(var(--cyan) / 0.35); }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-  }
+  * { @apply border-border; }
+  :focus-visible { outline: 3px solid hsl(var(--ring)); outline-offset: 3px; border-radius: 4px; }
+  ::selection { background: hsl(var(--primary) / 0.25); }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 }
 
 @layer components {
-  /* Tautan di dalam teks */
-  .link { @apply text-link underline decoration-1 hover:decoration-2; }
-
-  /* Judul utama halaman: besar, rapat, rata kiri */
-  .display-xl {
-    @apply font-display font-bold;
-    font-size: clamp(2.5rem, 7.2vw, 5.25rem);
-    line-height: 0.98;
-    letter-spacing: -0.035em;
-    font-variation-settings: "wdth" 92;
-  }
-  .display-lg {
-    @apply font-display font-bold;
-    font-size: clamp(2rem, 4.6vw, 3.25rem);
-    line-height: 1.04;
-    letter-spacing: -0.028em;
-  }
-  .display-md {
-    @apply font-display font-semibold;
-    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
-    line-height: 1.15;
-  }
-  .ui { @apply font-display; }
-
-  /* Isi artikel dan teks panjang: lebar baris terjaga */
+  .link { @apply font-medium text-primary underline decoration-1 hover:decoration-2; }
+  .display-xl { @apply font-bold; font-size: clamp(2.25rem, 5.6vw, 4rem); line-height: 1.05; letter-spacing: -0.035em; }
+  .display-lg { @apply font-bold; font-size: clamp(1.75rem, 3.8vw, 2.75rem); line-height: 1.1; letter-spacing: -0.028em; }
+  .display-md { @apply font-semibold; font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.25; }
+  .eyebrow { @apply text-xs font-semibold uppercase text-primary; letter-spacing: 0.14em; }
+  .surface { @apply rounded-xl border bg-card text-card-foreground shadow-soft; }
   .prose-site { @apply max-w-prose; }
   .prose-site > * + * { @apply mt-5; }
   .prose-site h2 { @apply display-md mt-12; }
-  .prose-site ul { @apply list-disc space-y-2 pl-6 marker:text-quiet; }
-
-  /* ── Tanda overprint ── */
-  .overprint {
-    position: relative;
-    aspect-ratio: 1 / 0.86;
-    width: 100%;
-    isolation: isolate;
-  }
-  .overprint-layer {
-    position: absolute;
-    top: 6%;
-    width: 64%;
-    aspect-ratio: 1;
-    border-radius: 9999px;
-    mix-blend-mode: var(--blend);
-    animation: into-register 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  }
-  .overprint-cyan { left: 2%; background: rgb(var(--cyan)); --from: -22px; }
-  .overprint-magenta { right: 2%; background: rgb(var(--magenta)); --from: 22px; animation-delay: 120ms; }
-  @keyframes into-register {
-    from { transform: translate(var(--from), calc(var(--from) * -0.6)); opacity: 0.55; }
-    to { transform: translate(0, 0); opacity: 1; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .overprint-layer { animation: none; }
-  }
-
-  /* Tanda potong di sudut: konvensi file siap cetak */
-  .crop::before, .crop::after {
-    content: "";
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: rgb(var(--quiet));
-    pointer-events: none;
-  }
-  .crop::before { top: 0; left: 0; border-top: 1px solid; border-left: 1px solid; }
-  .crop::after { bottom: 0; right: 0; border-bottom: 1px solid; border-right: 1px solid; }
+  .prose-site ul { @apply list-disc space-y-2 pl-6 marker:text-muted-foreground; }
 }

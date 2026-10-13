@@ -1,40 +1,12 @@
+@import "@kholil/config/theme.css";
+@import "@fontsource-variable/inter";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 217 33% 16%;
-  --card: 0 0% 100%;
-  --muted: 214 32% 96%;
-  --muted-foreground: 215 16% 44%;
-  --border: 214 24% 88%;
-  --primary: 213 72% 42%;
-  --primary-foreground: 0 0% 100%;
-  --success: 152 60% 36%;
-  --warning: 36 90% 44%;
-  --danger: 0 72% 48%;
-}
-
-.dark {
-  --background: 217 33% 10%;
-  --foreground: 214 32% 95%;
-  --card: 217 30% 13%;
-  --muted: 216 25% 18%;
-  --muted-foreground: 215 18% 68%;
-  --border: 216 20% 24%;
-  --primary: 211 78% 63%;
-  --primary-foreground: 217 33% 10%;
-  --success: 152 55% 48%;
-  --warning: 38 92% 56%;
-  --danger: 0 80% 64%;
-}
-
-body {
-  @apply bg-background text-foreground antialiased;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-* {
-  @apply border-border;
+@layer base {
+  body { @apply font-sans antialiased; }
+  * { @apply border-border; }
+  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; border-radius: 4px; }
 }

@@ -18,7 +18,7 @@ export default function PortfolioPage() {
       <PageHeader eyebrow="Portofolio" title="Karya yang menunjukkan arah, kualitas, dan hasil yang nyata." intro="Setiap proyek disusun dengan konteks yang jelas: tantangan yang dihadapi, pendekatan yang dipilih, dan nilai yang bisa dibawa ke bisnis Anda." />
       <Section ruled={false}>
         {projects.length === 0 ? (
-          <p className="border border-rule p-6 text-quiet">Portofolio sedang disiapkan.</p>
+          <p className="border border-border p-6 text-muted-foreground">Portofolio sedang disiapkan.</p>
         ) : (
           <ProjectBrowser projects={projects} labels={projectCategoryLabels} typeLabels={projectTypeLabels} />
         )}

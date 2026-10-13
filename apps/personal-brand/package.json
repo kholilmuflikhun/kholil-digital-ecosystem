@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.1.0",
     "@kholil/shared": "workspace:*",
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",

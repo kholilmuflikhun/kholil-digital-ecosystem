@@ -6,7 +6,7 @@ import {
 import { buildMetadata } from "@/lib/seo";
 import { Container, Section } from "@/components/layout";
 import { ButtonLink } from "@/components/button-link";
-import { OverprintMark } from "@/components/overprint-mark";
+import { HeroPanel } from "@/components/hero-panel";
 import { ProductBrowser } from "@/components/filter-browsers";
 import { ProjectCard, ArticleCard } from "@/components/cards";
 import { WhatsAppCta } from "@/components/whatsapp-cta";
@@ -29,20 +29,18 @@ export default function HomePage() {
   return (
     <>
       {/* 1. Hero */}
-      <section aria-labelledby="hero-judul" className="pb-16 pt-14 sm:pb-24 sm:pt-20">
-        <Container className="grid items-center gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <section aria-labelledby="hero-judul" className="bg-gradient-to-b from-primary/5 to-transparent pb-16 pt-14 sm:pb-24 sm:pt-20">
+        <Container className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
           <div>
-            <p className="ui mb-5 text-sm font-medium uppercase tracking-[0.14em] text-quiet">{profile.name} · Strategi Brand · Desain · Digital</p>
+            <p className="eyebrow mb-5">{profile.name} · Strategi Brand · Desain · Digital</p>
             <h1 id="hero-judul" className="display-xl">{profile.headline}</h1>
-            <p className="mt-6 max-w-prose text-lg text-quiet sm:text-xl">{profile.heroSupport}</p>
+            <p className="mt-6 max-w-prose text-lg text-muted-foreground sm:text-xl">{profile.heroSupport}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href={primaryCta.href} event="consultation_click" eventProps={{ placement: "hero" }}>{primaryCta.label}</ButtonLink>
               <ButtonLink href={secondaryCta.href} variant="secondary">{secondaryCta.label}</ButtonLink>
             </div>
           </div>
-          <div className="crop relative p-4" aria-hidden={false}>
-            <OverprintMark />
-          </div>
+          <HeroPanel items={pillars} />
         </Container>
       </section>
 
@@ -58,9 +56,9 @@ export default function HomePage() {
       <Section id="layanan" eyebrow="Layanan" title="Empat bidang kerja, satu ekosistem yang terarah untuk pertumbuhan." intro="Setiap layanan dirancang untuk memperkuat identitas, pengalaman, dan eksekusi bisnis Anda—tanpa perlu mengelola banyak vendor yang terpisah.">
         <div className="grid gap-10 md:grid-cols-2">
           {pillars.map((p) => (
-            <article key={p.id} className="border-t border-ink pt-4">
+            <article key={p.id} className="surface p-6">
               <h3 className="display-md">{p.name}</h3>
-              <p className="mt-2 text-quiet">{p.tagline}</p>
+              <p className="mt-2 text-muted-foreground">{p.tagline}</p>
               <ul className="ui mt-4 space-y-1 text-sm">
                 {servicesByPillar(p.id).slice(0, 4).map((s) => (
                   <li key={s.slug}><Link href={`/services/${s.slug}`} className="hover:underline">{s.name}</Link></li>
@@ -94,9 +92,9 @@ export default function HomePage() {
       <Section id="alasan" eyebrow="Cara kerja" title="Mengapa bisnis memilih pendekatan yang lebih terarah ini.">
         <dl className="grid gap-8 md:grid-cols-2">
           {profile.philosophy.map((f) => (
-            <div key={f.title} className="border-t border-rule pt-4">
+            <div key={f.title} className="surface p-6">
               <dt className="display-md">{f.title}</dt>
-              <dd className="mt-2 text-quiet">{f.text}</dd>
+              <dd className="mt-2 text-muted-foreground">{f.text}</dd>
             </div>
           ))}
         </dl>
@@ -106,10 +104,10 @@ export default function HomePage() {
       <Section id="proses" eyebrow="Proses" title="Dari ide awal sampai hasil akhir, setiap langkah dibuat jelas dan terkendali.">
         <ol className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
           {processSteps.slice(0, 4).map((s, i) => (
-            <li key={s.id} className="border-t border-ink pt-3">
-              <span className="ui text-sm text-quiet">{String(i + 1).padStart(2, "0")}</span>
+            <li key={s.id} className="surface p-5">
+              <span className="ui text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="display-md mt-1">{s.title}</h3>
-              <p className="mt-2 text-quiet">{s.description}</p>
+              <p className="mt-2 text-muted-foreground">{s.description}</p>
             </li>
           ))}
         </ol>
@@ -120,8 +118,8 @@ export default function HomePage() {
       {caseStudy && (
         <Section id="studi-kasus" eyebrow="Studi kasus" title={caseStudy.title}>
           <div className="grid gap-8 md:grid-cols-2">
-            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-quiet">Masalah</h3><p className="mt-2">{caseStudy.problem}</p></div>
-            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-quiet">Pendekatan</h3><p className="mt-2">{caseStudy.approach}</p></div>
+            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">Masalah</h3><p className="mt-2">{caseStudy.problem}</p></div>
+            <div><h3 className="ui text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">Pendekatan</h3><p className="mt-2">{caseStudy.approach}</p></div>
           </div>
           <p className="mt-8"><Link href={`/portfolio/${caseStudy.slug}`} className="link ui font-semibold">Baca studi kasus</Link></p>
         </Section>
@@ -134,7 +132,7 @@ export default function HomePage() {
             {testimonials.map((t) => (
               <li key={t.id}>
                 <blockquote className="text-lg">“{t.quote}”</blockquote>
-                <p className="ui mt-3 text-sm text-quiet">{t.name}{t.role ? `, ${t.role}` : ""}{t.business ? ` · ${t.business}` : ""}</p>
+                <p className="ui mt-3 text-sm text-muted-foreground">{t.name}{t.role ? `, ${t.role}` : ""}{t.business ? ` · ${t.business}` : ""}</p>
               </li>
             ))}
           </ul>
@@ -155,7 +153,7 @@ export default function HomePage() {
       <Section id="hubungi" ruled>
         <div className="max-w-3xl">
           <h2 className="display-lg">Siap memperkuat brand dan sistem digital Anda?</h2>
-          <p className="mt-4 max-w-prose text-lg text-quiet">Ceritakan kebutuhan Anda dengan singkat dan jelas. Saya akan membantu menguraikan langkah yang paling tepat untuk memperkuat posisi, komunikasi, dan eksekusi bisnis Anda.</p>
+          <p className="mt-4 max-w-prose text-lg text-muted-foreground">Ceritakan kebutuhan Anda dengan singkat dan jelas. Saya akan membantu menguraikan langkah yang paling tepat untuk memperkuat posisi, komunikasi, dan eksekusi bisnis Anda.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/contact" event="consultation_click" eventProps={{ placement: "cta-akhir" }}>Diskusikan Proyek Anda</ButtonLink>
             <WhatsAppCta placement="cta-akhir" />

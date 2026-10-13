@@ -3,11 +3,11 @@ import type { AnalyticsEvent } from "@/lib/analytics";
 import { TrackedLink } from "./tracked-link";
 
 const base =
-  "ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-base font-semibold transition-colors";
+  "ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-[0.95rem] font-semibold transition-colors";
 const variants = {
-  primary: "bg-ink text-paper hover:bg-ink/85",
-  secondary: "border border-ink text-ink hover:bg-ink hover:text-paper",
-  ghost: "text-ink underline decoration-1 underline-offset-4 hover:decoration-2 px-0",
+  primary: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90",
+  secondary: "border border-input bg-card text-foreground hover:border-primary hover:text-primary",
+  ghost: "text-primary underline decoration-1 underline-offset-4 hover:decoration-2 px-0",
 } as const;
 
 type Props = {

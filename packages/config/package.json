@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./eslint-next": "./eslint-next.mjs"
+    "./eslint-next": "./eslint-next.mjs",
+    "./theme.css": "./theme.css",
+    "./tailwind-preset": "./tailwind-preset.cjs"
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.2.0",

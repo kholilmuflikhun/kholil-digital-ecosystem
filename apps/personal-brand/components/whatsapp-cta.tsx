@@ -18,13 +18,13 @@ type Props = WhatsAppMessageInput & {
 export function WhatsAppCta({ label = "Chat via WhatsApp", variant = "outline", className = "", placement = "umum", ...message }: Props) {
   const url = buildWhatsAppUrl(whatsappNumber, message);
   const styles =
-    variant === "solid" ? "bg-ink text-paper hover:bg-ink/85" : "border border-ink text-ink hover:bg-ink hover:text-paper";
+    variant === "solid" ? "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90" : "border border-input bg-card text-foreground hover:border-primary hover:text-primary";
   return (
     <TrackedLink
       href={url ?? "/contact"}
       event="whatsapp_click"
       eventProps={{ placement, configured: Boolean(url) }}
-      className={`ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-base font-semibold transition-colors ${styles} ${className}`}
+      className={`ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-[0.95rem] font-semibold transition-colors ${styles} ${className}`}
     >
       <MessageCircle aria-hidden="true" size={18} />
       {url ? label : "Hubungi lewat formulir"}
