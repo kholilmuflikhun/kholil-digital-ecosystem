@@ -13,7 +13,7 @@ export async function registerAction(_: unknown, formData: FormData): Promise<Ac
   if (process.env.ALLOW_SIGNUP === "false") return { ok: false, error: "Pendaftaran dinonaktifkan." };
 
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!rateLimit(`register:${ip}`, 5, 60 * 60_000).ok) {
+  if (!(await rateLimit(`register:${ip}`, 5, 60 * 60_000)).ok) {
     return { ok: false, error: "Terlalu banyak percobaan. Coba lagi nanti." };
   }
 

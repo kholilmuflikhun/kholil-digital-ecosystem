@@ -38,7 +38,7 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   // 1) Batas laju per IP
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown";
-  if (!rateLimit(`contact:${ip}`, 5, 10 * 60_000).ok) {
+  if (!(await rateLimit(`contact:${ip}`, 5, 10 * 60_000)).ok) {
     return { status: "rate_limited", message: "Terlalu banyak pengiriman dalam waktu singkat. Coba lagi beberapa menit lagi.", values };
   }
 

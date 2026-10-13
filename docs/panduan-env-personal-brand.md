@@ -108,3 +108,7 @@ Tambahkan variabel yang diperlukan melalui **Vercel → Project → Settings →
 - Setelah mengubah variabel di Vercel, lakukan redeploy agar nilai baru diterapkan.
 
 Variabel berawalan `NEXT_PUBLIC_` ditujukan untuk penggunaan publik dan dapat terlihat oleh browser. Jangan pernah menaruh API key atau kunci Growth OS pada variabel dengan awalan tersebut.
+
+## Rate limiter Upstash (opsional)
+
+`UPSTASH_REDIS_REST_URL` dan `UPSTASH_REDIS_REST_TOKEN` mengaktifkan pembatas laju formulir kontak yang berlaku global lintas instance Vercel. Tanpa keduanya, pembatas bekerja in-memory per instance. Bila Upstash tidak terjangkau, website otomatis memakai cadangan in-memory dan tetap melayani pengunjung.

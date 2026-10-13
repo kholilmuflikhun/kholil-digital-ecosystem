@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   const token = extractBearer(req.headers.get("authorization"));
   if (!token || !safeEqual(token, apiKey)) return json({ error: "unauthorized" }, 401);
 
-  if (!rateLimit("lead-ingest", 120, 60_000).ok) return json({ error: "rate_limited" }, 429);
+  if (!(await rateLimit("lead-ingest", 120, 60_000)).ok) return json({ error: "rate_limited" }, 429);
 
   const declared = Number(req.headers.get("content-length") ?? 0);
   if (declared > MAX_BODY_BYTES) return json({ error: "payload_too_large" }, 413);

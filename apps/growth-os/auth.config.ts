@@ -13,7 +13,8 @@ export const authConfig = {
         nextUrl.pathname.startsWith("/login") ||
         nextUrl.pathname.startsWith("/register") ||
         nextUrl.pathname.startsWith("/api/auth") ||
-        nextUrl.pathname.startsWith("/api/leads"); // dilindungi API key di route handler
+        nextUrl.pathname.startsWith("/api/leads") || // dilindungi API key di route handler
+        nextUrl.pathname.startsWith("/api/cron"); // dilindungi CRON_SECRET di route handler
       if (isPublic) {
         if (loggedIn && (nextUrl.pathname.startsWith("/login") || nextUrl.pathname.startsWith("/register"))) {
           return Response.redirect(new URL("/dashboard", nextUrl));

@@ -5,11 +5,13 @@ import { scalePhases } from "@/lib/constants/campaign-template";
 import { addDays, startOfDay } from "date-fns";
 import {
   goalSchema, taskSchema, taskStatusSchema, offerSchema, projectSchema, contentSchema,
-  revenueSchema, expenseSchema, campaignSchema, dailyActivitySchema, settingsSchema,
+  revenueSchema, expenseSchema, paymentSchema, campaignSchema, dailyActivitySchema, settingsSchema,
   strategySchema, weeklyReviewSchema, idSchema,
 } from "@/lib/validations/entities";
 import { guard, parse, ownsAll, refresh, safe, fail, type ActionResult } from "./helpers";
 import type { Prisma } from "@prisma/client";
+import { derivePaymentStatus, exceedsGross } from "@/lib/calculations/payments";
+import { num } from "@/lib/utils";
 
 type In = FormData | Record<string, unknown>;
 
@@ -220,12 +222,71 @@ export async function deleteRevenue(input: In): Promise<ActionResult> {
   });
 }
 
-export async function saveExpense(input: In): Promise<ActionResult> {
+export async function saveExpense(input: In, id?: string): Promise<ActionResult> {
   return safe(async () => {
     const userId = await guard();
     const p = parse(expenseSchema, input);
     if (!p.ok) return p;
-    await db.expense.create({ data: { ...p.data, userId } });
+    const res = await upsertOwned(id,
+      () => db.expense.updateMany({ where: { id, userId }, data: p.data }),
+      () => db.expense.create({ data: { ...p.data, userId } }),
+      "Biaya tidak ditemukan.");
+    refresh("/revenue", "/dashboard", "/analytics", "/goals");
+    return res;
+  });
+}
+
+export async function deleteExpense(input: In): Promise<ActionResult> {
+  return safe(async () => {
+    const userId = await guard();
+    const p = parse(idSchema, input);
+    if (!p.ok) return p;
+    await db.expense.deleteMany({ where: { id: p.data.id, userId } });
+    refresh("/revenue", "/dashboard", "/analytics", "/goals");
+    return { ok: true };
+  });
+}
+
+/** Hitung ulang status pembayaran transaksi dari total pembayaran bertahap (dalam transaksi DB). */
+async function recalcRevenueStatus(tx: Prisma.TransactionClient, userId: string, revenueId: string) {
+  const rev = await tx.revenue.findFirst({ where: { id: revenueId, userId }, include: { payments: { select: { amount: true } } } });
+  if (!rev) return;
+  const paid = rev.payments.reduce((s, x) => s + num(x.amount), 0);
+  const status = derivePaymentStatus({ gross: num(rev.grossRevenue), paid, dueDate: rev.dueDate, current: rev.paymentStatus });
+  if (status !== rev.paymentStatus) await tx.revenue.update({ where: { id: rev.id }, data: { paymentStatus: status } });
+}
+
+export async function savePayment(input: In): Promise<ActionResult> {
+  return safe(async () => {
+    const userId = await guard();
+    const p = parse(paymentSchema, input);
+    if (!p.ok) return p;
+    const res = await db.$transaction(async (tx): Promise<ActionResult> => {
+      const rev = await tx.revenue.findFirst({ where: { id: p.data.revenueId, userId }, include: { payments: { select: { amount: true } } } });
+      if (!rev) return fail("Transaksi tidak ditemukan.");
+      if (rev.paymentStatus === "CANCELLED") return fail("Transaksi dibatalkan.");
+      const already = rev.payments.reduce((s, x) => s + num(x.amount), 0);
+      if (exceedsGross(num(rev.grossRevenue), already, p.data.amount)) return fail("Pembayaran melebihi sisa tagihan.");
+      await tx.payment.create({ data: { ...p.data, userId } });
+      await recalcRevenueStatus(tx, userId, rev.id);
+      return { ok: true };
+    });
+    refresh("/revenue", "/dashboard", "/analytics", "/customers");
+    return res;
+  });
+}
+
+export async function deletePayment(input: In): Promise<ActionResult> {
+  return safe(async () => {
+    const userId = await guard();
+    const p = parse(idSchema, input);
+    if (!p.ok) return p;
+    await db.$transaction(async (tx) => {
+      const pay = await tx.payment.findFirst({ where: { id: p.data.id, userId }, select: { id: true, revenueId: true } });
+      if (!pay) return;
+      await tx.payment.delete({ where: { id: pay.id } });
+      await recalcRevenueStatus(tx, userId, pay.revenueId);
+    });
     refresh("/revenue", "/dashboard", "/analytics");
     return { ok: true };
   });

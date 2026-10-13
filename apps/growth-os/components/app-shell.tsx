@@ -4,21 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  BarChart3, CalendarCheck, Compass, FolderKanban, Heart, Kanban, LayoutDashboard,
+  Award, BarChart3, Bell, CalendarCheck, Compass, FolderKanban, Heart, Kanban, LayoutDashboard,
   Megaphone, Menu, Package, Settings, Target, Users, Wallet, X, LogOut, Rocket,
 } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/theme";
 
-const ICONS = { LayoutDashboard, Target, CalendarCheck, Users, Kanban, Heart, Package, FolderKanban, Megaphone, Wallet, BarChart3, Compass, Settings };
+const ICONS = { Award, Bell, LayoutDashboard, Target, CalendarCheck, Users, Kanban, Heart, Package, FolderKanban, Megaphone, Wallet, BarChart3, Compass, Settings };
 
 export function AppShell({
-  children, userName, logout,
+  children, userName, logout, unread = 0,
 }: {
   children: React.ReactNode;
   userName: string;
   logout: () => Promise<void>;
+  unread?: number;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -75,6 +76,10 @@ export function AppShell({
           </button>
           <div className="ml-auto flex items-center gap-2">
             <span className="hidden text-sm text-muted-foreground sm:inline">{userName}</span>
+            <Link href="/notifications" aria-label={unread > 0 ? `Notifikasi, ${unread} belum dibaca` : "Notifikasi"} className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border hover:bg-muted">
+              <Bell className="h-4 w-4" />
+              {unread > 0 && <span aria-hidden className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-semibold text-background">{unread > 9 ? "9+" : unread}</span>}
+            </Link>
             <ThemeToggle />
             <form action={logout}>
               <button className="inline-flex h-9 w-9 items-center justify-center rounded-md border hover:bg-muted" aria-label="Keluar">

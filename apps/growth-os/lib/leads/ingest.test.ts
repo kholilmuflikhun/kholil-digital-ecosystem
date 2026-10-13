@@ -17,15 +17,23 @@ const payload = leadPayloadSchema.parse({
   attribution: { utmSource: "instagram", utmCampaign: "okt" },
 });
 
-function fakeDb(opts: { owner?: boolean; existing?: boolean } = {}) {
-  const { owner = true, existing = false } = opts;
-  return {
-    user: { findUnique: vi.fn().mockResolvedValue(owner ? { id: "u1" } : null) },
-    activityLog: {
-      findFirst: vi.fn().mockResolvedValue(existing ? { id: "a1" } : null),
-      create: vi.fn().mockResolvedValue({}),
+function fakeDb(opts: { owner?: boolean; duplicate?: boolean; fail?: boolean } = {}) {
+  const { owner = true, duplicate = false, fail = false } = opts;
+  const tx = {
+    prospect: {
+      create: vi.fn().mockImplementation(async () => {
+        if (duplicate) throw Object.assign(new Error("Unique constraint"), { code: "P2002" });
+        if (fail) throw new Error("db down");
+        return { id: "p1" };
+      }),
     },
-    prospect: { create: vi.fn().mockResolvedValue({ id: "p1" }) },
+    activityLog: { create: vi.fn().mockResolvedValue({}) },
+    notification: { create: vi.fn().mockResolvedValue({}) },
+  };
+  return {
+    tx,
+    user: { findUnique: vi.fn().mockResolvedValue(owner ? { id: "u1" } : null) },
+    $transaction: vi.fn(async (fn: (t: typeof tx) => Promise<unknown>) => fn(tx)),
   };
 }
 
@@ -56,25 +64,34 @@ describe("buildProspectData", () => {
 });
 
 describe("ingestLead", () => {
-  it("membuat prospek dan mencatat externalId", async () => {
+  it("membuat prospek, log aktivitas, dan notifikasi dalam satu transaksi", async () => {
     const db = fakeDb();
     const r = await ingestLead(db as never, payload, "owner@example.com");
     expect(r).toEqual({ ok: true, duplicate: false });
-    expect(db.prospect.create).toHaveBeenCalledOnce();
-    expect(db.activityLog.create).toHaveBeenCalledOnce();
+    expect(db.$transaction).toHaveBeenCalledOnce();
+    expect(db.tx.prospect.create.mock.calls[0]![0].data.externalId).toBe(payload.externalId);
+    expect(db.tx.activityLog.create).toHaveBeenCalledOnce();
+    const n = db.tx.notification.create.mock.calls[0]![0].data;
+    expect(n.dedupeKey).toBe(`lead:${payload.externalId}`);
+    expect(n.userId).toBe("u1");
   });
 
-  it("idempoten: pengiriman ulang tidak membuat prospek ganda", async () => {
-    const db = fakeDb({ existing: true });
+  it("idempoten: pelanggaran constraint unik dianggap duplikat, bukan error", async () => {
+    const db = fakeDb({ duplicate: true });
     const r = await ingestLead(db as never, payload, "owner@example.com");
     expect(r).toEqual({ ok: true, duplicate: true });
-    expect(db.prospect.create).not.toHaveBeenCalled();
+    expect(db.tx.activityLog.create).not.toHaveBeenCalled();
+  });
+
+  it("error database lain tetap dilempar (tidak ditelan sebagai duplikat)", async () => {
+    const db = fakeDb({ fail: true });
+    await expect(ingestLead(db as never, payload, "owner@example.com")).rejects.toThrow("db down");
   });
 
   it("gagal bila akun pemilik tidak ada, tanpa menulis data", async () => {
     const db = fakeDb({ owner: false });
     const r = await ingestLead(db as never, payload, "x@example.com");
     expect(r).toEqual({ ok: false, reason: "owner_not_found" });
-    expect(db.prospect.create).not.toHaveBeenCalled();
+    expect(db.$transaction).not.toHaveBeenCalled();
   });
 });
