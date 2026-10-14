@@ -323,7 +323,7 @@ export async function saveSettings(input: In): Promise<ActionResult> {
     if (!p.ok) return p;
     const { name, currency, locale, ...rest } = p.data;
     if (!(rest.scoreCritical < rest.scoreNeedsWork && rest.scoreNeedsWork < rest.scoreOnTrack)) {
-      return fail("Ambang skor harus berurutan: Critical < Needs Improvement < On Track.");
+      return fail("Urutkan batas skor: kritis < perlu ditingkatkan < sesuai target.");
     }
     await db.$transaction([
       db.user.update({ where: { id: userId }, data: { name, currency, locale } }),

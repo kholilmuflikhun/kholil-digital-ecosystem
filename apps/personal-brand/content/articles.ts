@@ -41,7 +41,7 @@ export const articles: Article[] = [
     title: "Cara Menyiapkan File Desain agar Siap Cetak",
     description:
       "Poin teknis yang sering terlewat sebelum desain dikirim ke percetakan: ukuran, bleed, mode warna, dan huruf.",
-    category: "Digital Printing",
+    category: "Cetak Digital",
     publishedAt: "2026-10-09",
     readingMinutes: 3,
     author: "Kholil Muflikhun",

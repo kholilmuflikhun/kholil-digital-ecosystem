@@ -7,16 +7,16 @@ type Action = (input: Record<string, unknown>) => Promise<{ ok: boolean; error?:
 
 const FIELDS = [
   ["name", "Nama", "text", "Nama tampilan"],
-  ["currency", "Mata uang (kode ISO, mis. IDR, USD)", "text", ""],
-  ["locale", "Locale (mis. id-ID, en-US)", "text", ""],
-  ["averageOrderValue", "Rata-rata nilai pesanan (AOV)", "number", "Dipakai mesin matematika penjualan"],
-  ["conversionRate", "Konversi lead terkualifikasi → transaksi (0–1)", "number", "0.2 = 20%"],
-  ["qualificationRate", "Kualifikasi prospek → lead (0–1)", "number", ""],
-  ["responseRate", "Response rate outreach (0–1)", "number", ""],
-  ["scoreCritical", "Ambang Critical (di bawah, %)", "number", ""],
-  ["scoreNeedsWork", "Ambang Needs Improvement (di bawah, %)", "number", ""],
-  ["scoreOnTrack", "Ambang On Track (di bawah, %)", "number", "Di atas ini = Excellent"],
-  ["repeatWindowDays", "Jendela repeat order (hari)", "number", "Pelanggan dianggap dorman setelahnya"],
+  ["currency", "Mata uang (kode ISO, mis. IDR)", "text", ""],
+  ["locale", "Format wilayah (mis. id-ID)", "text", ""],
+  ["averageOrderValue", "Rata-rata nilai pesanan", "number", "Dasar perhitungan target penjualan"],
+  ["conversionRate", "Konversi lead ke transaksi (0–1)", "number", "0,2 = 20%"],
+  ["qualificationRate", "Konversi prospek ke lead (0–1)", "number", ""],
+  ["responseRate", "Tingkat respons prospek (0–1)", "number", ""],
+  ["scoreCritical", "Batas skor kritis (%)", "number", ""],
+  ["scoreNeedsWork", "Batas skor perlu ditingkatkan (%)", "number", ""],
+  ["scoreOnTrack", "Batas skor sesuai target (%)", "number", "Di atas batas ini: unggul"],
+  ["repeatWindowDays", "Periode pesanan ulang (hari)", "number", "Pelanggan dianggap tidak aktif setelah periode ini"],
 ] as const;
 
 export function SettingsForm({ action, initial }: { action: Action; initial: Record<string, string | number> }) {
@@ -34,7 +34,7 @@ export function SettingsForm({ action, initial }: { action: Action; initial: Rec
         start(async () => {
           const r = await action(values);
           setErrors(r.fieldErrors ?? {});
-          setMsg(r.ok ? "Pengaturan tersimpan." : r.error ?? "Gagal menyimpan.");
+          setMsg(r.ok ? "Pengaturan tersimpan." : r.error ?? "Pengaturan gagal disimpan.");
         });
       }}
       className="grid gap-3 sm:grid-cols-2"

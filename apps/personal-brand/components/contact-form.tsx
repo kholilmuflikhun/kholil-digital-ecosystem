@@ -38,11 +38,8 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
   if (state.status === "success") {
     return (
       <div ref={statusRef} tabIndex={-1} role="status" className="border border-foreground p-6 outline-none">
-        <h2 className="display-md">Pesan Anda sudah terkirim.</h2>
-        <p className="mt-3 text-muted-foreground">
-          Terima kasih. Saya akan membaca kebutuhan Anda dan membalas lewat metode kontak yang Anda pilih. Estimasi waktu balasan tidak dijanjikan di sini; bila
-          mendesak, hubungi lewat WhatsApp.
-        </p>
+        <h2 className="display-md">Pesan terkirim.</h2>
+        <p className="mt-3 text-muted-foreground">Terima kasih. Saya akan meninjau kebutuhan Anda dan menghubungi melalui kanal pilihan.</p>
       </div>
     );
   }
@@ -82,7 +79,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
       {/* Honeypot: disembunyikan dari pengguna dan teknologi bantu */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>
-          Situs web perusahaan
+          Situs web
           <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
@@ -108,10 +105,10 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
           {err("whatsapp") && <p id="whatsapp-error" className="mt-1 text-sm text-danger">{err("whatsapp")}</p>}
         </div>
       </div>
-      <p className="-mt-3 text-sm text-muted-foreground">Isi minimal salah satu: email atau nomor WhatsApp.</p>
+      <p className="-mt-3 text-sm text-muted-foreground">Isi email atau nomor WhatsApp.</p>
 
       <fieldset aria-describedby={describe("preferredContact")}>
-        <legend className={label}>Metode kontak yang Anda pilih <span aria-hidden="true">*</span></legend>
+        <legend className={label}>Kanal kontak pilihan <span aria-hidden="true">*</span></legend>
         <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
           {[
             ["whatsapp", "WhatsApp"],
@@ -149,21 +146,21 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
             <option value="">Pilih</option>
             {budgetOptions.map((o) => (<option key={o}>{o}</option>))}
           </select>
-          <p className="mt-1 text-sm text-muted-foreground">Hanya membantu saya memahami skala. Bukan daftar harga dan tidak mengikat.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Perkiraan ini bukan penawaran harga.</p>
         </div>
       </div>
 
       <div>
-        <label htmlFor="message" className={label}>Ceritakan kebutuhan Anda <span aria-hidden="true">*</span></label>
+        <label htmlFor="message" className={label}>Kebutuhan proyek <span aria-hidden="true">*</span></label>
         <textarea id="message" name="message" required rows={6} maxLength={3000} defaultValue={values.message ?? defaultMessage} aria-invalid={Boolean(err("message"))} aria-describedby={describe("message")} className={field} />
         {err("message") && <p id="message-error" className="mt-1 text-sm text-danger">{err("message")}</p>}
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" disabled={pending || !startedAt} className="ui inline-flex min-h-[48px] items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-60">
-          {pending ? "Mengirim…" : "Kirim pesan"}
+          {pending ? "Mengirim…" : "Kirim"}
         </button>
-        <p className="text-sm text-muted-foreground">Data Anda hanya dipakai untuk membalas pesan ini. Lihat <Link className="link" href="/privacy">kebijakan privasi</Link>.</p>
+        <p className="text-sm text-muted-foreground">Data digunakan untuk menanggapi pesan Anda. Baca <Link className="link" href="/privacy">kebijakan privasi</Link>.</p>
       </div>
     </form>
   );

@@ -10,7 +10,7 @@ import { BarList, TrendChart } from "@/components/ui/charts";
 import { PAYMENT_STATUS, label, pick } from "@/lib/constants/options";
 import { formatCurrency, formatPct, num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Revenue" };
+export const metadata: Metadata = { title: "Pendapatan" };
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 50;
 
@@ -33,19 +33,19 @@ export default async function RevenuePage({ searchParams }: { searchParams: Prom
     { name: "date", label: "Tanggal", type: "date", required: true },
     { name: "customerId", label: "Pelanggan", type: "select", options: pick(customers.map((c) => ({ id: c.id, name: c.businessName ?? c.name }))) },
     { name: "offerId", label: "Produk/layanan", type: "select", options: pick(offers) },
-    { name: "dealId", label: "Deal", type: "select", options: pick(deals) },
+    { name: "dealId", label: "Transaksi terkait", type: "select", options: pick(deals) },
     { name: "grossRevenue", label: "Pendapatan kotor", type: "number", required: true },
     { name: "cost", label: "Biaya", type: "number" },
     { name: "paymentStatus", label: "Status pembayaran", type: "select", required: true, options: PAYMENT_STATUS },
     { name: "paymentMethod", label: "Metode pembayaran" },
-    { name: "reference", label: "Invoice/referensi" },
+    { name: "reference", label: "Tagihan / referensi" },
     { name: "channel", label: "Kanal" },
     { name: "dueDate", label: "Jatuh tempo", type: "date" },
     { name: "notes", label: "Catatan", type: "textarea" },
   ];
   const expenseFields: Field[] = [
     { name: "date", label: "Tanggal", type: "date", required: true },
-    { name: "category", label: "Kategori (iklan, tools, dll.)", required: true },
+    { name: "category", label: "Kategori (iklan, alat, dll.)", required: true },
     { name: "amount", label: "Jumlah", type: "number", required: true },
     { name: "note", label: "Catatan", type: "textarea" },
   ];
@@ -61,7 +61,7 @@ export default async function RevenuePage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHeader
-        title="Revenue"
+        title="Pendapatan"
         actions={
           <div className="flex gap-2">
             <EntityForm title="Biaya operasional" fields={expenseFields} action={saveExpense} triggerLabel="Biaya" />
@@ -73,19 +73,19 @@ export default async function RevenuePage({ searchParams }: { searchParams: Prom
       <section aria-label="Ringkasan keuangan" className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Pendapatan kotor" value={money(f.grossRevenue)} />
         <Stat label="Total biaya" value={money(f.totalCosts)} hint={`+ operasional ${money(f.operatingExpenses)}`} />
-        <Stat label="Laba kotor / bersih" value={money(f.grossProfit)} hint={`Bersih ${money(f.netProfit)}`} />
-        <Stat label="Margin" value={formatPct(f.profitMargin)} hint={`AOV ${f.averageOrderValue ? money(f.averageOrderValue) : "—"}`} />
+        <Stat label="Profit kotor / bersih" value={money(f.grossProfit)} hint={`Bersih ${money(f.netProfit)}`} />
+        <Stat label="Margin profit" value={formatPct(f.profitMargin)} hint={`Nilai rata-rata ${f.averageOrderValue ? money(f.averageOrderValue) : "—"}`} />
         <Stat label="Belum dibayar" value={money(f.outstanding)} tone={f.outstanding > 0 ? "warning" : undefined} />
       </section>
 
       <div className="mb-4 grid gap-4 lg:grid-cols-2">
-        <Card><CardTitle>Tren Pendapatan & Profit</CardTitle><TrendChart data={o.monthly} series={[{ key: "revenue", label: "Pendapatan" }, { key: "profit", label: "Profit" }]} /></Card>
-        <Card><CardTitle>Pendapatan per Pelanggan</CardTitle>{o.revenueByCustomer.length ? <BarList data={o.revenueByCustomer} /> : <EmptyState>Belum ada data.</EmptyState>}</Card>
+        <Card><CardTitle>Tren pendapatan dan profit</CardTitle><TrendChart data={o.monthly} series={[{ key: "revenue", label: "Pendapatan" }, { key: "profit", label: "Profit" }]} /></Card>
+        <Card><CardTitle>Pendapatan per pelanggan</CardTitle>{o.revenueByCustomer.length ? <BarList data={o.revenueByCustomer} /> : <EmptyState>Belum ada data.</EmptyState>}</Card>
       </div>
 
       {rows.length === 0 ? <EmptyState>Belum ada transaksi.</EmptyState> : (
         <Table>
-          <thead><tr><Th>Tanggal</Th><Th>Pelanggan</Th><Th>Layanan</Th><Th>Kotor</Th><Th>Biaya</Th><Th>Bersih</Th><Th>Terbayar</Th><Th>Status</Th><Th>Ref</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
+          <thead><tr><Th>Tanggal</Th><Th>Pelanggan</Th><Th>Penawaran</Th><Th>Kotor</Th><Th>Biaya</Th><Th>Bersih</Th><Th>Dibayar</Th><Th>Status</Th><Th>Referensi</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
           <tbody>
             {rows.map((r) => {
               const paid = r.payments.reduce((s, x) => s + num(x.amount), 0);

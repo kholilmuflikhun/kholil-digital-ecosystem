@@ -9,7 +9,7 @@ import { DeleteButton, EntityForm, type Field } from "@/components/ui/entity-for
 import { formatCurrency, num } from "@/lib/utils";
 import { pick } from "@/lib/constants/options";
 
-export const metadata: Metadata = { title: "Testimoni & Referral" };
+export const metadata: Metadata = { title: "Testimoni & Rujukan" };
 export const dynamic = "force-dynamic";
 
 export default async function RetentionPage() {
@@ -26,16 +26,16 @@ export default async function RetentionPage() {
 
   const testimonialFields: Field[] = [
     { name: "customerId", label: "Pelanggan", type: "select", required: true, options: customerOptions },
-    { name: "quote", label: "Isi testimoni (kutipan asli dari pelanggan)", type: "textarea", required: true },
+    { name: "quote", label: "Testimoni (kutipan pelanggan)", type: "textarea", required: true },
     { name: "rating", label: "Rating", type: "select", options: [1, 2, 3, 4, 5].map((n) => ({ value: String(n), label: `${n} / 5` })) },
     { name: "receivedAt", label: "Tanggal diterima", type: "date" },
-    { name: "isPublic", label: "Izin ditampilkan publik (pelanggan sudah menyetujui)", type: "checkbox" },
+    { name: "isPublic", label: "Izin publikasi telah diberikan", type: "checkbox" },
   ];
   const referralFields: Field[] = [
     { name: "referrerId", label: "Pelanggan yang merekomendasikan", type: "select", required: true, options: customerOptions },
     { name: "referredName", label: "Nama yang direferensikan", required: true },
     { name: "referredProspectId", label: "Terhubung ke prospek", type: "select", options: pick(prospects) },
-    { name: "resultingRevenue", label: "Pendapatan dari referral", type: "number" },
+    { name: "resultingRevenue", label: "Pendapatan dari rujukan", type: "number" },
   ];
 
   const referralRevenue = referrals.reduce((s, r) => s + num(r.resultingRevenue), 0);
@@ -43,19 +43,19 @@ export default async function RetentionPage() {
   return (
     <>
       <PageHeader
-        title="Testimoni & Referral"
-        description="Catat bukti sosial yang nyata. Testimoni publik hanya untuk yang sudah diizinkan pelanggan."
+        title="Testimoni & Rujukan"
+        description="Catat testimoni dan rujukan. Tampilkan testimoni hanya dengan izin pelanggan."
         actions={
           <div className="flex gap-2">
-            <EntityForm title="Referral baru" fields={referralFields} action={saveReferral} triggerLabel="Referral" />
+            <EntityForm title="Rujukan baru" fields={referralFields} action={saveReferral} triggerLabel="Rujukan" />
             <EntityForm title="Testimoni baru" fields={testimonialFields} action={saveTestimonial} triggerLabel="Testimoni" />
           </div>
         }
       />
       <section aria-label="Ringkasan" className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Testimoni" value={testimonials.length} hint={`${testimonials.filter((t) => t.isPublic).length} boleh publik`} />
-        <Stat label="Referral" value={referrals.length} />
-        <Stat label="Pendapatan referral" value={money(referralRevenue)} />
+        <Stat label="Rujukan" value={referrals.length} />
+        <Stat label="Pendapatan dari rujukan" value={money(referralRevenue)} />
         <Stat label="Pelanggan" value={customers.length} />
       </section>
 
@@ -86,10 +86,10 @@ export default async function RetentionPage() {
       </Card>
 
       <Card>
-        <CardTitle>Referral</CardTitle>
-        {referrals.length === 0 ? <EmptyState>Belum ada referral.</EmptyState> : (
+        <CardTitle>Rujukan</CardTitle>
+        {referrals.length === 0 ? <EmptyState>Belum ada rujukan.</EmptyState> : (
           <Table>
-            <thead><tr><Th>Perekomendasi</Th><Th>Direferensikan</Th><Th>Pendapatan</Th><Th>Tanggal</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
+            <thead><tr><Th>Pemberi rujukan</Th><Th>Nama rujukan</Th><Th>Pendapatan</Th><Th>Tanggal</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
             <tbody>
               {referrals.map((r) => (
                 <tr key={r.id}>
@@ -99,7 +99,7 @@ export default async function RetentionPage() {
                   <Td>{format(r.createdAt, "d MMM yyyy")}</Td>
                   <Td>
                     <div className="flex justify-end gap-1">
-                      <EntityForm mode="edit" title="Edit referral" fields={referralFields} action={saveReferral} id={r.id} initial={{ ...r, resultingRevenue: num(r.resultingRevenue), referredProspectId: r.referredProspectId ?? "" }} />
+                      <EntityForm mode="edit" title="Ubah rujukan" fields={referralFields} action={saveReferral} id={r.id} initial={{ ...r, resultingRevenue: num(r.resultingRevenue), referredProspectId: r.referredProspectId ?? "" }} />
                       <DeleteButton action={deleteReferral} id={r.id} />
                     </div>
                   </Td>

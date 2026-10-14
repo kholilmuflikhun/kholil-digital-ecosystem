@@ -12,7 +12,7 @@ export function StageSelect({ id, stage }: { id: string; stage: (typeof DEAL_STA
       onChange={(e) => {
         const next = e.target.value as (typeof DEAL_STAGES)[number];
         let lostReason: string | undefined;
-        if (next === "LOST") lostReason = prompt("Alasan kalah?") ?? undefined;
+        if (next === "LOST") lostReason = prompt("Apa alasan transaksi tidak berhasil?") ?? undefined;
         start(async () => void (await moveDealStage({ id, stage: next, lostReason })));
       }}
       className="h-8 w-full rounded-md border bg-background px-2 text-xs"

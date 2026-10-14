@@ -6,8 +6,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ButtonLink } from "@/components/button-link";
 
 export const metadata = buildMetadata({
-  title: "Layanan Strategis untuk Brand dan Digital",
-  description: "Brand strategy, desain visual, konten kreatif, cetak dan apparel, serta solusi digital yang membantu bisnis tampil lebih kuat dan lebih siap tumbuh.",
+  title: "Layanan Brand, Desain, dan Digital",
+  description: "Strategi brand, desain visual, konten, produksi, dan solusi digital sesuai kebutuhan bisnis.",
   path: "/services",
 });
 
@@ -15,12 +15,12 @@ export default function ServicesPage() {
   return (
     <>
       <Breadcrumbs items={[{ name: "Layanan", path: "/services" }]} />
-      <PageHeader eyebrow="Layanan" title="Layanan yang menyatukan brand, produk, dan pertumbuhan." intro="Tak perlu mengelola banyak vendor untuk kebutuhan yang sama. Saya membantu membangun sistem yang lebih rapi, lebih konsisten, dan lebih siap mendukung pertumbuhan bisnis Anda." />
+      <PageHeader eyebrow="Layanan" title="Layanan sesuai kebutuhan bisnis." intro="Saya menghubungkan strategi brand, desain, dan solusi digital dalam ruang lingkup yang disepakati." />
       {pillars.map((p) => (
         <Section key={p.id} id={p.id} title={p.name} intro={p.description} ruled>
           {p.kind === "production" && (
             <p className="ui mb-6 border border-border p-4 text-sm">
-              Catatan: bagian ini memisahkan <strong>desain</strong> (file siap produksi) dari <strong>produksi fisik</strong>. Kapasitas, estimasi, dan ketersediaan produksi dikonfirmasi per pesanan.
+              Desain dan produksi fisik memiliki ruang lingkup terpisah. Kapasitas, estimasi, dan ketersediaan dikonfirmasi per pesanan.
             </p>
           )}
           <ul>{servicesByPillar(p.id).map((s, i) => (<ServiceLink key={s.slug} service={s} index={i} />))}</ul>

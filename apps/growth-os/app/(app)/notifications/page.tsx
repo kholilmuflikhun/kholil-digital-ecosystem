@@ -13,8 +13,8 @@ export const dynamic = "force-dynamic";
 
 const HREF: Record<string, string> = { Prospect: "/prospects", Revenue: "/revenue", Task: "/daily", Project: "/projects" };
 const TYPE_LABEL: Record<string, string> = {
-  FOLLOW_UP: "Follow-up", OVERDUE_PAYMENT: "Tagihan", DEADLINE: "Deadline", DAILY_PRIORITY: "Prioritas",
-  CAMPAIGN_MILESTONE: "Milestone", WEEKLY_REVIEW: "Review", CUSTOMER_REACTIVATION: "Reaktivasi",
+  FOLLOW_UP: "Tindak lanjut", OVERDUE_PAYMENT: "Tagihan", DEADLINE: "Tenggat", DAILY_PRIORITY: "Prioritas",
+  CAMPAIGN_MILESTONE: "Tahapan kampanye", WEEKLY_REVIEW: "Tinjauan", CUSTOMER_REACTIVATION: "Pelanggan tidak aktif",
 };
 
 export default async function NotificationsPage() {
@@ -31,7 +31,7 @@ export default async function NotificationsPage() {
     <>
       <PageHeader
         title="Notifikasi"
-        description="Pengingat follow-up, tagihan jatuh tempo, prioritas, dan deadline dari data Anda."
+        description="Pengingat tindak lanjut, tagihan, tenggat, dan prioritas."
         actions={
           <div className="flex gap-2">
             <ActionButton action={refreshInsights} payload={{}}>Segarkan</ActionButton>
@@ -39,7 +39,7 @@ export default async function NotificationsPage() {
           </div>
         }
       />
-      {items.length === 0 ? <EmptyState>Tidak ada notifikasi. Semua beres.</EmptyState> : (
+      {items.length === 0 ? <EmptyState>Tidak ada notifikasi baru.</EmptyState> : (
         <ul className="grid gap-2">
           {items.map((n) => (
             <li key={n.id}>
@@ -55,7 +55,7 @@ export default async function NotificationsPage() {
                   </div>
                   <div className="flex gap-1">
                     {n.entityType && HREF[n.entityType] && <Link href={HREF[n.entityType]!} className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Buka</Link>}
-                    {!n.readAt && <ActionButton action={markNotificationRead} payload={{ id: n.id }}>Dibaca</ActionButton>}
+                    {!n.readAt && <ActionButton action={markNotificationRead} payload={{ id: n.id }}>Tandai dibaca</ActionButton>}
                   </div>
                 </div>
               </Card>

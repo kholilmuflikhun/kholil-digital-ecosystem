@@ -15,7 +15,7 @@ type Props = WhatsAppMessageInput & {
  * Tombol WhatsApp dengan pesan terisi dan ter-encode. Bila nomor belum dikonfigurasi,
  * tombol dialihkan ke formulir kontak (tidak pernah membuat tautan rusak).
  */
-export function WhatsAppCta({ label = "Chat via WhatsApp", variant = "outline", className = "", placement = "umum", ...message }: Props) {
+export function WhatsAppCta({ label = "Hubungi via WhatsApp", variant = "outline", className = "", placement = "umum", ...message }: Props) {
   const url = buildWhatsAppUrl(whatsappNumber, message);
   const styles =
     variant === "solid" ? "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90" : "border border-input bg-card text-foreground hover:border-primary hover:text-primary";
@@ -27,7 +27,7 @@ export function WhatsAppCta({ label = "Chat via WhatsApp", variant = "outline", 
       className={`ui inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-[0.95rem] font-semibold transition-colors ${styles} ${className}`}
     >
       <MessageCircle aria-hidden="true" size={18} />
-      {url ? label : "Hubungi lewat formulir"}
+      {url ? label : "Gunakan formulir kontak"}
       {url && <span className="sr-only"> (membuka WhatsApp di tab baru)</span>}
     </TrackedLink>
   );

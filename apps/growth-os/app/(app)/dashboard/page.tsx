@@ -9,11 +9,12 @@ import { ActivityChart, BarList, TrendChart } from "@/components/ui/charts";
 import { Flywheel } from "@/components/flywheel";
 import { NOT_ENOUGH_DATA } from "@/lib/calculations";
 
-export const metadata: Metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Ringkasan" };
 export const dynamic = "force-dynamic";
 
-const focusIcon = { priority: "🔥 Prioritas", today: "📅 Hari ini", revenue: "💰 Pendapatan", retention: "🔁 Retensi" } as const;
-const labelTone = { Critical: "danger", "Needs Improvement": "warning", "On Track": "primary", Excellent: "success" } as const;
+const focusIcon = { priority: "Prioritas", today: "Hari ini", revenue: "Pendapatan", retention: "Retensi" } as const;
+const labelTone = { Kritis: "danger", "Perlu ditingkatkan": "warning", "Sesuai target": "primary", Unggul: "success" } as const;
+const priorityLabel = { high: "Tinggi", medium: "Sedang", low: "Rendah" } as const;
 
 export default async function DashboardPage() {
   const userId = await requireUserId();
@@ -23,20 +24,20 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard" description={`Pusat kendali bisnis · ${format(new Date(), "EEEE, d MMMM yyyy")}`} />
+      <PageHeader title="Ringkasan" description={format(new Date(), "EEEE, d MMMM yyyy")} />
 
       {/* KPI */}
       <section aria-label="Ringkasan" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat
-          label="Pendapatan (total)" value={money(o.finance.grossRevenue)}
-          hint={revenueGoal ? `Sisa ke target: ${money(revenueGoal.remaining)}` : "Belum ada goal pendapatan"}
+          label="Total pendapatan" value={money(o.finance.grossRevenue)}
+          hint={revenueGoal ? `Sisa target: ${money(revenueGoal.remaining)}` : "Belum ada target pendapatan"}
         />
         <Stat
-          label="Pertumbuhan bulan ini" value={formatPct(o.revenueGrowth, 0)}
+          label="Perubahan pendapatan bulan ini" value={formatPct(o.revenueGrowth, 0)}
           tone={o.revenueGrowth === null ? undefined : o.revenueGrowth >= 0 ? "success" : "danger"}
           hint={o.revenueGrowth === null ? NOT_ENOUGH_DATA : "vs bulan lalu"}
         />
-        <Stat label="Rata-rata nilai pesanan" value={o.finance.averageOrderValue ? money(o.finance.averageOrderValue) : "—"} hint={`${o.finance.transactions} transaksi`} />
+        <Stat label="Nilai pesanan rata-rata" value={o.finance.averageOrderValue ? money(o.finance.averageOrderValue) : "—"} hint={`${o.finance.transactions} transaksi`} />
         <Stat label="Profit bersih" value={money(o.finance.netProfit)} hint={`Margin ${formatPct(o.finance.profitMargin, 0)}`} />
       </section>
 
@@ -45,7 +46,7 @@ export default async function DashboardPage() {
         <Card className="lg:col-span-1">
           <CardTitle>Fokus Hari Ini</CardTitle>
           {o.focus.length === 0 ? (
-            <EmptyState>Belum ada rekomendasi. Tambahkan prospek, deal, atau konten.</EmptyState>
+            <EmptyState>Belum ada rekomendasi. Tambahkan prospek, transaksi, atau konten.</EmptyState>
           ) : (
             <ul className="grid gap-2">
               {o.focus.map((f) => (
@@ -60,21 +61,21 @@ export default async function DashboardPage() {
           )}
           <div className="mt-4 border-t pt-3">
             <div className="mb-1 flex items-center justify-between text-sm">
-              <span>Skor eksekusi hari ini</span>
+              <span>Skor aktivitas hari ini</span>
               {o.execution.label ? <Badge tone={labelTone[o.execution.label]}>{o.execution.label}</Badge> : <Badge>—</Badge>}
             </div>
-            <Progress value={o.execution.score ?? 0} tone={o.execution.label ? labelTone[o.execution.label] : "neutral"} label="Skor eksekusi" />
+            <Progress value={o.execution.score ?? 0} tone={o.execution.label ? labelTone[o.execution.label] : "neutral"} label="Skor aktivitas" />
             <p className="mt-1 text-xs text-muted-foreground">
-              {o.execution.planned > 0 ? `${o.execution.done}/${o.execution.planned} aktivitas KPI selesai` : "Belum ada tugas hari ini"}
+              {o.execution.planned > 0 ? `${o.execution.done} dari ${o.execution.planned} aktivitas selesai` : "Belum ada tugas hari ini"}
             </p>
           </div>
         </Card>
 
         {/* Progres goal */}
         <Card className="lg:col-span-2">
-          <CardTitle action={<Link href="/goals" className="text-xs text-primary hover:underline">Kelola goal</Link>}>Progres Goal</CardTitle>
+          <CardTitle action={<Link href="/goals" className="text-xs text-primary hover:underline">Kelola target</Link>}>Progres target</CardTitle>
           {o.goalProgress.length === 0 ? (
-            <EmptyState>Belum ada goal aktif. Buat goal pertama Anda di menu Goals.</EmptyState>
+            <EmptyState>Belum ada target aktif. Tambahkan target untuk memantau progres.</EmptyState>
           ) : (
             <ul className="grid gap-4 sm:grid-cols-2">
               {o.goalProgress.slice(0, 6).map((g) => (
@@ -85,7 +86,7 @@ export default async function DashboardPage() {
                   </div>
                   <Progress value={g.progressPct} tone={g.onTrack ? "success" : "warning"} label={g.name} />
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {g.current.toLocaleString(o.locale)} / {g.target.toLocaleString(o.locale)} {g.metric} · {g.daysLeft} hari lagi · butuh {g.dailyRequiredPace.toLocaleString(o.locale, { maximumFractionDigits: 1 })}/hari
+                    {g.current.toLocaleString(o.locale)} / {g.target.toLocaleString(o.locale)} {g.metric} · {g.daysLeft} hari tersisa · {g.dailyRequiredPace.toLocaleString(o.locale, { maximumFractionDigits: 1 })}/hari
                   </p>
                 </li>
               ))}
@@ -115,11 +116,11 @@ export default async function DashboardPage() {
           <TrendChart data={o.monthly} series={[{ key: "revenue", label: "Pendapatan" }, { key: "profit", label: "Profit" }]} />
         </Card>
         <Card>
-          <CardTitle>Pendapatan per Produk/Layanan</CardTitle>
+          <CardTitle>Pendapatan per produk atau layanan</CardTitle>
           {o.revenueByOffer.length === 0 ? <EmptyState>{NOT_ENOUGH_DATA}</EmptyState> : <BarList data={o.revenueByOffer.slice(0, 6)} />}
         </Card>
         <Card>
-          <CardTitle>Aktivitas 7 Hari</CardTitle>
+          <CardTitle>Aktivitas 7 hari</CardTitle>
           {o.activity7.length === 0 ? (
             <EmptyState>{NOT_ENOUGH_DATA}</EmptyState>
           ) : (
@@ -132,7 +133,7 @@ export default async function DashboardPage() {
           </dl>
         </Card>
         <Card>
-          <CardTitle>Mesin Matematika Penjualan</CardTitle>
+          <CardTitle>Perhitungan target penjualan</CardTitle>
           {o.salesMath && revenueGoal ? (
             <>
               <p className="mb-3 text-sm text-muted-foreground">Untuk menutup sisa {money(revenueGoal.remaining)} pada goal “{revenueGoal.name}”:</p>
@@ -151,7 +152,7 @@ export default async function DashboardPage() {
               </dl>
             </>
           ) : (
-            <EmptyState>Buat goal pendapatan dan isi rata-rata nilai pesanan serta tingkat konversi di <Link className="text-primary underline" href="/settings">Settings</Link>.</EmptyState>
+            <EmptyState>Tetapkan target pendapatan dan lengkapi nilai pesanan serta konversi di <Link className="text-primary underline" href="/settings">Pengaturan</Link>.</EmptyState>
           )}
         </Card>
       </div>
@@ -159,7 +160,7 @@ export default async function DashboardPage() {
       {/* Insight & rekomendasi */}
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardTitle>Insight Otomatis</CardTitle>
+          <CardTitle>Insight otomatis</CardTitle>
           {o.insights.length === 0 ? <EmptyState>{NOT_ENOUGH_DATA}</EmptyState> : (
             <ul className="grid gap-2 text-sm">
               {o.insights.map((i) => (
@@ -177,7 +178,7 @@ export default async function DashboardPage() {
             <ul className="grid gap-2 text-sm">
               {o.recommendations.map((r) => (
                 <li key={r.id} className="flex gap-2">
-                  <Badge tone={r.priority === "high" ? "danger" : r.priority === "medium" ? "warning" : "neutral"}>{r.priority}</Badge>
+                  <Badge tone={r.priority === "high" ? "danger" : r.priority === "medium" ? "warning" : "neutral"}>{priorityLabel[r.priority]}</Badge>
                   <span>{r.text}</span>
                 </li>
               ))}
@@ -187,7 +188,7 @@ export default async function DashboardPage() {
       </div>
 
       <Card className="mt-4">
-        <CardTitle>Growth Flywheel</CardTitle>
+        <CardTitle>Siklus pertumbuhan</CardTitle>
         <Flywheel />
       </Card>
     </>

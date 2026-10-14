@@ -68,10 +68,10 @@ describe("scorecard", () => {
   it("menghitung skor dan label", () => {
     expect(executionScore(3, 4)).toBe(75);
     expect(executionScore(0, 0)).toBeNull();
-    expect(scoreLabel(49)).toBe("Critical");
-    expect(scoreLabel(50)).toBe("Needs Improvement");
-    expect(scoreLabel(70)).toBe("On Track");
-    expect(scoreLabel(90)).toBe("Excellent");
+    expect(scoreLabel(49)).toBe("Kritis");
+    expect(scoreLabel(50)).toBe("Perlu ditingkatkan");
+    expect(scoreLabel(70)).toBe("Sesuai target");
+    expect(scoreLabel(90)).toBe("Unggul");
   });
 });
 

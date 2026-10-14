@@ -7,7 +7,7 @@ import { SettingsForm } from "@/components/settings-form";
 import { ActionButton } from "@/components/ui/entity-form";
 import { num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Settings" };
+export const metadata: Metadata = { title: "Pengaturan" };
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
@@ -20,9 +20,9 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" description={user.email ?? undefined} />
+      <PageHeader title="Pengaturan" description={user.email ?? undefined} />
       <Card>
-        <CardTitle>Profil & parameter bisnis</CardTitle>
+        <CardTitle>Profil dan parameter bisnis</CardTitle>
         <SettingsForm
           action={saveSettings}
           initial={{
@@ -37,10 +37,10 @@ export default async function SettingsPage() {
 
       <Card className="mt-4">
         <CardTitle>Data demo</CardTitle>
-        <p className="mb-3 text-sm text-muted-foreground">Data contoh diberi label DEMO. Hapus semuanya bila Anda siap memakai data nyata.</p>
+        <p className="mb-3 text-sm text-muted-foreground">Hapus data contoh sebelum menggunakan data bisnis.</p>
         {demoCount > 0 ? (
           <ActionButton action={clearDemoData as never} payload={{}}>Hapus semua data demo</ActionButton>
-        ) : <p className="text-sm">Tidak ada data demo.</p>}
+        ) : <p className="text-sm">Data demo tidak ditemukan.</p>}
       </Card>
     </>
   );

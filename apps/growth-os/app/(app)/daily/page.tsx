@@ -10,7 +10,7 @@ import { TaskRow } from "@/components/daily/task-row";
 import { PRIORITY, TASK_CATEGORY, label } from "@/lib/constants/options";
 import { num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Daily Actions" };
+export const metadata: Metadata = { title: "Aktivitas Harian" };
 export const dynamic = "force-dynamic";
 
 const taskFields: Field[] = [
@@ -24,16 +24,16 @@ const scoreFields: Field[] = [
   { name: "date", label: "Tanggal", type: "date", required: true },
   { name: "prospectsContacted", label: "Prospek dihubungi", type: "number" },
   { name: "responses", label: "Respons", type: "number" },
-  { name: "qualifiedLeads", label: "Lead terkualifikasi", type: "number" },
-  { name: "followUps", label: "Follow-up", type: "number" },
+  { name: "qualifiedLeads", label: "Lead berkualitas", type: "number" },
+  { name: "followUps", label: "Tindak lanjut", type: "number" },
   { name: "proposals", label: "Proposal", type: "number" },
-  { name: "dealsWon", label: "Deal won", type: "number" },
+  { name: "dealsWon", label: "Transaksi berhasil", type: "number" },
   { name: "contentPublished", label: "Konten terbit", type: "number" },
   { name: "hoursWorked", label: "Jam kerja", type: "number" },
   { name: "notes", label: "Catatan", type: "textarea" },
 ];
 
-const tone = { Critical: "danger", "Needs Improvement": "warning", "On Track": "primary", Excellent: "success" } as const;
+const tone = { Kritis: "danger", "Perlu ditingkatkan": "warning", "Sesuai target": "primary", Unggul: "success" } as const;
 
 export default async function DailyPage() {
   const userId = await requireUserId();
@@ -57,11 +57,11 @@ export default async function DailyPage() {
   return (
     <>
       <PageHeader
-        title="Daily Actions"
+        title="Aktivitas Harian"
         description={format(now, "EEEE, d MMMM yyyy")}
         actions={
           <div className="flex gap-2">
-            <EntityForm title="Scorecard harian" fields={scoreFields} action={saveDailyActivity} triggerLabel="Scorecard" initial={{ date: format(now, "yyyy-MM-dd"), ...(log ?? {}), hoursWorked: num(log?.hoursWorked) }} />
+            <EntityForm title="Catatan harian" fields={scoreFields} action={saveDailyActivity} triggerLabel="Catatan" initial={{ date: format(now, "yyyy-MM-dd"), ...(log ?? {}), hoursWorked: num(log?.hoursWorked) }} />
             <EntityForm title="Tugas baru" fields={taskFields} action={saveTask} triggerLabel="Tugas" initial={{ category: "OTHER", priority: "MEDIUM" }} />
           </div>
         }
@@ -69,20 +69,20 @@ export default async function DailyPage() {
 
       <Card className="mb-4">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Skor Eksekusi</h2>
+          <h2 className="text-sm font-semibold">Skor eksekusi</h2>
           {lbl ? <Badge tone={tone[lbl]}>{score}% · {lbl}</Badge> : <Badge>Belum ada tugas</Badge>}
         </div>
         <Progress value={score ?? 0} tone={lbl ? tone[lbl] : "neutral"} label="Skor eksekusi" />
-        <p className="mt-1 text-xs text-muted-foreground">Aktivitas KPI selesai ÷ direncanakan × 100 ({done}/{planned}). Tugas yang dilewati tidak dihitung.</p>
+        <p className="mt-1 text-xs text-muted-foreground">{done} dari {planned} aktivitas KPI selesai. Tugas yang dilewati tidak dihitung.</p>
       </Card>
 
-      <section aria-label="Scorecard" className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+      <section aria-label="Ringkasan aktivitas" className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
         <Stat label="Prospek dihubungi" value={log?.prospectsContacted ?? 0} />
         <Stat label="Respons" value={log?.responses ?? 0} />
-        <Stat label="Lead terkualifikasi" value={log?.qualifiedLeads ?? 0} />
-        <Stat label="Follow-up" value={log?.followUps ?? 0} />
+        <Stat label="Lead berkualitas" value={log?.qualifiedLeads ?? 0} />
+        <Stat label="Tindak lanjut" value={log?.followUps ?? 0} />
         <Stat label="Proposal" value={log?.proposals ?? 0} />
-        <Stat label="Deal won" value={log?.dealsWon ?? 0} />
+        <Stat label="Transaksi berhasil" value={log?.dealsWon ?? 0} />
         <Stat label="Pendapatan" value={revToday.toLocaleString("id-ID")} />
         <Stat label="Profit" value={profitToday.toLocaleString("id-ID")} />
         <Stat label="Konten terbit" value={log?.contentPublished ?? 0} />
@@ -91,7 +91,7 @@ export default async function DailyPage() {
       </section>
 
       {tasks.length === 0 ? (
-        <EmptyState>Belum ada tugas untuk hari ini. Tambahkan target harian: pendapatan, penjualan, prospecting, follow-up, konten, delivery, atau pekerjaan strategis.</EmptyState>
+        <EmptyState>Belum ada tugas hari ini. Tambahkan aktivitas untuk pendapatan, penjualan, prospek, tindak lanjut, konten, pengerjaan, atau strategi.</EmptyState>
       ) : (
         <div className="grid gap-5">
           {TASK_CATEGORY.filter((c) => groups[c.value].length > 0).map((c) => (

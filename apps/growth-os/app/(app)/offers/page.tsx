@@ -7,14 +7,14 @@ import { DeleteButton, EntityForm, type Field } from "@/components/ui/entity-for
 import { grossMargin } from "@/lib/calculations";
 import { formatCurrency, formatPct, num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Offers" };
+export const metadata: Metadata = { title: "Penawaran" };
 export const dynamic = "force-dynamic";
 
 const fields: Field[] = [
   { name: "name", label: "Nama", required: true },
-  { name: "category", label: "Kategori (mis. Design, Content, Digital, Production)", required: true },
+  { name: "category", label: "Kategori (mis. desain, konten, digital)", required: true },
   { name: "price", label: "Harga", type: "number", required: true },
-  { name: "cost", label: "Biaya (HPP)", type: "number" },
+  { name: "cost", label: "Biaya pokok", type: "number" },
   { name: "deliveryDays", label: "Waktu pengerjaan (hari)", type: "number" },
   { name: "revisionLimit", label: "Batas revisi", type: "number" },
   { name: "targetCustomer", label: "Target pelanggan" },
@@ -34,7 +34,7 @@ export default async function OffersPage() {
 
   return (
     <>
-      <PageHeader title="Offers" description="Katalog produk dan layanan. Tambah, ubah, atau hapus sesuai bisnis Anda." actions={<EntityForm title="Penawaran baru" fields={fields} action={saveOffer} initial={{ isActive: true }} />} />
+      <PageHeader title="Penawaran" description="Kelola produk dan layanan." actions={<EntityForm title="Penawaran baru" fields={fields} action={saveOffer} initial={{ isActive: true }} />} />
       {offers.length === 0 ? <EmptyState>Belum ada penawaran.</EmptyState> : categories.map((cat) => (
         <section key={cat} className="mb-6" aria-label={cat}>
           <h2 className="mb-2 text-sm font-semibold text-muted-foreground">{cat}</h2>
@@ -50,10 +50,10 @@ export default async function OffersPage() {
                     </div>
                     <p className="mt-2 text-xl font-semibold tabular-nums">{money(num(o.price))}</p>
                     <p className="text-xs text-muted-foreground">
-                      Biaya {money(num(o.cost))} · Margin <span className={m !== null && m < 25 ? "text-warning" : ""}>{formatPct(m)}</span>
+                      Biaya {money(num(o.cost))} · Margin laba <span className={m !== null && m < 25 ? "text-warning" : ""}>{formatPct(m)}</span>
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {o.deliveryDays ? `${o.deliveryDays} hari` : "—"} · revisi {o.revisionLimit ?? "—"}
+                      {o.deliveryDays ? `${o.deliveryDays} hari` : "—"} · Maks. revisi {o.revisionLimit ?? "—"}
                     </p>
                     {o.salesMessage && <p className="mt-2 line-clamp-3 text-xs">“{o.salesMessage}”</p>}
                     <div className="mt-3 flex justify-end gap-1">

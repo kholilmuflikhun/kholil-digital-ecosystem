@@ -1,19 +1,19 @@
 export const NAV_ITEMS = [
-  { href: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
-  { href: "/goals", label: "Goals", icon: "Target" },
-  { href: "/daily", label: "Daily Actions", icon: "CalendarCheck" },
-  { href: "/prospects", label: "Prospects", icon: "Users" },
-  { href: "/pipeline", label: "Sales Pipeline", icon: "Kanban" },
-  { href: "/customers", label: "Customers", icon: "Heart" },
-  { href: "/retention", label: "Testimoni & Referral", icon: "Award" },
-  { href: "/offers", label: "Offers", icon: "Package" },
-  { href: "/projects", label: "Projects", icon: "FolderKanban" },
-  { href: "/content", label: "Content", icon: "Megaphone" },
-  { href: "/revenue", label: "Revenue", icon: "Wallet" },
-  { href: "/analytics", label: "Analytics", icon: "BarChart3" },
+  { href: "/dashboard", label: "Ringkasan", icon: "LayoutDashboard" },
+  { href: "/goals", label: "Target", icon: "Target" },
+  { href: "/daily", label: "Aktivitas Harian", icon: "CalendarCheck" },
+  { href: "/prospects", label: "Prospek", icon: "Users" },
+  { href: "/pipeline", label: "Pipeline Penjualan", icon: "Kanban" },
+  { href: "/customers", label: "Pelanggan", icon: "Heart" },
+  { href: "/retention", label: "Testimoni & Rujukan", icon: "Award" },
+  { href: "/offers", label: "Penawaran", icon: "Package" },
+  { href: "/projects", label: "Proyek", icon: "FolderKanban" },
+  { href: "/content", label: "Konten", icon: "Megaphone" },
+  { href: "/revenue", label: "Pendapatan", icon: "Wallet" },
+  { href: "/analytics", label: "Analitik", icon: "BarChart3" },
   { href: "/notifications", label: "Notifikasi", icon: "Bell" },
-  { href: "/strategy", label: "Strategy", icon: "Compass" },
-  { href: "/settings", label: "Settings", icon: "Settings" },
+  { href: "/strategy", label: "Strategi", icon: "Compass" },
+  { href: "/settings", label: "Pengaturan", icon: "Settings" },
 ] as const;
 
 export const DEAL_STAGES = [
@@ -29,13 +29,13 @@ export const DEAL_STAGES = [
 
 export const DEAL_STAGE_LABELS: Record<(typeof DEAL_STAGES)[number], string> = {
   LEAD: "Lead",
-  CONTACTED: "Contacted",
-  QUALIFIED: "Qualified",
-  DISCOVERY: "Discovery",
+  CONTACTED: "Dihubungi",
+  QUALIFIED: "Terkualifikasi",
+  DISCOVERY: "Penjajakan",
   PROPOSAL: "Proposal",
-  NEGOTIATION: "Negotiation",
-  WON: "Won",
-  LOST: "Lost",
+  NEGOTIATION: "Negosiasi",
+  WON: "Berhasil",
+  LOST: "Tidak berhasil",
 };
 
 /** Probabilitas default per tahap; dapat diubah per deal. */
@@ -51,20 +51,20 @@ export const DEAL_STAGE_PROBABILITY: Record<(typeof DEAL_STAGES)[number], number
 };
 
 export const FLYWHEEL_STEPS = [
-  "Personal Brand",
-  "Content",
-  "Audience",
-  "Prospects",
-  "Conversations",
-  "Offers",
-  "Sales",
-  "Delivery",
-  "Testimonials",
-  "Referrals",
-  "Repeat Orders",
-  "Digital Products",
-  "Scalable Revenue",
-  "Reinvestment",
+  "Brand Personal",
+  "Konten",
+  "Audiens",
+  "Prospek",
+  "Percakapan",
+  "Penawaran",
+  "Penjualan",
+  "Layanan",
+  "Testimoni",
+  "Rujukan",
+  "Pesanan Ulang",
+  "Produk Digital",
+  "Pendapatan Terukur",
+  "Investasi Ulang",
 ] as const;
 
 export const DEMO_LABEL = "DEMO";

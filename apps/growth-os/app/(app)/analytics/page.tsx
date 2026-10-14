@@ -10,7 +10,7 @@ import { Flywheel } from "@/components/flywheel";
 import { findBiggestLeak, NOT_ENOUGH_DATA } from "@/lib/calculations";
 import { formatCurrency, formatPct } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Analytics" };
+export const metadata: Metadata = { title: "Analitik" };
 export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
@@ -30,28 +30,28 @@ export default async function AnalyticsPage() {
 
   return (
     <>
-      <PageHeader title="Analytics" description="Peninjauan bulanan, kebocoran funnel, dan review mingguan." />
+      <PageHeader title="Analitik" description="Tinjau pendapatan, konversi, dan aktivitas bisnis." />
 
-      <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Review bulanan · {format(new Date(), "MMMM yyyy")}</h2>
-      <section aria-label="Review bulanan" className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Ringkasan bulanan · {format(new Date(), "MMMM yyyy")}</h2>
+      <section aria-label="Ringkasan bulanan" className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Pendapatan" value={money(m.grossRevenue)} hint={o.revenueGrowth === null ? NOT_ENOUGH_DATA : `${o.revenueGrowth >= 0 ? "+" : ""}${o.revenueGrowth.toFixed(0)}% vs bulan lalu`} tone={o.revenueGrowth === null ? undefined : o.revenueGrowth >= 0 ? "success" : "danger"} />
         <Stat label="Profit / margin" value={money(m.grossProfit)} hint={formatPct(m.grossRevenue > 0 ? (m.grossProfit / m.grossRevenue) * 100 : null)} />
-        <Stat label="Transaksi / AOV" value={m.transactions} hint={m.averageOrderValue ? money(m.averageOrderValue) : "—"} />
-        <Stat label="Pelanggan repeat" value={formatPct(o.customers.repeatRate)} hint={`${o.customers.buyers} pelanggan membeli`} />
+        <Stat label="Transaksi / nilai rata-rata" value={m.transactions} hint={m.averageOrderValue ? money(m.averageOrderValue) : "—"} />
+        <Stat label="Pelanggan membeli ulang" value={formatPct(o.customers.repeatRate)} hint={`${o.customers.buyers} pelanggan membeli`} />
         <Stat label="Pipeline tertimbang" value={money(o.pipeline.weightedPipeline)} hint={`Win rate ${formatPct(o.pipeline.winRate)}`} />
         <Stat label="Konten terbit" value={o.publishedCount} hint={`${o.contentStats.reduce((s, c) => s + c.leads, 0)} lead dari konten`} />
         <Stat label="Jam kerja (7 hari)" value={totalHours.toFixed(1)} hint={totalHours > 0 ? `${money(o.thisMonth.grossProfit / Math.max(totalHours, 1))}/jam (indikatif)` : NOT_ENOUGH_DATA} />
-        <Stat label="Kanal terbaik" value={bestChannel?.name ?? "—"} hint={bestChannel ? money(bestChannel.value) : NOT_ENOUGH_DATA} />
+        <Stat label="Kanal utama" value={bestChannel?.name ?? "—"} hint={bestChannel ? money(bestChannel.value) : NOT_ENOUGH_DATA} />
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card><CardTitle>Perbandingan Bulanan</CardTitle><TrendChart data={o.monthly} series={[{ key: "revenue", label: "Pendapatan" }, { key: "cost", label: "Biaya" }, { key: "profit", label: "Profit" }]} /></Card>
-        <Card><CardTitle>Pendapatan per Kanal</CardTitle>{o.revenueByChannel.length ? <BarList data={o.revenueByChannel} /> : <EmptyState>{NOT_ENOUGH_DATA}</EmptyState>}</Card>
+        <Card><CardTitle>Perbandingan bulanan</CardTitle><TrendChart data={o.monthly} series={[{ key: "revenue", label: "Pendapatan" }, { key: "cost", label: "Biaya" }, { key: "profit", label: "Profit" }]} /></Card>
+        <Card><CardTitle>Pendapatan per kanal</CardTitle>{o.revenueByChannel.length ? <BarList data={o.revenueByChannel} /> : <EmptyState>{NOT_ENOUGH_DATA}</EmptyState>}</Card>
 
         <Card>
-          <CardTitle>Kebocoran Funnel</CardTitle>
+          <CardTitle>Titik lemah funnel</CardTitle>
           {leak ? (
-            <p className="text-sm">Konversi terendah ada pada tahap <strong>{leak.label}</strong> ({leak.conversionFromPrev?.toFixed(0)}% dari tahap sebelumnya). Fokuskan perbaikan di sini lebih dulu.</p>
+            <p className="text-sm">Konversi terendah terjadi pada tahap <strong>{leak.label}</strong> ({leak.conversionFromPrev?.toFixed(0)}%). Prioritaskan perbaikan di sini.</p>
           ) : <EmptyState>{NOT_ENOUGH_DATA}</EmptyState>}
           <ol className="mt-3 grid gap-1 text-sm">
             {o.funnel.map((s, i) => (
@@ -64,13 +64,13 @@ export default async function AnalyticsPage() {
         </Card>
 
         <Card>
-          <CardTitle>Atribusi Konten → Pendapatan</CardTitle>
+          <CardTitle>Kontribusi konten terhadap pendapatan</CardTitle>
           {o.contentStats.filter((c) => c.leads > 0).length === 0 ? <EmptyState>{NOT_ENOUGH_DATA}</EmptyState> : (
             <ul className="grid gap-2 text-sm">
               {[...o.contentStats].filter((c) => c.leads > 0).sort((a, b) => b.revenue - a.revenue || b.leads - a.leads).slice(0, 6).map((c) => (
                 <li key={c.id} className="flex items-center justify-between gap-2 rounded-md border p-2">
                   <span className="truncate">{c.title}</span>
-                  <span className="shrink-0 text-xs text-muted-foreground">{c.leads} lead · {c.deals} deal · {money(c.revenue)}{c.leadRate !== null ? ` · ${c.leadRate.toFixed(2)}% lead/reach` : ""}</span>
+                  <span className="shrink-0 text-xs text-muted-foreground">{c.leads} lead · {c.deals} transaksi · {money(c.revenue)}{c.leadRate !== null ? ` · ${c.leadRate.toFixed(2)}% lead/jangkauan` : ""}</span>
                 </li>
               ))}
             </ul>
@@ -78,13 +78,13 @@ export default async function AnalyticsPage() {
         </Card>
 
         <Card>
-          <CardTitle>Penawaran: Unggulan vs Lemah</CardTitle>
+          <CardTitle>Performa penawaran</CardTitle>
           {offerStats.length === 0 ? <EmptyState>{NOT_ENOUGH_DATA}</EmptyState> : (
             <ul className="grid gap-1 text-sm">
               {offerStats.map((s, i) => (
                 <li key={s.name} className="flex items-center justify-between">
                   <span>{s.name}</span>
-                  <span className="flex items-center gap-2 tabular-nums">{money(s.value)}{i === 0 && <Badge tone="success">Unggulan</Badge>}{i === offerStats.length - 1 && offerStats.length > 2 && <Badge tone="warning">Terlemah</Badge>}</span>
+                  <span className="flex items-center gap-2 tabular-nums">{money(s.value)}{i === 0 && <Badge tone="success">Tertinggi</Badge>}{i === offerStats.length - 1 && offerStats.length > 2 && <Badge tone="warning">Terendah</Badge>}</span>
                 </li>
               ))}
             </ul>
@@ -92,7 +92,7 @@ export default async function AnalyticsPage() {
         </Card>
 
         <Card>
-          <CardTitle>Insight & Rekomendasi</CardTitle>
+          <CardTitle>Insight dan rekomendasi</CardTitle>
           {o.insights.length + o.recommendations.length === 0 ? <EmptyState>{NOT_ENOUGH_DATA}</EmptyState> : (
             <ul className="grid gap-2 text-sm">
               {o.insights.map((i) => <li key={i.id}>• {i.text}</li>)}
@@ -103,11 +103,11 @@ export default async function AnalyticsPage() {
       </div>
 
       <Card className="mt-4">
-        <CardTitle>Review Mingguan · minggu {format(weekStart, "d MMM")}</CardTitle>
+        <CardTitle>Tinjauan mingguan · mulai {format(weekStart, "d MMM")}</CardTitle>
         <WeeklyReview weekStart={format(weekStart, "yyyy-MM-dd")} initial={(review?.answers as Record<string, string> | undefined) ?? {}} />
       </Card>
 
-      <Card className="mt-4"><CardTitle>Growth Flywheel</CardTitle><Flywheel /></Card>
+      <Card className="mt-4"><CardTitle>Siklus pertumbuhan</CardTitle><Flywheel /></Card>
     </>
   );
 }

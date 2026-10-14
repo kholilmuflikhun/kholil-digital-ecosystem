@@ -10,7 +10,7 @@ import { CONTENT_STATUS, PILLAR, PLATFORM, label, pick } from "@/lib/constants/o
 import { formatCurrency, formatPct, num } from "@/lib/utils";
 import { NOT_ENOUGH_DATA } from "@/lib/calculations";
 
-export const metadata: Metadata = { title: "Content" };
+export const metadata: Metadata = { title: "Konten" };
 export const dynamic = "force-dynamic";
 
 export default async function ContentPage() {
@@ -27,14 +27,14 @@ export default async function ContentPage() {
   const fields: Field[] = [
     { name: "title", label: "Judul", required: true, full: true },
     { name: "platform", label: "Platform", type: "select", required: true, options: PLATFORM },
-    { name: "pillar", label: "Content pillar", type: "select", required: true, options: PILLAR },
+    { name: "pillar", label: "Pilar konten", type: "select", required: true, options: PILLAR },
     { name: "format", label: "Format (reel, carousel, dll.)" },
     { name: "status", label: "Status", type: "select", required: true, options: CONTENT_STATUS },
     { name: "publishDate", label: "Tanggal terbit", type: "date" },
     { name: "cta", label: "CTA", full: true },
     { name: "offerId", label: "Penawaran terkait", type: "select", options: pick(offers) },
     { name: "campaignId", label: "Kampanye", type: "select", options: pick(campaigns) },
-    { name: "reach", label: "Reach", type: "number" },
+    { name: "reach", label: "Jangkauan", type: "number" },
     { name: "profileVisits", label: "Kunjungan profil", type: "number" },
     { name: "dms", label: "DM masuk", type: "number" },
     { name: "productionCost", label: "Biaya produksi", type: "number" },
@@ -48,11 +48,11 @@ export default async function ContentPage() {
 
   return (
     <>
-      <PageHeader title="Content" description="Atribusi: Konten → Reach → Kunjungan → DM → Lead → Deal → Pendapatan" actions={<EntityForm title="Konten baru" fields={fields} action={saveContent} initial={{ status: "IDEA", platform: "INSTAGRAM", pillar: "EDUCATION" }} />} />
+      <PageHeader title="Konten" description="Lacak kontribusi konten terhadap pendapatan." actions={<EntityForm title="Konten baru" fields={fields} action={saveContent} initial={{ status: "IDEA", platform: "INSTAGRAM", pillar: "EDUCATION" }} />} />
 
       {items.length === 0 ? <EmptyState>Belum ada konten.</EmptyState> : (
         <Table>
-          <thead><tr><Th>Konten</Th><Th>Pillar</Th><Th>Status</Th><Th>Terbit</Th><Th>Reach</Th><Th>DM</Th><Th>Lead</Th><Th>Deal won</Th><Th>Pendapatan</Th><Th>ROI</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
+          <thead><tr><Th>Konten</Th><Th>Pilar</Th><Th>Status</Th><Th>Terbit</Th><Th>Jangkauan</Th><Th>DM</Th><Th>Lead</Th><Th>Transaksi</Th><Th>Pendapatan</Th><Th>ROI</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
           <tbody>
             {items.map((c) => {
               const s = stats.get(c.id);
@@ -82,7 +82,7 @@ export default async function ContentPage() {
       )}
 
       <Card className="mt-4">
-        <CardTitle>Performa per Content Pillar</CardTitle>
+        <CardTitle>Performa per pilar konten</CardTitle>
         {byPillar.size === 0 ? <EmptyState>{NOT_ENOUGH_DATA}</EmptyState> : (
           <ul className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
             {[...byPillar.entries()].sort((a, b) => b[1].leads - a[1].leads).map(([p, v]) => (

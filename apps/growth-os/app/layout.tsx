@@ -3,8 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme";
 
 export const metadata: Metadata = {
-  title: { default: "Growth Operating System", template: "%s · Growth OS" },
-  description: "Sistem operasi bisnis untuk mengubah personal brand menjadi pendapatan yang berulang.",
+  title: { default: "Growth OS", template: "%s · Growth OS" },
+  description: "Kelola strategi, prospek, proyek, dan pendapatan bisnis.",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };

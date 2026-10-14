@@ -11,7 +11,7 @@ export function Flywheel() {
 
   return (
     <figure>
-      <svg viewBox="0 0 400 400" role="img" aria-label="Growth flywheel: personal brand, konten, audience, prospek, percakapan, penawaran, penjualan, delivery, testimoni, referral, repeat order, produk digital, pendapatan skala, reinvestasi, kembali ke personal brand" className="mx-auto w-full max-w-md">
+      <svg viewBox="0 0 400 400" role="img" aria-label="Siklus pertumbuhan bisnis dari brand personal hingga investasi ulang" className="mx-auto w-full max-w-md">
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M0 0L10 5L0 10z" fill="hsl(var(--primary))" />
@@ -38,14 +38,13 @@ export function Flywheel() {
             <text x={p.x} y={p.y + 4} textAnchor="middle" fontSize="11" fontWeight="600" fill="hsl(var(--primary))">{i + 1}</text>
           </g>
         ))}
-        <text x={cx} y={cy - 6} textAnchor="middle" fontSize="15" fontWeight="700" fill="hsl(var(--foreground))">Growth</text>
-        <text x={cx} y={cy + 14} textAnchor="middle" fontSize="15" fontWeight="700" fill="hsl(var(--foreground))">Flywheel</text>
+        <text x={cx} y={cy + 4} textAnchor="middle" fontSize="15" fontWeight="700" fill="hsl(var(--foreground))">Siklus</text>
       </svg>
       <ol className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground sm:grid-cols-3">
         {FLYWHEEL_STEPS.map((s, i) => (
           <li key={s}><span className="mr-1 font-semibold text-primary">{i + 1}.</span>{s}</li>
         ))}
-        <li className="col-span-full mt-1 text-foreground">↻ Reinvestasi memperkuat Personal Brand</li>
+        <li className="col-span-full mt-1 text-foreground">↻ Investasi ulang memperkuat brand personal</li>
       </ol>
     </figure>
   );

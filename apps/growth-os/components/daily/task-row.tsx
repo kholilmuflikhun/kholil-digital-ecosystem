@@ -7,8 +7,11 @@ import { DeleteButton } from "@/components/ui/entity-form";
 import { cn } from "@/lib/utils";
 
 const STATUSES = [
-  ["TODO", "Todo"], ["IN_PROGRESS", "Berjalan"], ["DONE", "Selesai"], ["SKIPPED", "Lewati"],
+  ["TODO", "Belum dimulai"], ["IN_PROGRESS", "Berjalan"], ["DONE", "Selesai"], ["SKIPPED", "Dilewati"],
 ] as const;
+const PRIORITY_LABELS: Record<string, string> = {
+  LOW: "Rendah", MEDIUM: "Sedang", HIGH: "Tinggi", CRITICAL: "Kritis",
+};
 
 export function TaskRow({
   id, title, category, priority, status, minutes, demo,
@@ -26,10 +29,10 @@ export function TaskRow({
       />
       <div className="min-w-0 flex-1">
         <p className={cn("truncate text-sm font-medium", done && "text-muted-foreground line-through")}>{title}</p>
-        <p className="text-xs text-muted-foreground">{category}{minutes ? ` · ${minutes} mnt` : ""}</p>
+        <p className="text-xs text-muted-foreground">{category}{minutes ? ` · ${minutes} menit` : ""}</p>
       </div>
       {demo && <Badge tone="warning">DEMO</Badge>}
-      <Badge tone={priority === "HIGH" || priority === "CRITICAL" ? "danger" : "neutral"}>{priority}</Badge>
+      <Badge tone={priority === "HIGH" || priority === "CRITICAL" ? "danger" : "neutral"}>{PRIORITY_LABELS[priority] ?? priority}</Badge>
       <select
         aria-label="Status tugas" value={status} disabled={pending}
         onChange={(e) => start(async () => void (await setTaskStatus({ id, status: e.target.value })))}

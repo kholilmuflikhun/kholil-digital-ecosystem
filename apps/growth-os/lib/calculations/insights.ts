@@ -1,4 +1,4 @@
-export const NOT_ENOUGH_DATA = "Not enough data yet.";
+export const NOT_ENOUGH_DATA = "Data belum mencukupi.";
 
 export type OfferStat = { name: string; revenue: number; cost: number; count: number };
 export type ContentStat = { title: string; pillar: string; leads: number; revenue: number };
@@ -81,7 +81,7 @@ export function generateInsights(s: InsightSnapshot): Insight[] {
     out.push({
       id: "followup-better",
       tone: "positive",
-      text: "Prospek yang di-follow-up memiliki konversi lebih tinggi daripada cold outreach.",
+      text: "Tindak lanjut menghasilkan konversi lebih tinggi daripada kontak awal.",
     });
   }
 
@@ -114,7 +114,7 @@ export function generateInsights(s: InsightSnapshot): Insight[] {
     out.push({
       id: "weak-close",
       tone: "warning",
-      text: "Pipeline Anda terisi, tetapi konversi dari proposal ke closing masih rendah.",
+      text: "Konversi proposal ke transaksi masih rendah.",
     });
   }
 

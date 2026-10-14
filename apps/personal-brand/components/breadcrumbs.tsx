@@ -11,7 +11,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(all)} />
-      <nav aria-label="Breadcrumb" className="border-b border-border">
+      <nav aria-label="Navigasi lokasi" className="border-b border-border">
         <Container>
           <ol className="ui flex flex-wrap items-center gap-x-2 py-3 text-sm text-muted-foreground">
             {all.map((c, i) => {

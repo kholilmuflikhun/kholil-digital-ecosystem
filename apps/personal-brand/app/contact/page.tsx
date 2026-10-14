@@ -9,8 +9,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import type { ServiceCategory } from "@kholil/shared";
 
 export const metadata = buildMetadata({
-  title: "Mulai Konsultasi",
-  description: "Ceritakan kebutuhan bisnis Anda dan dapatkan saran yang lebih jelas untuk branding, desain, produk digital, atau sistem kerja yang lebih rapi.",
+  title: "Diskusikan Proyek",
+  description: "Jelaskan kebutuhan Anda untuk layanan brand, desain, atau solusi digital.",
   path: "/contact",
 });
 
@@ -35,8 +35,8 @@ export default async function ContactPage({ searchParams }: Props) {
       <Breadcrumbs items={[{ name: "Kontak", path: "/contact" }]} />
       <PageHeader
         eyebrow="Kontak"
-        title="Ceritakan kebutuhan Anda. Saya akan membantu merumuskannya dengan lebih jelas."
-        intro={subject ? `${subject}. Tambahkan detail yang Anda punya, dan saya akan menilai arah yang paling tepat untuk kebutuhan Anda.` : "Semakin jelas kebutuhan Anda, semakin cepat saya bisa memberi gambaran solusi yang relevan."}
+        title="Ceritakan kebutuhan proyek Anda."
+        intro={subject ? `${subject}. Tambahkan detail yang relevan agar saya dapat memahami ruang lingkupnya.` : "Jelaskan tujuan, kebutuhan, dan hal yang perlu dipertimbangkan."}
       />
       <Section ruled={false}>
         <div className="grid gap-14 lg:grid-cols-[1.6fr_1fr]">
@@ -46,17 +46,17 @@ export default async function ContactPage({ searchParams }: Props) {
             context={{ page: subject, serviceSlug: service?.slug, productSlug: product?.slug }}
           />
           <aside className="h-fit space-y-6 border border-border p-5" aria-label="Cara lain menghubungi">
-            <h2 className="display-md">Alternatif kontak</h2>
+            <h2 className="display-md">Kontak langsung</h2>
             <div className="space-y-3">
               <WhatsAppCta variant="solid" context={subject} service={product?.name ?? service?.name} placement="kontak" className="w-full" />
-              {!whatsappNumber && <p className="text-sm text-muted-foreground">Nomor WhatsApp belum dikonfigurasi. Anda tetap bisa mengirimkan formulir.</p>}
+              {!whatsappNumber && <p className="text-sm text-muted-foreground">WhatsApp belum tersedia. Silakan gunakan formulir.</p>}
               {publicEmail ? (
                 <p><TrackedLink href={`mailto:${publicEmail}`} event="email_click" eventProps={{ placement: "kontak" }} className="link">{publicEmail}</TrackedLink></p>
               ) : (
-                <p className="text-sm text-muted-foreground">Alamat email publik belum dikonfigurasi.</p>
+                <p className="text-sm text-muted-foreground">Email belum tersedia.</p>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">Balasan biasanya diberikan dalam waktu singkat. Untuk kebutuhan yang lebih urgent, WhatsApp adalah jalur tercepat.</p>
+            <p className="text-sm text-muted-foreground">Pilih kanal kontak yang paling sesuai.</p>
           </aside>
         </div>
       </Section>

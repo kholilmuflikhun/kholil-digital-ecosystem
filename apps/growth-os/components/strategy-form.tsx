@@ -4,15 +4,15 @@ import { useState, useTransition } from "react";
 import { buttonClass } from "@/components/ui/primitives";
 
 const SECTIONS = [
-  ["vision", "Vision", "Ke mana bisnis ini menuju?"],
-  ["mission", "Mission", "Mengapa bisnis ini ada?"],
-  ["positioning", "Positioning", "Siapa yang kita bantu?"],
-  ["valueProposition", "Value Proposition", "Masalah apa yang kita selesaikan?"],
-  ["idealCustomer", "Ideal Customer", "Siapa pelanggan terbaik?"],
-  ["offersSummary", "Offers", "Apa yang kita jual?"],
-  ["acquisitionChannels", "Acquisition Channels", "Dari mana pelanggan datang?"],
-  ["growthStrategy", "Growth Strategy", "Bagaimana bisnis akan tumbuh?"],
-  ["competitiveEdge", "Competitive Advantage", "Mengapa pelanggan memilih kita?"],
+  ["vision", "Visi", "Arah bisnis jangka panjang"],
+  ["mission", "Misi", "Tujuan bisnis"],
+  ["positioning", "Posisi brand", "Audiens dan pembeda utama"],
+  ["valueProposition", "Proposisi nilai", "Masalah yang diselesaikan"],
+  ["idealCustomer", "Pelanggan ideal", "Pelanggan yang dilayani"],
+  ["offersSummary", "Penawaran", "Produk atau layanan"],
+  ["acquisitionChannels", "Kanal akuisisi", "Sumber pelanggan"],
+  ["growthStrategy", "Strategi pertumbuhan", "Arah pengembangan bisnis"],
+  ["competitiveEdge", "Keunggulan", "Alasan pelanggan memilih bisnis"],
 ] as const;
 
 type Action = (input: Record<string, unknown>) => Promise<{ ok: boolean; error?: string }>;
@@ -28,7 +28,7 @@ export function StrategyForm({ action, initial }: { action: Action; initial: Rec
         const values = Object.fromEntries(SECTIONS.map(([k]) => [k, String(fd.get(k) ?? "")]));
         start(async () => {
           const r = await action(values);
-          setMsg(r.ok ? "Strategi tersimpan." : r.error ?? "Gagal menyimpan.");
+          setMsg(r.ok ? "Strategi tersimpan." : r.error ?? "Strategi gagal disimpan.");
         });
       }}
       className="grid gap-4"

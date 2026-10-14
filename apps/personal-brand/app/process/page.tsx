@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/button-link";
 
 export const metadata = buildMetadata({
   title: "Proses Kerja",
-  description: "Dari discovery sampai serah terima: tahapan kerja yang jelas agar ruang lingkup, revisi, dan hasil akhir tidak mengejutkan.",
+  description: "Tahapan kerja, ruang lingkup, revisi, dan penyerahan hasil.",
   path: "/process",
 });
 
@@ -14,7 +14,7 @@ export default function ProcessPage() {
   return (
     <>
       <Breadcrumbs items={[{ name: "Proses", path: "/process" }]} />
-      <PageHeader eyebrow="Proses" title="Tahapan kerja yang jelas." intro="Setiap proyek melewati alur yang sama, disesuaikan dengan bidangnya." />
+      <PageHeader eyebrow="Proses" title="Tahapan kerja." intro="Alur disesuaikan dengan kebutuhan dan ruang lingkup proyek." />
       <Section ruled={false}>
         <ol className="max-w-3xl">
           {processSteps.map((s, i) => (
@@ -30,7 +30,7 @@ export default function ProcessPage() {
             </li>
           ))}
         </ol>
-        <div className="mt-10"><ButtonLink href="/contact">Mulai dengan Discovery</ButtonLink></div>
+        <div className="mt-10"><ButtonLink href="/contact">Diskusikan proyek Anda</ButtonLink></div>
       </Section>
     </>
   );

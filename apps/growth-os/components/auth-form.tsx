@@ -21,7 +21,7 @@ export function AuthForm({
     <main className="grid min-h-screen place-items-center p-4">
       <div className="w-full max-w-sm rounded-lg border bg-card p-6 shadow-sm">
         <div className="mb-6 flex items-center gap-2 font-semibold">
-          <Rocket className="h-5 w-5 text-primary" /> Growth Operating System
+          <Rocket className="h-5 w-5 text-primary" /> Growth OS
         </div>
         <h1 className="text-xl font-semibold">{isLogin ? "Masuk" : "Buat akun"}</h1>
         <form action={formAction} className="mt-4 grid gap-3">
@@ -38,7 +38,7 @@ export function AuthForm({
             {state?.fieldErrors?.email?.[0] && <span className="text-xs text-danger">{state.fieldErrors.email[0]}</span>}
           </label>
           <label className="grid gap-1 text-sm">
-            Password
+            Kata sandi
             <input name="password" type="password" required minLength={isLogin ? 1 : 8} autoComplete={isLogin ? "current-password" : "new-password"} className={input} />
             {state?.fieldErrors?.password?.[0] && <span className="text-xs text-danger">{state.fieldErrors.password[0]}</span>}
           </label>
@@ -55,7 +55,7 @@ export function AuthForm({
         </p>
         {isLogin && (
           <p className="mt-3 rounded-md bg-muted p-2 text-center text-xs text-muted-foreground">
-            Akun demo (setelah seed): demo@growthos.app / demo12345
+            Akun demo: demo@growthos.app / demo12345
           </p>
         )}
       </div>

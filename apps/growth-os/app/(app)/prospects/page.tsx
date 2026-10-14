@@ -8,7 +8,7 @@ import { ActionButton, DeleteButton, EntityForm, type Field } from "@/components
 import { PROSPECT_STATUS, label, pick } from "@/lib/constants/options";
 import { formatCurrency, num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Prospects" };
+export const metadata: Metadata = { title: "Prospek" };
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 50;
 
@@ -43,10 +43,10 @@ export default async function ProspectsPage({ searchParams }: { searchParams: Pr
     { name: "potentialValue", label: "Potensi nilai", type: "number" },
     { name: "probability", label: "Probabilitas (%)", type: "number" },
     { name: "status", label: "Status", type: "select", required: true, options: PROSPECT_STATUS },
-    { name: "nextFollowUpAt", label: "Follow-up berikutnya", type: "date" },
+    { name: "nextFollowUpAt", label: "Tindak lanjut berikutnya", type: "date" },
     { name: "offerId", label: "Penawaran", type: "select", options: pick(offers) },
     { name: "contentId", label: "Berasal dari konten", type: "select", options: pick(contents.map((c) => ({ id: c.id, name: c.title }))) },
-    { name: "isColdOutreach", label: "Cold outreach", type: "checkbox" },
+    { name: "isColdOutreach", label: "Kontak awal tanpa rujukan", type: "checkbox" },
     { name: "notes", label: "Catatan", type: "textarea" },
   ];
 
@@ -55,7 +55,7 @@ export default async function ProspectsPage({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <PageHeader title="Prospects" description={`${total} prospek`} actions={<EntityForm title="Prospek baru" fields={fields} action={saveProspect} initial={{ status: "NEW", probability: 10 }} />} />
+      <PageHeader title="Prospek" description={`${total} prospek`} actions={<EntityForm title="Prospek baru" fields={fields} action={saveProspect} initial={{ status: "NEW", probability: 10 }} />} />
 
       <nav aria-label="Filter status" className="mb-4 flex flex-wrap gap-1.5">
         {[{ value: "", label: "Semua" }, ...PROSPECT_STATUS].map((s) => (
@@ -68,7 +68,7 @@ export default async function ProspectsPage({ searchParams }: { searchParams: Pr
 
       {rows.length === 0 ? <EmptyState>Belum ada prospek{status ? ` dengan status ${label(PROSPECT_STATUS, status)}` : ""}.</EmptyState> : (
         <Table>
-          <thead><tr><Th>Prospek</Th><Th>Status</Th><Th>Potensi</Th><Th>Prob.</Th><Th>Kontak terakhir</Th><Th>Follow-up</Th><Th>Penawaran</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
+          <thead><tr><Th>Prospek</Th><Th>Status</Th><Th>Potensi</Th><Th>Probabilitas</Th><Th>Kontak terakhir</Th><Th>Tindak lanjut</Th><Th>Penawaran</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
           <tbody>
             {rows.map((p) => {
               const overdue = p.nextFollowUpAt && p.nextFollowUpAt < today && !["WON", "LOST", "DORMANT"].includes(p.status);
@@ -86,7 +86,7 @@ export default async function ProspectsPage({ searchParams }: { searchParams: Pr
                   <Td className="text-xs">{p.offer?.name ?? "—"}</Td>
                   <Td>
                     <div className="flex justify-end gap-1">
-                      <ActionButton action={markProspectContacted} payload={{ id: p.id }}>Dihubungi</ActionButton>
+                      <ActionButton action={markProspectContacted} payload={{ id: p.id }}>Catat kontak</ActionButton>
                       <EntityForm mode="edit" title="Edit prospek" fields={fields} action={saveProspect} id={p.id} initial={{ ...p, potentialValue: num(p.potentialValue) }} />
                       <DeleteButton action={deleteProspect} id={p.id} />
                     </div>

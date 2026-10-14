@@ -7,7 +7,7 @@ import { Badge, DemoBadge, EmptyState, PageHeader, Stat, Table, Td, Th } from "@
 import { DeleteButton, EntityForm, type Field } from "@/components/ui/entity-form";
 import { formatCurrency, formatPct, num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Customers" };
+export const metadata: Metadata = { title: "Pelanggan" };
 export const dynamic = "force-dynamic";
 
 const fields: Field[] = [
@@ -16,7 +16,7 @@ const fields: Field[] = [
   { name: "whatsapp", label: "WhatsApp" },
   { name: "email", label: "Email", type: "email" },
   { name: "instagram", label: "Instagram" },
-  { name: "referralSource", label: "Sumber referral" },
+  { name: "referralSource", label: "Sumber rujukan" },
   { name: "notes", label: "Catatan", type: "textarea" },
 ];
 
@@ -51,18 +51,18 @@ export default async function CustomersPage() {
 
   return (
     <>
-      <PageHeader title="Customers" actions={<EntityForm title="Pelanggan baru" fields={fields} action={saveCustomer} />} />
+      <PageHeader title="Pelanggan" actions={<EntityForm title="Pelanggan baru" fields={fields} action={saveCustomer} />} />
 
       <section aria-label="Nilai pelanggan" className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Pelanggan" value={customers.length} hint={`${buyers.length} sudah membeli`} />
-        <Stat label="Repeat purchase rate" value={buyers.length ? formatPct((repeat / buyers.length) * 100) : "—"} hint={`${repeat} pelanggan repeat`} />
+        <Stat label="Tingkat pembelian ulang" value={buyers.length ? formatPct((repeat / buyers.length) * 100) : "—"} hint={`${repeat} pelanggan membeli ulang`} />
         <Stat label="Rata-rata pendapatan/pelanggan" value={buyers.length ? money(totalRevenue / buyers.length) : "—"} />
-        <Stat label="Customer lifetime value (rata-rata)" value={buyers.length ? money(rows.reduce((s, r) => s + r.profit, 0) / buyers.length) : "—"} hint="Berdasarkan profit historis" />
+        <Stat label="Nilai pelanggan rata-rata" value={buyers.length ? money(rows.reduce((s, r) => s + r.profit, 0) / buyers.length) : "—"} hint="Berdasarkan profit historis" />
       </section>
 
-      {customers.length === 0 ? <EmptyState>Belum ada pelanggan. Pelanggan dibuat otomatis saat deal dipindah ke Won.</EmptyState> : (
+      {customers.length === 0 ? <EmptyState>Belum ada pelanggan. Data pelanggan dibuat saat transaksi berhasil.</EmptyState> : (
         <Table>
-          <thead><tr><Th>Pelanggan</Th><Th>Pendapatan</Th><Th>Profit</Th><Th>Order</Th><Th>AOV</Th><Th>Pembelian terakhir</Th><Th>Proyek</Th><Th>Testimoni</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
+          <thead><tr><Th>Pelanggan</Th><Th>Pendapatan</Th><Th>Profit</Th><Th>Pesanan</Th><Th>Nilai rata-rata</Th><Th>Pembelian terakhir</Th><Th>Proyek</Th><Th>Testimoni</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
           <tbody>
             {rows.map(({ c, revenue, profit, orders, aov, last }) => {
               const stale = last && Date.now() - last.getTime() > window * 86_400_000;
@@ -70,7 +70,7 @@ export default async function CustomersPage() {
                 <tr key={c.id}>
                   <Td>
                     <div className="font-medium">{c.businessName ?? c.name} {c.isDemo && <DemoBadge />}</div>
-                    <div className="text-xs text-muted-foreground">{c.name}{c.referredBy ? ` · referral dari ${c.referredBy.name}` : c.referralSource ? ` · ${c.referralSource}` : ""}</div>
+                    <div className="text-xs text-muted-foreground">{c.name}{c.referredBy ? ` · dirujuk oleh ${c.referredBy.name}` : c.referralSource ? ` · ${c.referralSource}` : ""}</div>
                   </Td>
                   <Td className="tabular-nums">{money(revenue)}</Td>
                   <Td className="tabular-nums">{money(profit)}</Td>

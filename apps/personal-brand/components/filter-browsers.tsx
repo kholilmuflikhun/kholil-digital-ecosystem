@@ -44,7 +44,7 @@ export function ProductBrowser({
   return (
     <div>
       <FilterBar
-        label="Filter kategori produk"
+        label="Kategori produk"
         options={present.map((c) => ({ value: c, label: labels[c] ?? c }))}
         active={active}
         onChange={(v) => {
@@ -53,7 +53,7 @@ export function ProductBrowser({
         }}
       />
       {shown.length === 0 ? (
-        <p className="border border-border p-6 text-muted-foreground">Belum ada produk di kategori ini.</p>
+        <p className="border border-border p-6 text-muted-foreground">Produk tidak ditemukan.</p>
       ) : (
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
           {shown.map((p) => (
@@ -82,7 +82,7 @@ export function ProjectBrowser({
   return (
     <div>
       <FilterBar
-        label="Filter kategori portofolio"
+        label="Kategori portofolio"
         options={present.map((c) => ({ value: c, label: labels[c] ?? c }))}
         active={active}
         onChange={(v) => {
@@ -91,7 +91,7 @@ export function ProjectBrowser({
         }}
       />
       {filtered.length === 0 ? (
-        <p className="border border-border p-6 text-muted-foreground">Belum ada karya di kategori ini.</p>
+        <p className="border border-border p-6 text-muted-foreground">Proyek tidak ditemukan.</p>
       ) : (
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
           {filtered.map((p) => (

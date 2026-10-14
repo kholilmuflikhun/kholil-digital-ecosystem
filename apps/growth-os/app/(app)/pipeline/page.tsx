@@ -12,7 +12,7 @@ import { StageSelect } from "@/components/pipeline/stage-select";
 import { expectedValue } from "@/lib/calculations";
 import { formatCurrency, formatPct, num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Sales Pipeline" };
+export const metadata: Metadata = { title: "Pipeline Penjualan" };
 export const dynamic = "force-dynamic";
 
 export default async function PipelinePage() {
@@ -26,30 +26,30 @@ export default async function PipelinePage() {
   const money = (v: number) => formatCurrency(v, o.currency, o.locale);
 
   const fields: Field[] = [
-    { name: "name", label: "Nama deal", required: true, full: true },
+    { name: "name", label: "Nama transaksi", required: true, full: true },
     { name: "prospectId", label: "Prospek", type: "select", required: true, options: prospects.map((p) => ({ value: p.id, label: p.businessName ? `${p.name} — ${p.businessName}` : p.name })) },
     { name: "offerId", label: "Produk/layanan", type: "select", options: pick(offers) },
     { name: "stage", label: "Tahap", type: "select", required: true, options: DEAL_STAGE },
     { name: "value", label: "Nilai", type: "number", required: true },
     { name: "probability", label: "Probabilitas (%)", type: "number" },
-    { name: "expectedCloseDate", label: "Perkiraan closing", type: "date" },
+    { name: "expectedCloseDate", label: "Perkiraan selesai", type: "date" },
     { name: "nextAction", label: "Aksi berikutnya", full: true },
     { name: "notes", label: "Catatan", type: "textarea" },
   ];
 
   return (
     <>
-      <PageHeader title="Sales Pipeline" description="Expected Value = Nilai × Probabilitas" actions={<EntityForm title="Deal baru" fields={fields} action={saveDeal} initial={{ stage: "LEAD", probability: 5 }} />} />
+      <PageHeader title="Pipeline Penjualan" description="Nilai tertimbang = nilai transaksi × probabilitas." actions={<EntityForm title="Transaksi baru" fields={fields} action={saveDeal} initial={{ stage: "LEAD", probability: 5 }} />} />
 
       <section aria-label="Metrik pipeline" className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-5">
-        <Stat label="Nilai pipeline" value={money(o.pipeline.pipelineValue)} hint={`${o.pipeline.openCount} deal terbuka`} />
-        <Stat label="Pipeline tertimbang" value={money(o.pipeline.weightedPipeline)} />
-        <Stat label="Win rate" value={formatPct(o.pipeline.winRate)} />
-        <Stat label="Rata-rata deal" value={o.pipeline.avgDealSize ? money(o.pipeline.avgDealSize) : "—"} />
+        <Stat label="Nilai pipeline" value={money(o.pipeline.pipelineValue)} hint={`${o.pipeline.openCount} transaksi terbuka`} />
+        <Stat label="Nilai tertimbang" value={money(o.pipeline.weightedPipeline)} />
+        <Stat label="Tingkat keberhasilan" value={formatPct(o.pipeline.winRate)} />
+        <Stat label="Nilai transaksi rata-rata" value={o.pipeline.avgDealSize ? money(o.pipeline.avgDealSize) : "—"} />
         <Stat label="Siklus penjualan" value={o.pipeline.salesCycle !== null ? `${o.pipeline.salesCycle.toFixed(0)} hari` : "—"} />
       </section>
 
-      {deals.length === 0 ? <EmptyState>Belum ada deal. Buat prospek terlebih dahulu, lalu tambahkan deal.</EmptyState> : (
+      {deals.length === 0 ? <EmptyState>Belum ada transaksi. Tambahkan prospek, lalu buat transaksi.</EmptyState> : (
         <div className="-mx-4 overflow-x-auto px-4 pb-4">
           <div className="flex min-w-max gap-3">
             {DEAL_STAGES.map((stage) => {
@@ -69,11 +69,11 @@ export default async function PipelinePage() {
                           <p className="text-xs text-muted-foreground">{d.prospect.businessName ?? d.prospect.name}{d.offer ? ` · ${d.offer.name}` : ""}</p>
                           <p className="mt-1 text-sm font-semibold tabular-nums">{money(num(d.value))}</p>
                           <p className="text-xs text-muted-foreground">
-                            {d.probability}% → EV {money(expectedValue(num(d.value), d.probability))}
+                            {d.probability}% → nilai tertimbang {money(expectedValue(num(d.value), d.probability))}
                             {d.expectedCloseDate ? ` · ${format(d.expectedCloseDate, "d MMM")}` : ""}
                           </p>
                           {d.nextAction && <p className="mt-1 text-xs">➜ {d.nextAction}</p>}
-                          {d.lostReason && <p className="mt-1 text-xs text-danger">Alasan: {d.lostReason}</p>}
+                          {d.lostReason && <p className="mt-1 text-xs text-danger">Alasan tidak berhasil: {d.lostReason}</p>}
                           <div className="mt-2 flex items-center gap-1">
                             <StageSelect id={d.id} stage={d.stage} />
                             <EntityForm mode="edit" title="Edit deal" fields={fields} action={saveDeal} id={d.id} initial={{ ...d, value: num(d.value) }} />
@@ -92,7 +92,7 @@ export default async function PipelinePage() {
 
       {o.pipeline.lostReasons.length > 0 && (
         <Card className="mt-4">
-          <h2 className="mb-2 text-sm font-semibold">Alasan kalah</h2>
+          <h2 className="mb-2 text-sm font-semibold">Alasan transaksi tidak berhasil</h2>
           <ul className="grid gap-1 text-sm">
             {o.pipeline.lostReasons.map((r) => <li key={r.reason} className="flex justify-between"><span>{r.reason}</span><span className="tabular-nums text-muted-foreground">{r.count}</span></li>)}
           </ul>

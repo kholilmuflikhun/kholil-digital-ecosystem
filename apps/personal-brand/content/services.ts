@@ -3,34 +3,34 @@ import type { Pillar, PillarId, Service } from "./schemas";
 export const pillars: Pillar[] = [
   {
     id: "brand-design",
-    name: "Brand & Design",
-    tagline: "Identitas visual yang konsisten dari logo sampai kemasan.",
+    name: "Brand dan Desain",
+    tagline: "Identitas visual konsisten, dari logo hingga kemasan.",
     description:
-      "Logo, brand identity, kemasan, dan materi pemasaran yang dirancang agar bisnis Anda mudah dikenali dan terlihat meyakinkan di setiap titik temu dengan pelanggan.",
+      "Identitas visual, kemasan, dan materi pemasaran agar bisnis Anda mudah dikenali.",
     kind: "design",
   },
   {
     id: "content-creative",
-    name: "Content & Creative",
-    tagline: "Konten visual yang terencana, bukan sekadar mengisi feed.",
+    name: "Konten dan Kreatif",
+    tagline: "Konten visual terencana untuk media sosial dan kampanye.",
     description:
       "Perencanaan dan produksi konten kreatif untuk media sosial dan kampanye, dengan arah visual yang selaras dengan brand Anda.",
     kind: "design",
   },
   {
     id: "printing-apparel",
-    name: "Printing & Apparel",
-    tagline: "Desain siap cetak untuk kaos, jersey, kemasan, dan merchandise.",
+    name: "Cetak dan Apparel",
+    tagline: "Desain siap produksi untuk kaos, jersey, kemasan, dan merchandise.",
     description:
       "File desain yang siap diproduksi untuk sablon, digital printing, dan apparel. Layanan desain dan produksi fisik dibedakan: kapasitas, estimasi, dan ketersediaan dikonfirmasi per pesanan.",
     kind: "production",
   },
   {
     id: "digital-technology",
-    name: "Digital & Technology",
-    tagline: "Website dan sistem digital yang dipakai untuk menjalankan bisnis.",
+    name: "Digital dan Teknologi",
+    tagline: "Website dan sistem digital untuk kebutuhan operasional.",
     description:
-      "Landing page, website bisnis, aplikasi web, dan alat internal yang berfokus pada hasil praktis: menerima inquiry, merapikan proses, dan menghemat waktu.",
+      "Landing page, website bisnis, aplikasi web, dan alat internal untuk menerima inquiry dan merapikan proses.",
     kind: "digital",
   },
 ];

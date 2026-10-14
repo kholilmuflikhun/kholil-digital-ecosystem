@@ -11,16 +11,16 @@ import { DeleteButton, EntityForm, type Field } from "@/components/ui/entity-for
 import { CAMPAIGN_DURATION, GOAL_CATEGORY, GOAL_STATUS, PRIORITY, label } from "@/lib/constants/options";
 import { DEFAULT_30_DAY_PHASES } from "@/lib/constants/campaign-template";
 
-export const metadata: Metadata = { title: "Goals" };
+export const metadata: Metadata = { title: "Target" };
 export const dynamic = "force-dynamic";
 
 const goalFields: Field[] = [
-  { name: "name", label: "Nama goal", required: true, full: true },
+  { name: "name", label: "Nama target", required: true, full: true },
   { name: "category", label: "Kategori", type: "select", required: true, options: GOAL_CATEGORY },
-  { name: "metric", label: "Metrik (mis. IDR, transaksi)", required: true },
+  { name: "metric", label: "Satuan (mis. IDR, transaksi)", required: true },
   { name: "targetValue", label: "Target", type: "number", required: true },
   { name: "currentValue", label: "Nilai saat ini (manual)", type: "number" },
-  { name: "autoTrack", label: "Hitung otomatis dari data (pendapatan, profit, penjualan, pelanggan, lead, konten, proyek)", type: "checkbox" },
+  { name: "autoTrack", label: "Perbarui otomatis dari data bisnis", type: "checkbox" },
   { name: "startDate", label: "Mulai", type: "date", required: true },
   { name: "endDate", label: "Selesai", type: "date", required: true },
   { name: "status", label: "Status", type: "select", required: true, options: GOAL_STATUS },
@@ -37,8 +37,14 @@ const campaignFields: Field[] = [
   { name: "contentTarget", label: "Target konten", type: "number" },
   { name: "prospectTarget", label: "Target prospek", type: "number" },
   { name: "goalSummary", label: "Tujuan", type: "textarea" },
-  { name: "useTemplate", label: "Gunakan template fase 30 hari (diskalakan ke durasi)", type: "checkbox" },
+  { name: "useTemplate", label: "Gunakan tahapan 30 hari yang disesuaikan dengan durasi", type: "checkbox" },
 ];
+const campaignStatusLabel: Record<string, string> = {
+  ACTIVE: "Aktif",
+  PAUSED: "Dijeda",
+  COMPLETED: "Selesai",
+  CANCELLED: "Dibatalkan",
+};
 
 export default async function GoalsPage() {
   const userId = await requireUserId();
@@ -51,18 +57,18 @@ export default async function GoalsPage() {
   return (
     <>
       <PageHeader
-        title="Goals & Kampanye"
-        description="Target ditentukan sendiri: nilai, mata uang, dan periode tidak dikunci."
+        title="Target dan kampanye"
+        description="Tentukan nilai dan periode sesuai kebutuhan."
         actions={
           <div className="flex gap-2">
             <EntityForm title="Kampanye baru" fields={campaignFields} action={createCampaign} triggerLabel="Kampanye" initial={{ durationDays: 30, useTemplate: true }} />
-            <EntityForm title="Goal baru" fields={goalFields} action={saveGoal} triggerLabel="Goal" initial={{ status: "ACTIVE", priority: "MEDIUM" }} />
+            <EntityForm title="Target baru" fields={goalFields} action={saveGoal} triggerLabel="Target" initial={{ status: "ACTIVE", priority: "MEDIUM" }} />
           </div>
         }
       />
 
       {goals.length === 0 ? (
-        <EmptyState>Belum ada goal. Mulai dengan satu target pendapatan dan satu target aktivitas.</EmptyState>
+        <EmptyState>Belum ada target. Mulai dengan target pendapatan dan aktivitas.</EmptyState>
       ) : (
         <ul className="grid gap-3 md:grid-cols-2">
           {goals.map((g) => {
@@ -94,7 +100,7 @@ export default async function GoalsPage() {
                     </div>
                   </dl>
                   <div className="mt-3 flex justify-end gap-1">
-                    <EntityForm mode="edit" title="Edit goal" fields={goalFields} action={saveGoal} id={g.id} initial={{ ...g, targetValue: num(g.targetValue), currentValue: num(g.currentValue) }} />
+                    <EntityForm mode="edit" title="Ubah target" fields={goalFields} action={saveGoal} id={g.id} initial={{ ...g, targetValue: num(g.targetValue), currentValue: num(g.currentValue) }} />
                     <DeleteButton action={deleteGoal} id={g.id} />
                   </div>
                 </Card>
@@ -106,7 +112,7 @@ export default async function GoalsPage() {
 
       <h2 className="mb-3 mt-8 text-lg font-semibold">Kampanye</h2>
       {campaigns.length === 0 ? (
-        <EmptyState>Belum ada kampanye. Pilih durasi 7–90 hari atau kustom, lalu gunakan template 4 fase.</EmptyState>
+        <EmptyState>Belum ada kampanye. Pilih durasi 7–90 hari dan atur tahapan kampanye.</EmptyState>
       ) : (
         <div className="grid gap-3">
           {campaigns.map((c) => {
@@ -114,14 +120,14 @@ export default async function GoalsPage() {
             const day = Math.min(c.durationDays, Math.max(1, Math.ceil((Date.now() - c.startDate.getTime()) / 86_400_000) + 1));
             return (
               <Card key={c.id}>
-                <CardTitle action={<Badge tone={c.status === "ACTIVE" ? "primary" : "neutral"}>{c.status}</Badge>}>
+                <CardTitle action={<Badge tone={c.status === "ACTIVE" ? "primary" : "neutral"}>{campaignStatusLabel[c.status] ?? c.status}</Badge>}>
                   {c.name} {c.isDemo && <DemoBadge />}
                 </CardTitle>
                 <p className="text-xs text-muted-foreground">
                   {c.durationDays} hari · {format(c.startDate, "d MMM")} – {format(c.endDate, "d MMM yyyy")} · hari ke-{day}
                   {c.revenueTarget ? ` · target ${num(c.revenueTarget).toLocaleString("id-ID")}` : ""}
                 </p>
-                <div className="my-3"><Progress value={(day / c.durationDays) * 100} label="Waktu berjalan" /></div>
+                <div className="my-3"><Progress value={(day / c.durationDays) * 100} label="Progres waktu" /></div>
                 {phases.length > 0 && (
                   <ol className="grid gap-2 md:grid-cols-4">
                     {phases.map((ph) => (

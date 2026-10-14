@@ -5,8 +5,8 @@ import { ProjectBrowser } from "@/components/filter-browsers";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata = buildMetadata({
-  title: "Portfolio & Studi Kasus",
-  description: "Lihat karya dan studi kasus yang menunjukkan pendekatan strategis, desain yang konsisten, dan solusi digital yang berdampak pada bisnis.",
+  title: "Portofolio dan Studi Kasus",
+  description: "Lihat konteks, pendekatan, dan hasil kerja dari proyek pilihan.",
   path: "/portfolio",
 });
 
@@ -15,7 +15,7 @@ export default function PortfolioPage() {
   return (
     <>
       <Breadcrumbs items={[{ name: "Portofolio", path: "/portfolio" }]} />
-      <PageHeader eyebrow="Portofolio" title="Karya yang menunjukkan arah, kualitas, dan hasil yang nyata." intro="Setiap proyek disusun dengan konteks yang jelas: tantangan yang dihadapi, pendekatan yang dipilih, dan nilai yang bisa dibawa ke bisnis Anda." />
+      <PageHeader eyebrow="Portofolio" title="Proyek dan studi kasus pilihan." intro="Setiap proyek memuat konteks, pendekatan, dan hasil kerja yang tersedia." />
       <Section ruled={false}>
         {projects.length === 0 ? (
           <p className="border border-border p-6 text-muted-foreground">Portofolio sedang disiapkan.</p>

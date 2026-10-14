@@ -5,11 +5,11 @@ import { saveWeeklyReview } from "@/lib/actions/business";
 import { buttonClass } from "@/components/ui/primitives";
 
 const STEPS = [
-  { title: "Revenue", questions: [["rev_amount", "Berapa pendapatan minggu ini?"], ["rev_profit", "Berapa profitnya?"], ["rev_source", "Apa yang menghasilkan pendapatan?"]] },
-  { title: "Sales", questions: [["sales_prospects", "Berapa prospek?"], ["sales_conversations", "Berapa percakapan?"], ["sales_proposals", "Berapa proposal?"], ["sales_won", "Berapa deal won?"], ["sales_lost", "Mengapa deal kalah?"]] },
-  { title: "Marketing", questions: [["mkt_content", "Konten mana yang performanya terbaik?"], ["mkt_leads", "Konten mana yang menghasilkan lead?"], ["mkt_channel", "Kanal mana yang terbaik?"]] },
-  { title: "Operations", questions: [["ops_time", "Apa yang paling menyita waktu?"], ["ops_profitable", "Proyek mana yang menguntungkan?"], ["ops_bottleneck", "Di mana hambatannya?"]] },
-  { title: "Strategy", questions: [["str_continue", "Apa yang dilanjutkan?"], ["str_stop", "Apa yang dihentikan?"], ["str_improve", "Apa yang diperbaiki?"], ["str_test", "Apa yang diuji berikutnya?"]] },
+  { title: "Pendapatan", questions: [["rev_amount", "Berapa pendapatan minggu ini?"], ["rev_profit", "Berapa profitnya?"], ["rev_source", "Sumber pendapatan utama?"]] },
+  { title: "Penjualan", questions: [["sales_prospects", "Berapa prospek yang ditangani?"], ["sales_conversations", "Berapa percakapan yang terjadi?"], ["sales_proposals", "Berapa proposal terkirim?"], ["sales_won", "Berapa transaksi berhasil?"], ["sales_lost", "Mengapa transaksi tidak berhasil?"]] },
+  { title: "Pemasaran", questions: [["mkt_content", "Konten mana yang paling efektif?"], ["mkt_leads", "Konten mana yang menghasilkan lead?"], ["mkt_channel", "Kanal mana yang paling efektif?"]] },
+  { title: "Operasional", questions: [["ops_time", "Apa yang paling menyita waktu?"], ["ops_profitable", "Proyek mana yang menguntungkan?"], ["ops_bottleneck", "Apa hambatan utama?"]] },
+  { title: "Strategi", questions: [["str_continue", "Apa yang perlu dilanjutkan?"], ["str_stop", "Apa yang perlu dihentikan?"], ["str_improve", "Apa yang perlu diperbaiki?"], ["str_test", "Apa yang perlu diuji berikutnya?"]] },
 ] as const;
 
 export function WeeklyReview({ weekStart, initial }: { weekStart: string; initial: Record<string, string> }) {
@@ -23,7 +23,7 @@ export function WeeklyReview({ weekStart, initial }: { weekStart: string; initia
     start(async () => {
       const clean = Object.fromEntries(Object.entries(answers).filter(([, v]) => v.trim()));
       const res = await saveWeeklyReview({ weekStart, answers: clean });
-      setMsg(res.ok ? "Review mingguan tersimpan." : res.error);
+      setMsg(res.ok ? "Tinjauan mingguan tersimpan." : res.error);
     });
   }
 

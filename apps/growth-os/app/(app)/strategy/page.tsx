@@ -5,7 +5,7 @@ import { saveStrategy } from "@/lib/actions/business";
 import { Card, PageHeader } from "@/components/ui/primitives";
 import { StrategyForm } from "@/components/strategy-form";
 
-export const metadata: Metadata = { title: "Strategy" };
+export const metadata: Metadata = { title: "Strategi" };
 export const dynamic = "force-dynamic";
 
 export default async function StrategyPage() {
@@ -13,7 +13,7 @@ export default async function StrategyPage() {
   const s = await db.strategy.findUnique({ where: { userId } });
   return (
     <>
-      <PageHeader title="Strategy" description="Jawab pertanyaan inti bisnis. Dokumen ini menjadi acuan semua aktivitas." />
+      <PageHeader title="Strategi" description="Tetapkan arah bisnis sebagai acuan aktivitas." />
       <Card>
         <StrategyForm
           action={saveStrategy}

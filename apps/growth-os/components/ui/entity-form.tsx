@@ -72,7 +72,7 @@ export function EntityForm({
   return (
     <>
       {mode === "edit" ? (
-        <button type="button" onClick={() => setOpen(true)} className={buttonClass("ghost") + " !h-8 !px-2"} aria-label={`Edit ${title}`}>
+        <button type="button" onClick={() => setOpen(true)} className={buttonClass("ghost") + " !h-8 !px-2"} aria-label={`Ubah ${title}`}>
           <Pencil className="h-3.5 w-3.5" />
         </button>
       ) : (
@@ -147,7 +147,7 @@ export function EntityForm({
 }
 
 export function DeleteButton({
-  action, id, label = "Hapus", confirmText = "Hapus data ini? Tindakan tidak dapat dibatalkan.",
+  action, id, label = "Hapus", confirmText = "Hapus data ini? Tindakan ini tidak dapat dibatalkan.",
 }: {
   action: (input: Record<string, unknown>) => Promise<ActionResult>;
   id: string;

@@ -1,7 +1,7 @@
 export type ScoreThresholds = {
-  critical: number; // di bawah ini = Critical (default 50)
-  needsWork: number; // di bawah ini = Needs Improvement (default 70)
-  onTrack: number; // di bawah ini = On Track (default 90)
+  critical: number;
+  needsWork: number;
+  onTrack: number;
 };
 
 export const DEFAULT_THRESHOLDS: ScoreThresholds = {
@@ -10,7 +10,7 @@ export const DEFAULT_THRESHOLDS: ScoreThresholds = {
   onTrack: 90,
 };
 
-export type ScoreLabel = "Critical" | "Needs Improvement" | "On Track" | "Excellent";
+export type ScoreLabel = "Kritis" | "Perlu ditingkatkan" | "Sesuai target" | "Unggul";
 
 export function executionScore(completed: number, planned: number): number | null {
   if (planned <= 0) return null;
@@ -21,8 +21,8 @@ export function scoreLabel(
   score: number,
   t: ScoreThresholds = DEFAULT_THRESHOLDS,
 ): ScoreLabel {
-  if (score < t.critical) return "Critical";
-  if (score < t.needsWork) return "Needs Improvement";
-  if (score < t.onTrack) return "On Track";
-  return "Excellent";
+  if (score < t.critical) return "Kritis";
+  if (score < t.needsWork) return "Perlu ditingkatkan";
+  if (score < t.onTrack) return "Sesuai target";
+  return "Unggul";
 }

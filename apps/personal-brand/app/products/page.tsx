@@ -19,8 +19,8 @@ export default async function ProductsPage({ searchParams }: Props) {
       <Breadcrumbs items={[{ name: "Produk", path: "/products" }]} />
       <PageHeader
         eyebrow="Produk"
-        title="Pilihan solusi, disusun untuk kebutuhan nyata."
-        intro="Mulai dari identitas brand hingga kebutuhan digital dan produksi. Setiap paket memiliki cakupan yang jelas; detail dan penawaran dibahas berdasarkan tujuan serta kebutuhan proyek Anda."
+        title="Paket dan produk untuk kebutuhan bisnis."
+        intro="Jadikan pilihan ini sebagai titik awal. Cakupan dan penawaran disesuaikan dengan kebutuhan proyek."
       />
       <Section ruled={false}>
         <ProductBrowser products={publishedProducts()} labels={productCategoryLabels} initialCategory={kategori} />

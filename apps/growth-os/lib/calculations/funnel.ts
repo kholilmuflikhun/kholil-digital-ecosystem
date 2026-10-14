@@ -19,15 +19,15 @@ export type FunnelStage = {
 };
 
 const STAGES: { key: keyof FunnelCounts; label: string }[] = [
-  { key: "audience", label: "Audience" },
+  { key: "audience", label: "Audiens" },
   { key: "prospects", label: "Prospek" },
-  { key: "qualifiedLeads", label: "Lead Terkualifikasi" },
+  { key: "qualifiedLeads", label: "Lead berkualitas" },
   { key: "conversations", label: "Percakapan" },
   { key: "offers", label: "Penawaran" },
-  { key: "won", label: "Deal Won" },
+  { key: "won", label: "Transaksi berhasil" },
   { key: "customers", label: "Pelanggan" },
-  { key: "repeatCustomers", label: "Pelanggan Berulang" },
-  { key: "referrals", label: "Referral" },
+  { key: "repeatCustomers", label: "Pelanggan berulang" },
+  { key: "referrals", label: "Rujukan" },
 ];
 
 export function buildFunnel(counts: FunnelCounts): FunnelStage[] {

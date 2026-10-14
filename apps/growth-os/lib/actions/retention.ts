@@ -45,7 +45,7 @@ export async function saveReferral(input: In, id?: string): Promise<ActionResult
     if (!(await ownsAll(userId, { customer: p.data.referrerId, prospect: p.data.referredProspectId }))) return fail("Data tidak ditemukan.");
     if (id) {
       const r = await db.referral.updateMany({ where: { id, userId }, data: p.data });
-      if (r.count === 0) return fail("Referral tidak ditemukan.");
+      if (r.count === 0) return fail("Rujukan tidak ditemukan.");
     } else {
       await db.referral.create({ data: { ...p.data, userId } });
     }

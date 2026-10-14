@@ -4,48 +4,48 @@ import { defineList, processStepSchema, type ProcessStep } from "./schemas";
 export const processSteps: ProcessStep[] = defineList(processStepSchema, [
   {
     id: "discovery",
-    title: "Discovery",
-    description: "Kita mulai dengan percakapan singkat: apa bisnis Anda, siapa pelanggannya, dan masalah apa yang ingin diselesaikan.",
+    title: "Diskusi awal",
+    description: "Bahas bisnis, audiens, dan kebutuhan yang ingin diselesaikan.",
   },
   {
     id: "briefing",
-    title: "Briefing",
-    description: "Kebutuhan dituangkan ke brief tertulis: tujuan, referensi, materi yang tersedia, ruang lingkup, dan batasan.",
+    title: "Brief",
+    description: "Catat tujuan, referensi, materi, ruang lingkup, dan batasan.",
   },
   {
     id: "strategy",
     title: "Strategi",
-    description: "Arah visual, struktur konten, atau rancangan sistem disusun lebih dulu agar pengerjaan tidak berputar-putar.",
+    description: "Tetapkan arah visual, struktur konten, atau rancangan sistem sebelum produksi.",
     appliesTo: ["brand-design", "content-creative", "digital-technology"],
   },
   {
     id: "proposal",
     title: "Proposal",
-    description: "Proposal merinci deliverable, tahapan, jadwal, dan biaya sebelum pengerjaan dimulai, sehingga semua pihak menyetujui hal yang sama.",
+    description: "Proposal merinci hasil kerja, tahapan, jadwal, dan biaya untuk disepakati sebelum pengerjaan.",
   },
   {
     id: "deposit",
-    title: "Deposit dan penjadwalan",
-    description: "Setelah proposal disetujui, ketentuan pembayaran awal dan jadwal pengerjaan dikonfirmasi bersama.",
+    title: "Pembayaran dan jadwal",
+    description: "Konfirmasi pembayaran awal dan jadwal setelah proposal disetujui.",
   },
   {
     id: "production",
     title: "Produksi",
-    description: "Pengerjaan berjalan sesuai jadwal. Untuk layanan cetak atau apparel, tahap produksi fisik dikonfirmasi terpisah dari tahap desain.",
+    description: "Pengerjaan mengikuti jadwal yang disepakati. Produksi fisik dikonfirmasi terpisah dari desain.",
   },
   {
     id: "review",
-    title: "Review dan revisi",
-    description: "Hasil ditinjau bersama dan revisi dikerjakan sesuai batas yang disepakati di proposal.",
+    title: "Tinjauan dan revisi",
+    description: "Tinjau hasil dan lakukan revisi sesuai proposal.",
   },
   {
     id: "delivery",
-    title: "Penyerahan akhir",
-    description: "File final diserahkan dalam format yang siap dipakai, lengkap dengan panduan penggunaan bila diperlukan.",
+    title: "Penyerahan",
+    description: "Terima file siap pakai dan panduan bila diperlukan.",
   },
   {
     id: "followup",
     title: "Tindak lanjut",
-    description: "Setelah penyerahan, tersedia ruang untuk pertanyaan, penyesuaian kecil, dan perencanaan kebutuhan berikutnya.",
+    description: "Bahas pertanyaan, penyesuaian, dan kebutuhan berikutnya.",
   },
 ]);

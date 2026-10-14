@@ -8,7 +8,7 @@ import { DeleteButton, EntityForm, type Field } from "@/components/ui/entity-for
 import { PROJECT_STATUS, label, pick } from "@/lib/constants/options";
 import { formatCurrency, num } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Projects" };
+export const metadata: Metadata = { title: "Proyek" };
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
@@ -26,9 +26,9 @@ export default async function ProjectsPage() {
     { name: "name", label: "Nama proyek", required: true, full: true },
     { name: "customerId", label: "Pelanggan", type: "select", options: pick(customers.map((c) => ({ id: c.id, name: c.businessName ?? c.name }))) },
     { name: "offerId", label: "Penawaran", type: "select", options: pick(offers) },
-    { name: "dealId", label: "Deal (Won)", type: "select", options: pick(deals) },
+    { name: "dealId", label: "Transaksi berhasil", type: "select", options: pick(deals) },
     { name: "status", label: "Status", type: "select", required: true, options: PROJECT_STATUS },
-    { name: "deadline", label: "Deadline", type: "date" },
+    { name: "deadline", label: "Tenggat", type: "date" },
     { name: "value", label: "Nilai proyek", type: "number" },
     { name: "cost", label: "Biaya", type: "number" },
     { name: "completion", label: "Selesai (%)", type: "number" },
@@ -39,10 +39,10 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <PageHeader title="Projects" description="Profitabilitas dihitung dari nilai − biaya, termasuk pendapatan per jam." actions={<EntityForm title="Proyek baru" fields={fields} action={saveProject} initial={{ status: "PLANNING", completion: 0 }} />} />
+      <PageHeader title="Proyek" description="Pantau progres, biaya, dan profit per jam." actions={<EntityForm title="Proyek baru" fields={fields} action={saveProject} initial={{ status: "PLANNING", completion: 0 }} />} />
       {projects.length === 0 ? <EmptyState>Belum ada proyek.</EmptyState> : (
         <Table>
-          <thead><tr><Th>Proyek</Th><Th>Status</Th><Th>Deadline</Th><Th>Progres</Th><Th>Nilai</Th><Th>Profit</Th><Th>Jam</Th><Th>Profit/jam</Th><Th>Revisi</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
+          <thead><tr><Th>Proyek</Th><Th>Status</Th><Th>Tenggat</Th><Th>Progres</Th><Th>Nilai</Th><Th>Profit</Th><Th>Jam</Th><Th>Profit/jam</Th><Th>Revisi</Th><Th><span className="sr-only">Aksi</span></Th></tr></thead>
           <tbody>
             {projects.map((p) => {
               const profit = num(p.value) - num(p.cost);
