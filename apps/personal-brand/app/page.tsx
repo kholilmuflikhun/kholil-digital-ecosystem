@@ -6,7 +6,7 @@ import {
 import { buildMetadata } from "@/lib/seo";
 import { Container, Section } from "@/components/layout";
 import { ButtonLink } from "@/components/button-link";
-import { HeroPanel } from "@/components/hero-panel";
+import { HeroPortrait } from "@/components/hero-portrait";
 import { ProductBrowser } from "@/components/filter-browsers";
 import { ProjectCard, ArticleCard } from "@/components/cards";
 import { WhatsAppCta } from "@/components/whatsapp-cta";
@@ -30,17 +30,17 @@ export default function HomePage() {
     <>
       {/* 1. Hero */}
       <section aria-labelledby="hero-judul" className="bg-gradient-to-b from-primary/5 to-transparent pb-16 pt-14 sm:pb-24 sm:pt-20">
-        <Container className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
+        <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="eyebrow mb-5">{profile.name} · Strategi Brand · Desain · Digital</p>
             <h1 id="hero-judul" className="display-xl">{profile.headline}</h1>
-            <p className="mt-6 max-w-prose text-lg text-muted-foreground sm:text-xl">{profile.heroSupport}</p>
+            <p className="mt-5 max-w-md text-lg text-muted-foreground sm:text-xl">{profile.heroSupport}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href={primaryCta.href} event="consultation_click" eventProps={{ placement: "hero" }}>{primaryCta.label}</ButtonLink>
               <ButtonLink href={secondaryCta.href} variant="secondary">{secondaryCta.label}</ButtonLink>
             </div>
           </div>
-          <HeroPanel items={pillars} />
+          <HeroPortrait />
         </Container>
       </section>
 
