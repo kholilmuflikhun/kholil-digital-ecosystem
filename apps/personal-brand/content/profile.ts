@@ -4,9 +4,9 @@ import type { Profile } from "./schemas";
 export const profile: Profile = {
   name: "Kholil Muflikhun",
   role: "Brand strategist • Designer • Full-stack developer",
-  headline: "Brand yang kuat tidak berteriak. Ia membuat bisnis Anda mudah dipercaya.",
+  headline: "Brand yang kuat membuat bisnis mudah dipercaya.",
   heroSupport:
-    "Saya merancang identitas brand dan pengalaman digital yang presisi, konsisten, dan relevan dengan arah bisnis Anda—dari kesan pertama hingga cara kerja sehari-hari.",
+    "Strategi brand, desain, dan solusi digital untuk bisnis yang ingin tampil profesional.",
   valueProposition:
     "Strategi brand, desain, dan solusi digital yang menyatukan cara bisnis Anda terlihat, berkomunikasi, dan bekerja—dengan arah yang jelas dan eksekusi yang konsisten.",
   intro: [
