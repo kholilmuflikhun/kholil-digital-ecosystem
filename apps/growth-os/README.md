@@ -11,11 +11,11 @@ Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS · Prisma + Po
 
 ## Prasyarat
 
-Node.js 22 atau lebih baru dan pnpm 10.28.0. Jalankan perintah dari root monorepo.
+Node.js 20.9 atau lebih baru dan pnpm 12.11.2. Jalankan perintah dari root monorepo.
 
 ## Menjalankan secara lokal
 
-Salin file contoh environment lalu isi koneksi PostgreSQL dan rahasia autentikasi:
+Salin file contoh environment lalu isi `DATABASE_URL` dengan koneksi PostgreSQL lokal (mis. `postgresql://USER:PASSWORD@localhost:5432/growth_os?schema=public`) dan `AUTH_SECRET` dengan nilai acak:
 
 ```bash
 pnpm install
@@ -25,9 +25,9 @@ pnpm --filter growth-os db:seed    # opsional: buat data demo berlabel DEMO
 pnpm --filter growth-os dev        # http://localhost:3000
 ```
 
-Di PowerShell, gunakan `Copy-Item apps\growth-os\.env.example apps\growth-os\.env` sebagai pengganti perintah `cp`.
+Di PowerShell, gunakan `Copy-Item apps\growth-os\.env.example apps\growth-os\.env` sebagai pengganti perintah `cp`. Buat nilai `AUTH_SECRET` sendiri dengan `openssl rand -base64 32`, lalu masukkan ke `.env`; jangan gunakan nilai contoh dari dokumentasi.
 
-Setelah menjalankan seed, akun demo adalah `demo@growthos.app` / `demo12345`. Seed membuat ulang akun demo beserta datanya. Data demo dapat dihapus dari **Settings → Hapus semua data demo**. Jangan gunakan akun atau kata sandi demo di produksi.
+Setelah menjalankan seed, akun demo adalah `demo@growthos.app` / `demo12345` (ditampilkan di halaman login hanya saat development). Seed membuat ulang akun demo beserta datanya. Data demo dapat dihapus dari **Settings → Hapus semua data demo**. Jangan gunakan akun atau kata sandi demo di produksi.
 
 Perintah lain dari root monorepo:
 
@@ -49,6 +49,7 @@ pnpm --filter growth-os start
 | `ALLOW_SIGNUP` | tidak | `false` untuk menutup pendaftaran akun baru |
 | `LEAD_INGEST_API_KEY` | tidak | Kunci server-ke-server, minimal 32 karakter; wajib untuk mengaktifkan penerimaan lead |
 | `LEAD_INGEST_USER_EMAIL` | tidak | Email akun Growth OS yang menerima lead; wajib bersama API key |
+| `CRON_SECRET` | tidak | Rahasia minimal 32 karakter untuk mengaktifkan cron notifikasi di Vercel |
 
 Panduan lengkap environment ada di [`docs/panduan-env-growth-os.md`](../../docs/panduan-env-growth-os.md). Jangan commit file `.env` atau menaruh rahasia pada variabel `NEXT_PUBLIC_*`.
 
@@ -68,12 +69,11 @@ Lead dari website memerlukan `LEAD_INGEST_API_KEY` dan `LEAD_INGEST_USER_EMAIL` 
 2. Push repo ke GitHub, lalu **Import Project** di Vercel. Atur Root Directory ke `apps/growth-os` bila membuat proyek Vercel khusus untuk aplikasi ini.
 3. Isi environment variables di atas (Settings → Environment Variables).
 4. Deploy. Script build menjalankan `prisma generate && next build`.
-5. Setelah deploy pertama, terapkan skema dari mesin lokal:
+5. Repositori ini belum memiliki folder migrasi Prisma. Untuk bootstrap MVP pertama, terapkan skema dari mesin lokal:
    ```bash
-   DATABASE_URL="<url produksi>" pnpm --filter growth-os exec prisma db push
+   pnpm --filter growth-os exec prisma db push
    ```
-   Di PowerShell: `$env:DATABASE_URL="<url produksi>"; pnpm --filter growth-os exec prisma db push`.
-   (atau pakai `prisma migrate deploy` bila Anda memakai migrasi).
+   Atur `DATABASE_URL` produksi di environment lokal Anda hanya untuk perintah ini. Sebelum perubahan skema produksi berikutnya, buat dan commit migrasi Prisma, lalu jalankan `pnpm --filter growth-os db:deploy`; jangan gunakan `db push` sebagai alur deploy berulang.
 
 ### Memperbarui database yang sudah ada
 
@@ -109,7 +109,7 @@ prisma/           schema.prisma dan seed data demo
 - Setiap query dan mutasi memakai `userId` dari sesi server, tidak pernah dari klien.
 - Mutasi memakai `updateMany/deleteMany({ where: { id, userId } })`; ID relasi dari klien diverifikasi lewat `ownsAll`.
 - Input divalidasi dengan Zod di server. Password di-hash dengan bcrypt (cost 12).
-- Middleware melindungi halaman aplikasi; endpoint publik memiliki pemeriksaan akses masing-masing. Endpoint lead-ingest memakai API key, validasi payload, batas ukuran request, dan pencatatan pengiriman idempoten.
+- Layout server melindungi halaman aplikasi dengan memeriksa sesi Auth.js; endpoint publik memiliki pemeriksaan akses masing-masing. Endpoint lead-ingest memakai API key, validasi payload, batas ukuran request, dan pencatatan pengiriman idempoten.
 - Header keamanan dasar diatur di `next.config.ts`.
 - **Rate limiter bersifat in-memory** (`lib/utils/rate-limit.ts`) untuk login, pendaftaran, mutasi, dan lead-ingest. Di Vercel atau lingkungan multi-instance, batas ini tidak global; ganti implementasinya dengan Upstash Redis untuk rate limit lintas instance.
 

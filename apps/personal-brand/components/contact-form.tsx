@@ -39,7 +39,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
     return (
       <div ref={statusRef} tabIndex={-1} role="status" className="border border-foreground p-6 outline-none">
         <h2 className="display-md">Pesan terkirim.</h2>
-        <p className="mt-3 text-muted-foreground">Terima kasih. Saya akan meninjau kebutuhan Anda dan menghubungi melalui kanal pilihan.</p>
+        <p className="mt-3 text-muted-foreground">Terima kasih. Saya akan menghubungi Anda melalui kanal pilihan.</p>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
             <p className="mt-2">
               Anda tetap bisa{" "}
               <a href={waUrl} target="_blank" rel="noopener noreferrer" className="link">
-                mengirim pesan yang sama lewat WhatsApp
+                kirim pesan melalui WhatsApp
               </a>
               .
             </p>
@@ -146,7 +146,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
             <option value="">Pilih</option>
             {budgetOptions.map((o) => (<option key={o}>{o}</option>))}
           </select>
-          <p className="mt-1 text-sm text-muted-foreground">Perkiraan ini bukan penawaran harga.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Bukan penawaran harga.</p>
         </div>
       </div>
 
@@ -160,7 +160,7 @@ export function ContactForm({ defaultCategory, defaultMessage, context }: Props)
         <button type="submit" disabled={pending || !startedAt} className="ui inline-flex min-h-[48px] items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-60">
           {pending ? "Mengirim…" : "Kirim"}
         </button>
-        <p className="text-sm text-muted-foreground">Data digunakan untuk menanggapi pesan Anda. Baca <Link className="link" href="/privacy">kebijakan privasi</Link>.</p>
+        <p className="text-sm text-muted-foreground">Data digunakan untuk menanggapi pesan. Baca <Link className="link" href="/privacy">kebijakan privasi</Link>.</p>
       </div>
     </form>
   );

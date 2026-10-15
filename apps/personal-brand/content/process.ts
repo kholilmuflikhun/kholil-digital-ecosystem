@@ -5,47 +5,47 @@ export const processSteps: ProcessStep[] = defineList(processStepSchema, [
   {
     id: "discovery",
     title: "Diskusi awal",
-    description: "Bahas bisnis, audiens, dan kebutuhan yang ingin diselesaikan.",
+    description: "Tentukan bisnis, audiens, dan kebutuhan.",
   },
   {
     id: "briefing",
     title: "Brief",
-    description: "Catat tujuan, referensi, materi, ruang lingkup, dan batasan.",
+    description: "Susun tujuan, referensi, materi, dan ruang lingkup.",
   },
   {
     id: "strategy",
     title: "Strategi",
-    description: "Tetapkan arah visual, struktur konten, atau rancangan sistem sebelum produksi.",
+    description: "Tetapkan arah desain, konten, atau sistem.",
     appliesTo: ["brand-design", "content-creative", "digital-technology"],
   },
   {
     id: "proposal",
     title: "Proposal",
-    description: "Proposal merinci hasil kerja, tahapan, jadwal, dan biaya untuk disepakati sebelum pengerjaan.",
+    description: "Sepakati hasil kerja, tahapan, jadwal, dan biaya.",
   },
   {
     id: "deposit",
     title: "Pembayaran dan jadwal",
-    description: "Konfirmasi pembayaran awal dan jadwal setelah proposal disetujui.",
+    description: "Konfirmasi pembayaran awal dan jadwal kerja.",
   },
   {
     id: "production",
     title: "Produksi",
-    description: "Pengerjaan mengikuti jadwal yang disepakati. Produksi fisik dikonfirmasi terpisah dari desain.",
+    description: "Kerjakan sesuai jadwal. Produksi fisik dikonfirmasi terpisah.",
   },
   {
     id: "review",
     title: "Tinjauan dan revisi",
-    description: "Tinjau hasil dan lakukan revisi sesuai proposal.",
+    description: "Tinjau hasil dan revisi sesuai proposal.",
   },
   {
     id: "delivery",
     title: "Penyerahan",
-    description: "Terima file siap pakai dan panduan bila diperlukan.",
+    description: "Terima file dan panduan penggunaan.",
   },
   {
     id: "followup",
     title: "Tindak lanjut",
-    description: "Bahas pertanyaan, penyesuaian, dan kebutuhan berikutnya.",
+    description: "Bahas penyesuaian dan kebutuhan lanjutan.",
   },
 ]);

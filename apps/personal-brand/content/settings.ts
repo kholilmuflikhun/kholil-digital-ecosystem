@@ -6,8 +6,7 @@ import type { Settings } from "./schemas";
  */
 export const settings: Settings = {
   siteName: "Kholil Muflikhun",
-  siteDescription:
-    "Kholil Muflikhun menyatukan strategi brand, desain, dan solusi digital untuk membantu bisnis tampil lebih jelas, konsisten, dan meyakinkan.",
+  siteDescription: "Strategi brand, desain, dan solusi digital oleh Kholil Muflikhun.",
   locale: "id-ID",
   // Ubah ke "internal", "vendor", atau "hybrid" setelah model produksi dipastikan.
   productionModel: "unset",

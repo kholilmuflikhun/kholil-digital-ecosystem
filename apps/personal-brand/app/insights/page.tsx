@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata = buildMetadata({
   title: "Wawasan Brand, Desain, dan Digital",
-  description: "Panduan praktis tentang brand, desain, produksi, dan solusi digital.",
+  description: "Panduan singkat tentang brand, desain, dan digital.",
   path: "/insights",
 });
 
@@ -17,12 +17,12 @@ export default function InsightsPage() {
       <Breadcrumbs items={[{ name: "Wawasan", path: "/insights" }]} />
       <PageHeader
         eyebrow="Wawasan"
-        title="Wawasan untuk keputusan bisnis."
-        intro="Panduan ringkas tentang brand, desain, dan solusi digital."
+        title="Wawasan bisnis dan digital."
+        intro="Panduan ringkas untuk keputusan yang lebih baik."
       />
       <Section ruled={false}>
         {list.length === 0 ? (
-          <p className="border border-border p-6 text-muted-foreground">Artikel sedang disiapkan.</p>
+          <p className="border border-border p-6 text-muted-foreground">Artikel segera tersedia.</p>
         ) : (
           <ul className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">{list.map((a) => (<li key={a.slug}><ArticleCard article={a} /></li>))}</ul>
         )}

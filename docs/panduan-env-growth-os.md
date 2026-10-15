@@ -58,7 +58,7 @@ openssl rand -base64 32
 Contoh:
 
 ```env
-AUTH_SECRET="nU2d1iJ8YV0s2L5m7MhSxv0S4g6Qn7d4P7dQ9nP1qg7Q="
+AUTH_SECRET="GANTI_DENGAN_OUTPUT_OPENSSL"
 ```
 
 Jangan memakai string yang mudah ditebak.
@@ -122,7 +122,7 @@ openssl rand -hex 32
 Contoh:
 
 ```env
-LEAD_INGEST_API_KEY="0d1f9d1c6d8ea97d84152fc0bbd4475eea8ac29c10d7e4b5a896b5e21e6f3f2a"
+LEAD_INGEST_API_KEY="GANTI_DENGAN_OUTPUT_OPENSSL"
 ```
 
 Nilai ini harus sama persis dengan `GROWTH_OS_API_KEY` yang dipasang di website personal brand.
@@ -160,22 +160,24 @@ Mengaktifkan pembatas laju global di Upstash Redis. Tanpa keduanya, pembatas mem
 
 ```env
 DATABASE_URL="postgresql://postgres:password@localhost:5432/growth_os?schema=public"
-AUTH_SECRET="nU2d1iJ8YV0s2L5m7MhSxv0S4g6Qn7d4P7dQ9nP1qg7Q="
+AUTH_SECRET="GANTI_DENGAN_OUTPUT_OPENSSL"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ALLOW_SIGNUP="true"
-LEAD_INGEST_API_KEY="0d1f9d1c6d8ea97d84152fc0bbd4475eea8ac29c10d7e4b5a896b5e21e6f3f2a"
+LEAD_INGEST_API_KEY="GANTI_DENGAN_OUTPUT_OPENSSL"
 LEAD_INGEST_USER_EMAIL="admin@domainanda.com"
+CRON_SECRET="GANTI_DENGAN_OUTPUT_OPENSSL"
 ```
 
 ### Contoh produksi
 
 ```env
 DATABASE_URL="postgresql://user:password@host:5432/growth_os?sslmode=require"
-AUTH_SECRET="hasil_dari_openssl_rand_-base64_32"
+AUTH_SECRET="GANTI_DENGAN_OUTPUT_OPENSSL"
 NEXT_PUBLIC_APP_URL="https://growthos.domainanda.com"
 ALLOW_SIGNUP="false"
-LEAD_INGEST_API_KEY="kunci_rahasia_yang_sama_dengan_website_personal_brand"
+LEAD_INGEST_API_KEY="GANTI_DENGAN_OUTPUT_OPENSSL"
 LEAD_INGEST_USER_EMAIL="admin@domainanda.com"
+CRON_SECRET="GANTI_DENGAN_OUTPUT_OPENSSL"
 ```
 
 ## 4. Kapan fitur lead ingest aktif?
@@ -201,7 +203,7 @@ pnpm dev --filter=growth-os
 
 Informasi lengkapnya bisa dilihat di [apps/growth-os/README.md](../apps/growth-os/README.md).
 
-> **Peringatan:** nilai `AUTH_SECRET` dan `LEAD_INGEST_API_KEY` pada contoh di dokumen ini hanya ilustrasi dan tertulis publik di repositori. Jangan dipakai di produksi; buat nilai baru dengan `openssl`.
+> **Peringatan:** nilai `AUTH_SECRET`, `LEAD_INGEST_API_KEY`, dan `CRON_SECRET` pada contoh hanyalah placeholder. Hasilkan nilai baru dan unik untuk setiap environment menggunakan perintah `openssl` di atas.
 
 ## 6. Praktik keamanan yang disarankan
 

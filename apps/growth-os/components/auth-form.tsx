@@ -53,7 +53,7 @@ export function AuthForm({
             {isLogin ? "Daftar" : "Masuk"}
           </Link>
         </p>
-        {isLogin && (
+        {isLogin && process.env.NODE_ENV === "development" && (
           <p className="mt-3 rounded-md bg-muted p-2 text-center text-xs text-muted-foreground">
             Akun demo: demo@growthos.app / demo12345
           </p>

@@ -45,7 +45,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. Perkenalan */}
-      <Section id="perkenalan" eyebrow="Perkenalan" title="Strategi, desain, dan digital yang saling terhubung.">
+      <Section id="perkenalan" eyebrow="Perkenalan" title="Strategi, desain, dan teknologi.">
         <div className="grid gap-8 md:grid-cols-2">
           {profile.intro.map((t) => (<p key={t} className="text-lg">{t}</p>))}
         </div>
@@ -53,7 +53,7 @@ export default function HomePage() {
       </Section>
 
       {/* 3. Layanan */}
-      <Section id="layanan" eyebrow="Layanan" title="Empat bidang layanan untuk kebutuhan bisnis." intro="Pilih layanan sesuai kebutuhan. Ruang lingkup dan langkah kerja disepakati sebelum proyek dimulai.">
+      <Section id="layanan" eyebrow="Layanan" title="Layanan untuk bisnis." intro="Ruang lingkup dan proses disepakati sebelum proyek dimulai.">
         <div className="grid gap-10 md:grid-cols-2">
           {pillars.map((p) => (
             <article key={p.id} className="surface p-6">
@@ -67,29 +67,29 @@ export default function HomePage() {
             </article>
           ))}
         </div>
-        <p className="mt-10"><ButtonLink href="/services" variant="secondary">Lihat semua layanan</ButtonLink></p>
+        <p className="mt-10"><ButtonLink href="/services" variant="secondary">Semua layanan</ButtonLink></p>
       </Section>
 
       {/* 4. Portofolio pilihan */}
       {featuredProjects.length > 0 && (
-        <Section id="portofolio" eyebrow="Portofolio" title="Contoh pendekatan dan hasil kerja." intro="Lihat konteks, pendekatan, dan hasil yang tersedia untuk tiap proyek.">
+        <Section id="portofolio" eyebrow="Portofolio" title="Proyek pilihan." intro="Lihat konteks dan pendekatan setiap proyek.">
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featuredProjects.map((p) => (<li key={p.slug}><ProjectCard project={p} /></li>))}
           </ul>
-          <p className="mt-10"><ButtonLink href="/portfolio" variant="secondary">Lihat semua portofolio</ButtonLink></p>
+          <p className="mt-10"><ButtonLink href="/portfolio" variant="secondary">Semua portofolio</ButtonLink></p>
         </Section>
       )}
 
       {/* 5. Produk pilihan dengan filter kategori */}
       {featuredProducts.length > 0 && (
-        <Section id="produk" eyebrow="Produk" title="Paket dan aset untuk kebutuhan bisnis." intro="Gunakan pilihan ini sebagai titik awal. Detail penawaran menyesuaikan kebutuhan proyek.">
+        <Section id="produk" eyebrow="Produk" title="Paket dan produk." intro="Detail penawaran disesuaikan dengan kebutuhan proyek.">
           <ProductBrowser products={featuredProducts} labels={productCategoryLabels} limit={6} />
-          <p className="mt-10"><ButtonLink href="/products" variant="secondary">Lihat semua produk</ButtonLink></p>
+          <p className="mt-10"><ButtonLink href="/products" variant="secondary">Semua produk</ButtonLink></p>
         </Section>
       )}
 
       {/* 6. Mengapa bekerja dengan saya */}
-      <Section id="alasan" eyebrow="Cara kerja" title="Prinsip di balik setiap proyek.">
+      <Section id="alasan" eyebrow="Cara kerja" title="Prinsip kerja.">
         <dl className="grid gap-8 md:grid-cols-2">
           {profile.philosophy.map((f) => (
             <div key={f.title} className="surface p-6">
@@ -101,7 +101,7 @@ export default function HomePage() {
       </Section>
 
       {/* 7. Proses */}
-      <Section id="proses" eyebrow="Proses" title="Langkah kerja yang jelas sejak awal.">
+      <Section id="proses" eyebrow="Proses" title="Tahapan kerja.">
         <ol className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
           {processSteps.slice(0, 4).map((s, i) => (
             <li key={s.id} className="surface p-5">
@@ -111,7 +111,7 @@ export default function HomePage() {
             </li>
           ))}
         </ol>
-        <p className="mt-10"><ButtonLink href="/process" variant="secondary">Lihat Proses Lengkap</ButtonLink></p>
+        <p className="mt-10"><ButtonLink href="/process" variant="secondary">Semua tahapan</ButtonLink></p>
       </Section>
 
       {/* 8. Studi kasus */}
@@ -141,21 +141,21 @@ export default function HomePage() {
 
       {/* 10. Wawasan */}
       {articles.length > 0 && (
-        <Section id="wawasan" eyebrow="Wawasan" title="Panduan untuk keputusan bisnis yang lebih jelas.">
+        <Section id="wawasan" eyebrow="Wawasan" title="Panduan bisnis dan digital.">
           <ul className="grid gap-8 md:grid-cols-3">
             {articles.map((a) => (<li key={a.slug}><ArticleCard article={a} /></li>))}
           </ul>
-          <p className="mt-10"><ButtonLink href="/insights" variant="secondary">Lihat semua wawasan</ButtonLink></p>
+          <p className="mt-10"><ButtonLink href="/insights" variant="secondary">Semua wawasan</ButtonLink></p>
         </Section>
       )}
 
       {/* 11. CTA akhir */}
       <Section id="hubungi" ruled>
         <div className="max-w-3xl">
-          <h2 className="display-lg">Mari bahas kebutuhan proyek Anda.</h2>
-          <p className="mt-4 max-w-prose text-lg text-muted-foreground">Ceritakan kebutuhan dan tujuan bisnis Anda. Saya akan membantu menentukan langkah berikutnya.</p>
+          <h2 className="display-lg">Mari bahas proyek Anda.</h2>
+          <p className="mt-4 max-w-prose text-lg text-muted-foreground">Sampaikan kebutuhan dan tujuan bisnis Anda.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href="/contact" event="consultation_click" eventProps={{ placement: "cta-akhir" }}>Diskusikan Proyek Anda</ButtonLink>
+            <ButtonLink href="/contact" event="consultation_click" eventProps={{ placement: "cta-akhir" }}>Diskusikan proyek</ButtonLink>
             <WhatsAppCta placement="cta-akhir" />
           </div>
         </div>

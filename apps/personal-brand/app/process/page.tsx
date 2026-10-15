@@ -14,7 +14,7 @@ export default function ProcessPage() {
   return (
     <>
       <Breadcrumbs items={[{ name: "Proses", path: "/process" }]} />
-      <PageHeader eyebrow="Proses" title="Tahapan kerja." intro="Alur disesuaikan dengan kebutuhan dan ruang lingkup proyek." />
+      <PageHeader eyebrow="Proses" title="Tahapan kerja." intro="Alur mengikuti ruang lingkup proyek." />
       <Section ruled={false}>
         <ol className="max-w-3xl">
           {processSteps.map((s, i) => (
@@ -30,7 +30,7 @@ export default function ProcessPage() {
             </li>
           ))}
         </ol>
-        <div className="mt-10"><ButtonLink href="/contact">Diskusikan proyek Anda</ButtonLink></div>
+        <div className="mt-10"><ButtonLink href="/contact">Diskusikan proyek</ButtonLink></div>
       </Section>
     </>
   );

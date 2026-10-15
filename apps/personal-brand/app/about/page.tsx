@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata = buildMetadata({
   title: "Tentang Kholil Muflikhun",
-  description: "Pendekatan personal yang menghubungkan strategi brand, desain, dan implementasi digital.",
+  description: "Profil dan layanan Kholil Muflikhun di bidang brand, desain, dan digital.",
   path: "/about",
 });
 
@@ -14,7 +14,7 @@ export default function AboutPage() {
   return (
     <>
       <Breadcrumbs items={[{ name: "Tentang", path: "/about" }]} />
-      <PageHeader eyebrow="Tentang" title={`Saya ${profile.name}.`} intro="Saya menghubungkan strategi brand, desain, dan solusi digital dengan kebutuhan bisnis." />
+      <PageHeader eyebrow="Tentang" title={`Saya ${profile.name}.`} intro="Strategi brand, desain, dan solusi digital untuk bisnis." />
       <Section ruled={false}>
         <div className="prose-site text-lg">
           {profile.story.map((text, index) => (
@@ -22,7 +22,7 @@ export default function AboutPage() {
           ))}
         </div>
       </Section>
-      <Section eyebrow="Prinsip kerja" title="Cara saya mendekati setiap proyek.">
+      <Section eyebrow="Prinsip kerja" title="Prinsip di setiap proyek.">
         <dl className="grid gap-8 md:grid-cols-2">
           {profile.philosophy.map((item) => (
             <div key={item.title} className="border-t border-border pt-4">
@@ -32,7 +32,7 @@ export default function AboutPage() {
           ))}
         </dl>
       </Section>
-      <Section eyebrow="Bidang layanan" title="Keahlian yang dapat mendukung proyek Anda.">
+      <Section eyebrow="Keahlian" title="Bidang layanan.">
         <ul className="grid gap-x-8 sm:grid-cols-2">
           {profile.capabilities.map((capability, index) => (
             <li key={`capability-${index}`} className="border-t border-border py-3">
@@ -41,7 +41,7 @@ export default function AboutPage() {
           ))}
         </ul>
       </Section>
-      <Section eyebrow="Untuk siapa" title="Saya bekerja dengan bisnis dan tim yang membutuhkan arah lebih jelas.">
+      <Section eyebrow="Klien" title="Untuk bisnis dan tim.">
         <ul className="flex flex-wrap gap-2">
           {profile.audiences.map((audience, index) => (
             <li key={`audience-${index}`} className="ui rounded-full border border-border bg-muted px-3 py-1.5 text-sm">
@@ -50,7 +50,7 @@ export default function AboutPage() {
           ))}
         </ul>
         <div className="mt-10">
-          <ButtonLink href="/contact">Diskusikan Proyek Anda</ButtonLink>
+          <ButtonLink href="/contact">Diskusikan proyek</ButtonLink>
         </div>
       </Section>
     </>

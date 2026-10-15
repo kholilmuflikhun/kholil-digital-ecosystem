@@ -19,5 +19,5 @@ export const footerNav: NavItem[] = [
   { label: "Syarat dan ketentuan", href: "/terms" },
 ];
 
-export const primaryCta = { label: "Diskusikan Proyek Anda", href: "/contact" };
-export const secondaryCta = { label: "Lihat Portfolio", href: "/portfolio" };
+export const primaryCta = { label: "Diskusikan proyek", href: "/contact" };
+export const secondaryCta = { label: "Lihat portofolio", href: "/portfolio" };

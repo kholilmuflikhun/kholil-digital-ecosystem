@@ -5,8 +5,8 @@ import { ProductBrowser } from "@/components/filter-browsers";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata = buildMetadata({
-  title: "Paket dan Solusi untuk Bisnis",
-  description: "Jelajahi paket branding, konten, cetak, apparel, dan digital. Ruang lingkup, ketersediaan, dan penawaran dibahas sesuai kebutuhan proyek.",
+  title: "Paket dan Produk",
+  description: "Paket brand, konten, cetak, dan digital untuk bisnis.",
   path: "/products",
 });
 
@@ -19,8 +19,8 @@ export default async function ProductsPage({ searchParams }: Props) {
       <Breadcrumbs items={[{ name: "Produk", path: "/products" }]} />
       <PageHeader
         eyebrow="Produk"
-        title="Paket dan produk untuk kebutuhan bisnis."
-        intro="Jadikan pilihan ini sebagai titik awal. Cakupan dan penawaran disesuaikan dengan kebutuhan proyek."
+        title="Paket dan produk."
+        intro="Cakupan dan penawaran menyesuaikan kebutuhan proyek."
       />
       <Section ruled={false}>
         <ProductBrowser products={publishedProducts()} labels={productCategoryLabels} initialCategory={kategori} />
