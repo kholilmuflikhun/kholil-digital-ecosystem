@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "growth-os": {
+      "root": "apps/growth-os",
+      "framework": "nextjs"
+    },
+    "personal-brand": {
+      "root": "apps/personal-brand",
+      "framework": "nextjs"
+    }
+  },
+  "rewrites": []
+}
